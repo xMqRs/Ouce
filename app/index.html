@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="css/focus.css">
 <link rel="stylesheet" href="css/library.css">
 <link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/editor.css">
 <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body data-view="player">
@@ -82,6 +83,7 @@
         <div class="quick" id="quick" hidden>
           <button class="btn flat small" id="qPub"><i class="ri-global-line"></i><span>Publicar</span></button>
           <button class="btn flat small" id="qPl"><i class="ri-play-list-add-line"></i>Playlist</button>
+          <button class="btn flat small" id="qCut"><i class="ri-scissors-2-line"></i>Cortar</button>
           <button class="btn flat small" id="qCover"><i class="ri-image-add-line"></i>Capa</button>
         </div>
         <div class="fx">
@@ -102,7 +104,10 @@
   <section class="view" id="v-library">
     <div class="head">
       <div><h1>Biblioteca</h1><p class="stats" id="stats"></p></div>
-      <button class="btn" id="libAdd"><i class="ri-upload-2-line"></i>Adicionar</button>
+      <div class="head-actions">
+        <button class="btn flat" id="videoBtn"><i class="ri-movie-2-line"></i>Extrair de vídeo</button>
+        <button class="btn" id="libAdd"><i class="ri-upload-2-line"></i>Adicionar</button>
+      </div>
     </div>
     <div class="seg" id="seg">
       <button class="chip on" data-tab="library"><i class="ri-global-line"></i> Biblioteca</button>
@@ -199,9 +204,35 @@
   </div>
 </dialog>
 
+<dialog id="editorDlg" class="editor">
+  <h3>Cortar áudio</h3>
+  <p class="hint" id="edName"></p>
+  <div class="wave" id="wave">
+    <canvas id="waveCv"></canvas>
+    <i class="h" id="hs"></i>
+    <i class="h" id="he"></i>
+    <i class="playhead" id="ph" hidden></i>
+  </div>
+  <div class="ed-row">
+    <label>Início<input id="edStart" inputmode="decimal" autocomplete="off"></label>
+    <label>Fim<input id="edEnd" inputmode="decimal" autocomplete="off"></label>
+    <span class="ed-len" id="edLen"></span>
+  </div>
+  <div class="chips" id="edMode">
+    <button type="button" class="chip on" data-mode="keep">Manter o trecho</button>
+    <button type="button" class="chip" data-mode="remove">Remover o trecho</button>
+  </div>
+  <menu>
+    <button type="button" class="btn flat" id="edPreview">Ouvir</button>
+    <button type="button" class="btn flat" data-close>Cancelar</button>
+    <button type="button" class="btn" id="edApply">Aplicar</button>
+  </menu>
+</dialog>
+
 <div class="toast" id="toast"></div>
 <div class="drop" id="drop">Solte para adicionar</div>
-<input type="file" id="file" accept="audio/*" multiple hidden>
+<input type="file" id="file" accept="audio/*,video/*" multiple hidden>
+<input type="file" id="videoFile" accept="video/*" multiple hidden>
 <input type="file" id="photo" accept="image/*" hidden>
 <input type="file" id="coverFile" accept="image/*" hidden>
 <script type="module" src="js/main.js"></script>

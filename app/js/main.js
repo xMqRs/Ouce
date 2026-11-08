@@ -1,4 +1,5 @@
 import { bindAuth, watchSession } from './auth.js'
+import { bindEditor } from './editor.js'
 import { bindEffects, drawChips, syncFxUI } from './effects.js'
 import { $, paint } from './lib/dom.js'
 import { bindLibrary, loadPublic, renderLibrary } from './library.js'
@@ -24,6 +25,7 @@ function start() {
   bindEffects()
   bindLibrary()
   bindTracks()
+  bindEditor()
   bindPlaylists()
   bindAuth()
   bindSettings()

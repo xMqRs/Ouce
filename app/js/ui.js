@@ -9,6 +9,10 @@ export function toast(msg, undo) {
   if (undo) $('button', el).onclick = () => { undo(); el.classList.remove('on') }
 }
 
+export function hideToast() {
+  $('#toast').classList.remove('on')
+}
+
 export function undoable(msg, run, restore) {
   const timer = setTimeout(run, 5000)
   toast(msg, () => { clearTimeout(timer); restore() })

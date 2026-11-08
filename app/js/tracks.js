@@ -8,6 +8,7 @@ import { audio, cache, mine, state } from './state.js'
 import { sb } from './supabase.js'
 import { accentFromCover, applyAccent, theme } from './theme.js'
 import { toast, undoable } from './ui.js'
+import { extractAudio, isVideo, videoError } from './video.js'
 
 function parseName(name) {
   const base = name.replace(/\.[^.]+$/, '').replace(/_+/g, ' ').trim()
@@ -25,16 +26,44 @@ async function uploadFile(file) {
   return data
 }
 
-async function addFiles(files) {
-  const valid = [...files].filter(f => f.type.startsWith('audio/') || /\.(mp3|wav|ogg|m4a|flac|aac|opus)$/i.test(f.name))
-  if (!valid.length) return toast('Nenhum áudio encontrado')
+const AUDIO_EXT = /\.(mp3|wav|ogg|m4a|flac|aac|opus)$/i
+const MAX_UPLOAD = 50 * 1024 * 1024
+
+const isAudio = f => f.type.startsWith('audio/') || AUDIO_EXT.test(f.name)
+
+async function prepare(files) {
+  const ready = []
+  for (const f of files) {
+    if (isAudio(f)) {
+      ready.push(f)
+    } else if (isVideo(f)) {
+      toast(`Extraindo o áudio de "${f.name}"…`)
+      try {
+        ready.push(await extractAudio(f))
+      } catch (err) {
+        toast(videoError(err))
+      }
+    }
+  }
+  return ready
+}
+
+export async function addFiles(files, extra = {}) {
+  const incoming = [...files]
+  if (!incoming.some(f => isAudio(f) || isVideo(f))) return toast('Nenhum áudio ou vídeo encontrado')
+  const valid = await prepare(incoming)
+  if (!valid.length) return
   const first = valid[0]
-  setNow({ blob: first, ...parseName(first.name) })
+  setNow({ blob: first, ...parseName(first.name), ...extra })
   play()
   if (!state.user) return toast('Entre na sua conta para salvar na biblioteca')
-  toast(valid.length === 1 ? 'Salvando…' : `Salvando ${valid.length} músicas…`)
+
+  const saveable = valid.filter(f => f.size <= MAX_UPLOAD)
+  const skipped = valid.length - saveable.length
+  if (!saveable.length) return toast('Arquivo grande demais para guardar na conta (limite de 50 MB). Ele toca normalmente.')
+  toast(saveable.length === 1 ? 'Salvando…' : `Salvando ${saveable.length} músicas…`)
   let saved = 0
-  for (const f of valid) {
+  for (const f of saveable) {
     try {
       const row = await uploadFile(f)
       state.rows.unshift(row)
@@ -51,7 +80,8 @@ async function addFiles(files) {
     }
   }
   renderLibrary(true)
-  toast(saved ? (saved === 1 ? 'Música salva' : `${saved} músicas salvas`) : 'Não consegui salvar. Tente de novo.')
+  const note = skipped ? ' Arquivos acima de 50 MB não foram guardados.' : ''
+  toast(saved ? (saved === 1 ? 'Música salva.' : `${saved} músicas salvas.`) + note : 'Não consegui salvar. Tente de novo.')
 }
 
 export async function saveNow() {
@@ -149,6 +179,8 @@ async function saveEdit() {
 export function bindTracks() {
   for (const id of ['railAdd', 'libAdd']) $('#' + id).addEventListener('click', () => $('#file').click())
   $('#file').addEventListener('change', e => { addFiles(e.target.files); e.target.value = '' })
+  $('#videoBtn').addEventListener('click', () => $('#videoFile').click())
+  $('#videoFile').addEventListener('change', e => { addFiles(e.target.files); e.target.value = '' })
   $('#editForm').addEventListener('submit', e => { if (e.submitter && e.submitter.value === 'ok') saveEdit() })
   $('#qPub').addEventListener('click', () => { const r = mine(state.now.id); if (r) setPublished(r.id, !r.published) })
   $('#dlBtn').addEventListener('click', downloadEdited)
