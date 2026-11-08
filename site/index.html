@@ -8,7 +8,7 @@
 <link rel="canonical" href="https://ouce.site/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="xMqRs">
-<meta name="theme-color" content="#5b1592">
+<meta name="theme-color" content="#0B0B0B">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ouce">
 <meta property="og:locale" content="pt_BR">
@@ -28,8 +28,7 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;600;800&family=DM+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/responsive.css">
@@ -49,7 +48,7 @@
       "@id": "https://ouce.site/#app",
       "name": "Ouce",
       "url": "https://app.ouce.site/",
-      "description": "Player online de slowed + reverb e speed up. Ajuste velocidade, reverb e grave em tempo real, guarde sua biblioteca e publique faixas.",
+      "description": "Player online de slowed + reverb e speed up. Ajuste velocidade, reverb e grave em tempo real, baixe a versão editada, guarde sua biblioteca e publique faixas.",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Qualquer sistema com navegador moderno",
       "browserRequirements": "Requer JavaScript e Web Audio API",
@@ -76,16 +75,12 @@
   ]
 }
 </script>
-<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
 </head>
 <body>
-<canvas id="bars" aria-hidden="true"></canvas>
 
-<header class="nav" id="nav">
+<header class="nav">
   <div class="wrap nav-in">
-    <a class="brand" href="/" aria-label="Ouce, página inicial">
-      <img src="assets/symbol.png" alt="Ouce" width="40" height="40">
-    </a>
+    <a class="brand" href="/" aria-label="Ouce, página inicial"><img src="assets/symbol.png" alt="Ouce" width="36" height="36"></a>
     <nav class="links" aria-label="Principal">
       <a href="#o-que-e">O que é</a>
       <a href="#teste">Teste</a>
@@ -101,148 +96,104 @@
 <main>
   <section class="hero">
     <div class="wrap hero-grid">
-      <div class="hero-text">
-        <p class="kicker">player de música online</p>
-        <h1>Deixe qualquer música <span class="swap" id="swap">mais lenta</span>.</h1>
-        <p class="lead">O Ouce é um player online de slowed + reverb e speed up. Abra uma música, ajuste o som na hora e guarde tudo na sua biblioteca. Sem instalar nada.</p>
+      <div>
+        <h1>Slowed, reverb e speed up em qualquer música.</h1>
+        <p class="lead">O Ouce é um player online. Abra uma música, ajuste velocidade, reverb e grave na hora e baixe a versão editada. Sem instalar nada.</p>
         <div class="cta">
-          <a class="btn" href="https://app.ouce.site">Abrir o player <i class="ri-arrow-right-up-line"></i></a>
-          <a class="btn ghost" href="#teste">Testar agora</a>
+          <a class="btn" href="https://app.ouce.site">Abrir o player</a>
+          <a class="link" href="#teste">Testar aqui mesmo</a>
         </div>
       </div>
 
-      <div class="hero-card" aria-hidden="true">
-        <div class="sleeve">
-          <div class="disc"><div class="vinyl"><div class="label"></div></div></div>
-          <div class="art"><img src="assets/logo.png" alt="" width="320" height="320"></div>
-        </div>
-        <div class="song"><strong>Noite Longa</strong><span>slowed + reverb · 0.82x</span></div>
-        <div class="track"><i></i></div>
-        <div class="dots"><b></b><b class="on"></b><b></b></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="o-que-e">
-    <div class="wrap">
-      <p class="kicker reveal">o que é</p>
-      <h2 class="reveal">Slowed, reverb e speed up, sem complicação</h2>
-      <p class="intro reveal">Slowed + reverb é o estilo em que a música toca mais devagar, com o tom mais grave, e ganha um eco de sala grande. O speed up faz o contrário: acelera e deixa o tom mais agudo, como no nightcore. O Ouce faz isso em tempo real no navegador, com as músicas que você já tem. Não precisa exportar nem converter nada.</p>
-
-      <div class="effects">
-        <article class="effect reveal" style="--d:.05s">
-          <h3>Slowed</h3>
-          <p class="range">1.00x até 0.50x</p>
-          <p>Desacelera a música. O tom desce junto, como num vinil mais lento.</p>
-        </article>
-        <article class="effect reveal" style="--d:.12s">
-          <h3>Speed up</h3>
-          <p class="range">1.00x até 1.80x</p>
-          <p>Acelera a música. O tom sobe junto, no estilo nightcore.</p>
-        </article>
-        <article class="effect reveal" style="--d:.19s">
-          <h3>Reverb</h3>
-          <p class="range">0% até 100%</p>
-          <p>Mistura o som com uma reverberação de 3 segundos, de um toque leve a um salão enorme.</p>
-        </article>
-        <article class="effect reveal" style="--d:.26s">
-          <h3>Grave</h3>
-          <p class="range">0 até +15 dB</p>
-          <p>Reforça as frequências abaixo de 140 Hz para dar peso ao som.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="teste">
-    <div class="wrap">
-      <p class="kicker reveal">teste agora</p>
-      <h2 class="reveal">Ouça a diferença aqui mesmo</h2>
-      <p class="intro reveal">Uma melodia de exemplo, gerada no próprio navegador. Aperte play e mexa nos controles.</p>
-
-      <div class="demo reveal">
-        <button class="play" id="demoPlay" aria-label="Tocar exemplo"><i class="ri-play-fill"></i></button>
-        <div class="demo-body">
-          <div class="chips" id="demoPresets">
-            <button class="chip on" data-rate="100" data-verb="0">Original</button>
-            <button class="chip" data-rate="82" data-verb="50">Slowed + Reverb</button>
-            <button class="chip" data-rate="125" data-verb="0">Speed up</button>
+      <div class="stage" id="stage" aria-hidden="true">
+        <div class="rig">
+          <div class="box">
+            <div class="record"><div class="grooves"></div></div>
+            <div class="front"><img src="assets/logo.png" alt="" width="320" height="320"></div>
+            <span class="face f-back"></span><span class="face f-l"></span><span class="face f-r"></span><span class="face f-t"></span><span class="face f-b"></span>
           </div>
-          <label class="knob">Velocidade<input id="demoSpeed" type="range" min="50" max="180" value="100"><output id="speedOut">1.00x</output></label>
-          <label class="knob">Reverb<input id="demoReverb" type="range" min="0" max="100" value="0"><output id="reverbOut">0%</output></label>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="como-funciona">
-    <div class="wrap">
-      <p class="kicker reveal">como funciona</p>
-      <h2 class="reveal">Três passos</h2>
+  <section class="block" id="o-que-e">
+    <div class="wrap split">
+      <h2>O que é</h2>
+      <div>
+        <p class="intro">Slowed + reverb é o estilo em que a música toca mais devagar, com o tom mais grave, e ganha um eco de sala grande. O speed up faz o contrário: acelera e deixa o tom mais agudo, como no nightcore. O Ouce faz isso em tempo real no navegador, com as músicas que você já tem. Não precisa exportar nem converter nada.</p>
+        <dl class="defs">
+          <div><dt>Slowed</dt><dd class="range">1.00x até 0.50x</dd><dd>Desacelera a música. O tom desce junto, como num vinil mais lento.</dd></div>
+          <div><dt>Speed up</dt><dd class="range">1.00x até 1.80x</dd><dd>Acelera a música. O tom sobe junto, no estilo nightcore.</dd></div>
+          <div><dt>Reverb</dt><dd class="range">0% até 100%</dd><dd>Mistura o som com uma reverberação de 3 segundos, de um toque leve a um salão enorme.</dd></div>
+          <div><dt>Grave</dt><dd class="range">0 até +15 dB</dd><dd>Reforça as frequências abaixo de 140 Hz para dar peso ao som.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="teste">
+    <div class="wrap split">
+      <h2>Teste</h2>
+      <div>
+        <p class="intro">Uma melodia de exemplo, gerada no próprio navegador. Aperte play e mexa nos controles.</p>
+        <div class="demo">
+          <button class="play" id="demoPlay" aria-label="Tocar exemplo">
+            <svg class="i-play" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+            <svg class="i-pause" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>
+          </button>
+          <div class="demo-body">
+            <div class="chips" id="demoPresets">
+              <button class="chip on" data-rate="100" data-verb="0">Original</button>
+              <button class="chip" data-rate="82" data-verb="50">Slowed + Reverb</button>
+              <button class="chip" data-rate="125" data-verb="0">Speed up</button>
+            </div>
+            <label class="knob">Velocidade<input id="demoSpeed" type="range" min="50" max="180" value="100"><output id="speedOut">1.00x</output></label>
+            <label class="knob">Reverb<input id="demoReverb" type="range" min="0" max="100" value="0"><output id="reverbOut">0%</output></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="como-funciona">
+    <div class="wrap split">
+      <h2>Como funciona</h2>
       <ol class="steps">
-        <li class="reveal" style="--d:.05s">
-          <span class="num">01</span>
-          <h3>Adicione sua música</h3>
-          <p>Arraste um arquivo ou escolha no computador ou no celular. Funciona com MP3, WAV, OGG, M4A, FLAC, AAC e OPUS, conforme o suporte do seu navegador.</p>
+        <li>
+          <span class="num">1</span>
+          <div><h3>Adicione sua música</h3><p>Arraste um arquivo ou escolha no computador ou no celular. Funciona com MP3, WAV, OGG, M4A, FLAC, AAC e OPUS, conforme o suporte do seu navegador.</p></div>
         </li>
-        <li class="reveal" style="--d:.15s">
-          <span class="num">02</span>
-          <h3>Ajuste o som</h3>
-          <p>Escolha um preset, como Slowed + Reverb ou Nightcore, ou mexa nos controles de slowed, speed up, reverb e grave enquanto ouve.</p>
+        <li>
+          <span class="num">2</span>
+          <div><h3>Ajuste o som</h3><p>Escolha um preset, como Slowed + Reverb ou Nightcore, ou mexa nos controles de slowed, speed up, reverb e grave enquanto ouve.</p></div>
         </li>
-        <li class="reveal" style="--d:.25s">
-          <span class="num">03</span>
-          <h3>Guarde e compartilhe</h3>
-          <p>Baixe a música já editada, ou crie uma conta para manter histórico e playlists. Se quiser, publique uma faixa na biblioteca pública para qualquer pessoa ouvir.</p>
+        <li>
+          <span class="num">3</span>
+          <div><h3>Baixe, guarde ou publique</h3><p>Baixe a música já editada, ou crie uma conta para manter histórico e playlists. Se quiser, publique uma faixa na biblioteca pública para qualquer pessoa ouvir.</p></div>
         </li>
       </ol>
     </div>
   </section>
 
-  <section id="recursos">
-    <div class="wrap">
-      <p class="kicker reveal">recursos</p>
-      <h2 class="reveal">Feito para ouvir, não para configurar</h2>
-      <div class="features">
-        <article class="reveal" style="--d:.05s">
-          <i class="ri-folder-music-line"></i>
-          <h3>Biblioteca e playlists</h3>
-          <p>Histórico de tudo que você enviou, com busca, edição de título e artista e exclusão.</p>
-        </article>
-        <article class="reveal" style="--d:.12s">
-          <i class="ri-global-line"></i>
-          <h3>Biblioteca pública</h3>
-          <p>Publique uma música com os efeitos que você escolheu. Quem abrir ouve do mesmo jeito.</p>
-        </article>
-        <article class="reveal" style="--d:.19s">
-          <i class="ri-palette-line"></i>
-          <h3>Cor pela capa</h3>
-          <p>O site muda de cor conforme a capa da música, ou você fixa a sua cor em hex.</p>
-        </article>
-        <article class="reveal" style="--d:.26s">
-          <i class="ri-fullscreen-line"></i>
-          <h3>Modo foco</h3>
-          <p>Um cartão limpo, só com a música e os controles, e o equalizador ao fundo.</p>
-        </article>
-        <article class="reveal" style="--d:.33s">
-          <i class="ri-smartphone-line"></i>
-          <h3>No celular e no PC</h3>
-          <p>O layout se ajusta à tela, do celular ao monitor grande.</p>
-        </article>
-        <article class="reveal" style="--d:.4s">
-          <i class="ri-download-2-line"></i>
-          <h3>Baixe a versão editada</h3>
-          <p>Exporte a música já com slowed, reverb e grave aplicados, em arquivo WAV.</p>
-        </article>
-      </div>
+  <section class="block" id="recursos">
+    <div class="wrap split">
+      <h2>Recursos</h2>
+      <dl class="list">
+        <div><dt>Biblioteca e playlists</dt><dd>Histórico de tudo que você enviou, com busca, edição de título e artista e exclusão.</dd></div>
+        <div><dt>Biblioteca pública</dt><dd>Publique uma música com os efeitos que você escolheu. Quem abrir ouve do mesmo jeito.</dd></div>
+        <div><dt>Baixe a versão editada</dt><dd>Exporte a música já com slowed, reverb e grave aplicados, em arquivo WAV.</dd></div>
+        <div><dt>Cor pela capa</dt><dd>O player muda de cor conforme a capa da música, ou você fixa a sua cor em hex.</dd></div>
+        <div><dt>Modo foco</dt><dd>Um cartão limpo, só com a música e os controles.</dd></div>
+        <div><dt>No celular e no PC</dt><dd>O layout se ajusta à tela, do celular ao monitor grande.</dd></div>
+      </dl>
     </div>
   </section>
 
-  <section id="faq">
-    <div class="wrap narrow">
-      <p class="kicker reveal">perguntas</p>
-      <h2 class="reveal">Perguntas frequentes</h2>
-      <div class="faq reveal">
+  <section class="block" id="faq">
+    <div class="wrap split">
+      <h2>Perguntas</h2>
+      <div class="faq">
         <details>
           <summary>O que é slowed + reverb?</summary>
           <p>É um estilo de edição em que a música é desacelerada, ganhando um tom mais grave, e recebe reverb, que cria a sensação de eco em um espaço grande. No Ouce você faz isso na hora, com os controles de slowed e reverb.</p>
@@ -275,28 +226,20 @@
     </div>
   </section>
 
-  <section id="desenvolvedores">
-    <div class="wrap narrow">
-      <p class="kicker reveal">desenvolvedores</p>
-      <h2 class="reveal">Quem faz o Ouce</h2>
-      <div class="dev reveal">
-        <img src="assets/logo.png" alt="Logo do Ouce Project" width="80" height="80" loading="lazy">
+  <section class="block" id="desenvolvedores">
+    <div class="wrap split">
+      <h2>Desenvolvedores</h2>
+      <div class="dev">
+        <img src="assets/logo.png" alt="Logo do Ouce Project" width="64" height="64" loading="lazy">
         <div>
           <h3>xMqRs</h3>
           <p>Criação e desenvolvimento, Ouce Project</p>
-          <div class="dev-links">
-            <a class="btn ghost small" href="https://github.com/xMqRs" rel="noopener"><i class="ri-github-fill"></i> github.com/xMqRs</a>
-            <a class="btn ghost small" href="https://github.com/Ouce-Project/Ouce" rel="noopener"><i class="ri-code-s-slash-line"></i> Código do projeto</a>
-          </div>
+          <p class="dev-links">
+            <a class="link" href="https://github.com/xMqRs" rel="noopener">github.com/xMqRs</a>
+            <a class="link" href="https://github.com/Ouce-Project/Ouce" rel="noopener">Código do projeto</a>
+          </p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section class="final">
-    <div class="wrap">
-      <h2 class="reveal">Escolha uma música e comece.</h2>
-      <a class="btn reveal" href="https://app.ouce.site">Abrir o player <i class="ri-arrow-right-up-line"></i></a>
     </div>
   </section>
 </main>
@@ -305,8 +248,8 @@
   <div class="wrap foot">
     <a class="foot-logo" href="/" aria-label="Ouce, página inicial"><img src="assets/wordmark.png" alt="Ouce" width="43" height="44"></a>
     <span>© 2026 Ouce</span>
-    <span>Código sob <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/" rel="noopener">PolyForm Noncommercial 1.0.0</a></span>
-    <a href="https://github.com/Ouce-Project/Ouce" rel="noopener">GitHub</a>
+    <span>Código sob <a class="link" href="https://polyformproject.org/licenses/noncommercial/1.0.0/" rel="noopener">PolyForm Noncommercial 1.0.0</a></span>
+    <a class="link" href="https://github.com/Ouce-Project/Ouce" rel="noopener">GitHub</a>
   </div>
 </footer>
 

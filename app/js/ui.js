@@ -1,18 +1,5 @@
 import { $, $$, esc } from './lib/dom.js'
 
-export function scramble(el, text) {
-  const pool = 'abcdefghijklmnopqrstuvwxyz0123456789#%&*'
-  const steps = 18
-  let frame = 0
-  cancelAnimationFrame(el._raf)
-  const tick = () => {
-    el.textContent = [...text].map((c, i) => (c === ' ' || i < (frame * text.length) / steps ? c : pool[(Math.random() * pool.length) | 0])).join('')
-    if (++frame <= steps) el._raf = requestAnimationFrame(tick)
-    else el.textContent = text
-  }
-  tick()
-}
-
 export function toast(msg, undo) {
   const el = $('#toast')
   el.innerHTML = `<span>${esc(msg)}</span>${undo ? '<button>Desfazer</button>' : ''}`

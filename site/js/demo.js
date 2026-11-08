@@ -1,5 +1,3 @@
-import { setAnalyser } from './bars.js'
-
 const NOTES = [220, 261.63, 329.63, 392, 329.63, 261.63, 196, 246.94]
 const STEP = 0.42
 
@@ -32,17 +30,12 @@ export function initDemo() {
     dry = ctx.createGain()
     wet = ctx.createGain()
     const verb = ctx.createConvolver()
-    const analyser = ctx.createAnalyser()
-    analyser.fftSize = 256
-    analyser.smoothingTimeConstant = 0.78
     verb.buffer = makeImpulse(ctx)
     bus.connect(dry)
     bus.connect(verb)
     verb.connect(wet)
-    dry.connect(analyser)
-    wet.connect(analyser)
-    analyser.connect(ctx.destination)
-    setAnalyser(analyser)
+    dry.connect(ctx.destination)
+    wet.connect(ctx.destination)
     applyReverb()
   }
 
@@ -95,12 +88,10 @@ export function initDemo() {
     clearTimeout(timer)
     playing = false
     sync()
-    setTimeout(() => { if (!playing) setAnalyser(null) }, 1600)
   }
 
   function sync() {
     playBtn.classList.toggle('live', playing)
-    playBtn.firstElementChild.className = playing ? 'ri-pause-fill' : 'ri-play-fill'
     playBtn.setAttribute('aria-label', playing ? 'Pausar exemplo' : 'Tocar exemplo')
   }
 

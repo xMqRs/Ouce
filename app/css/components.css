@@ -1,15 +1,15 @@
 .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:16px 0}
-.switch-row label{display:block;margin:0;font:14px/1.4 'Bricolage Grotesque',sans-serif;color:var(--txt)}
+.switch-row label{display:block;margin:0;font:14px/1.4 var(--sans);color:var(--txt)}
 .switch-row small{display:block;color:var(--mute);font-size:12px}
 .switch{-webkit-appearance:none;appearance:none;flex:none;width:44px;height:26px;border-radius:99px;background:#262626;position:relative;cursor:pointer;border:0;padding:0;transition:background .25s}
 .switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s var(--ease)}
 .switch:checked{background:var(--accent)}
 .switch:checked::after{transform:translateX(18px)}
 .color-row{display:flex;gap:10px;align-items:center;margin:14px 0 6px}
-.color-row input:not([type=color]){flex:1;min-width:0;text-transform:uppercase;font-family:'DM Mono',monospace}
-dialog input[type=color]{padding:0;width:46px;height:46px;border-radius:12px;background:none;cursor:pointer}
+.color-row input:not([type=color]){flex:1;min-width:0;text-transform:uppercase;font-family:var(--sans)}
+dialog input[type=color]{padding:0;width:46px;height:46px;border-radius:8px;background:none;cursor:pointer}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:8px 14px;border-radius:99px;border:1px solid #262626;font-size:13px;color:var(--mute);transition:all .25s}
+.chip{padding:8px 14px;border-radius:8px;border:1px solid #262626;font-size:13px;color:var(--mute);transition:all .25s}
 .chip:hover{color:#fff;border-color:var(--accent)}
 .chip.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .hint{font-size:12px;color:#5a5d68}
@@ -19,11 +19,11 @@ input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:line
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;margin-top:-5px;transition:transform .2s}
 input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:#fff}
 input[type=range]:active::-webkit-slider-thumb{transform:scale(1.5)}
-.btn{padding:12px 18px;border-radius:14px;background:var(--accent);color:var(--on-accent);display:inline-flex;gap:8px;align-items:center;font-weight:600;transition:transform .3s var(--ease),background .2s}
-.btn:hover{background:var(--accent-hi);transform:translateY(-2px)}
+.btn{padding:12px 18px;border-radius:10px;background:var(--accent);color:var(--on-accent);display:inline-flex;gap:8px;align-items:center;font-weight:600;transition:background .2s}
+.btn:hover{background:var(--accent-hi)}
 .btn.flat{background:var(--panel);border:1px solid var(--line);color:var(--mute)}
 .btn.flat.on{border-color:var(--accent);color:#fff}
-.btn.small{padding:8px 13px;font-size:13px;border-radius:12px}
+.btn.small{padding:8px 13px;font-size:13px;border-radius:8px}
 .err{color:#ff6b7a;font-size:13px;min-height:18px;margin-bottom:6px}
 .pick{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:12px;text-align:left;color:var(--mute);transition:all .2s}
 .pick:hover{background:#181818;color:#fff}
@@ -31,21 +31,19 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.5)}
 #plPick{display:grid;gap:2px;margin-bottom:14px;max-height:240px;overflow:auto}
 .who{color:var(--mute);margin-bottom:16px;overflow-wrap:anywhere}
 dialog .stack{display:grid;gap:10px}
-dialog{margin:auto;background:var(--panel);color:var(--txt);border:1px solid #262626;border-radius:22px;padding:26px;width:min(92vw,420px)}
+dialog{margin:auto;background:var(--panel);color:var(--txt);border:1px solid #262626;border-radius:16px;padding:26px;width:min(92vw,420px)}
 dialog::backdrop{background:rgb(0 0 0/.78)}
 dialog[open]{animation:pop .4s var(--ease)}
-dialog h3{font-size:24px;letter-spacing:-.03em;margin-bottom:16px}
-dialog label{display:grid;gap:6px;font-size:12px;color:var(--mute);margin-bottom:14px;font-family:'DM Mono',monospace}
-dialog input{background:var(--ink);border:1px solid #262626;border-radius:12px;padding:12px;outline:0;font-size:15px;font-family:'Bricolage Grotesque',sans-serif;color:var(--txt)}
+dialog h3{font-family:var(--display);font-size:22px;letter-spacing:-.025em;margin-bottom:16px}
+dialog label{display:grid;gap:6px;font-size:12px;color:var(--mute);margin-bottom:14px}
+dialog input{background:var(--ink);border:1px solid #262626;border-radius:8px;padding:12px;outline:0;font-size:15px;color:var(--txt)}
 dialog input:focus{border-color:var(--accent)}
 dialog menu{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
-.toast{width:max-content;max-width:calc(100vw - 32px);position:fixed;left:50%;bottom:28px;translate:-50% 0;z-index:60;background:#fff;color:#0b0b0b;padding:12px 18px;border-radius:99px;font-weight:600;display:flex;gap:14px;align-items:center;opacity:0;visibility:hidden;transform:translateY(24px);transition:transform .5s var(--ease),opacity .3s,visibility 0s .5s}
+.toast{width:max-content;max-width:calc(100vw - 32px);position:fixed;left:50%;bottom:28px;translate:-50% 0;z-index:60;background:#fff;color:#0b0b0b;padding:12px 18px;border-radius:10px;font-weight:600;display:flex;gap:14px;align-items:center;opacity:0;visibility:hidden;transform:translateY(24px);transition:transform .5s var(--ease),opacity .3s,visibility 0s .5s}
 .toast.on{opacity:1;visibility:visible;transform:none;transition:transform .5s var(--ease),opacity .3s,visibility 0s}
 .toast button{color:var(--accent);font-weight:800}
-.drop{position:fixed;inset:14px;z-index:70;border:2px dashed var(--accent-hi);border-radius:28px;background:rgb(11 11 11/.94);display:none;place-items:center;font-size:clamp(24px,4vw,44px);font-weight:800;letter-spacing:-.03em}
+.drop{position:fixed;inset:14px;z-index:70;border:2px dashed var(--accent-hi);border-radius:16px;background:rgb(11 11 11/.94);display:none;place-items:center;font-size:clamp(24px,4vw,44px);font-weight:800;letter-spacing:-.03em}
 .drop.on{display:grid}
-.ripple{position:absolute;border-radius:50%;background:rgb(255 255 255/.35);transform:scale(0);animation:wave .6s ease-out forwards;pointer-events:none}
-@keyframes wave{to{transform:scale(4);opacity:0}}
 .round.busy{pointer-events:none}
 .round.busy i{animation:turn .9s linear infinite}
 @keyframes turn{to{transform:rotate(360deg)}}

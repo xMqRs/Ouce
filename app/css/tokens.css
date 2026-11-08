@@ -11,4 +11,6 @@
   --txt:#f1f2f6;
   --mute:#80838f;
   --ease:cubic-bezier(.7,0,.2,1);
+  --sans:'Inter',system-ui,sans-serif;
+  --display:'Inter Tight','Inter',system-ui,sans-serif;
 }

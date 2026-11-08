@@ -9,7 +9,7 @@ import { markNow, visibleRows } from './library.js'
 import { audio, byId, cache, mine, state } from './state.js'
 import { sb } from './supabase.js'
 import { accentFromCover, applyAccent, theme } from './theme.js'
-import { scramble, toast } from './ui.js'
+import { toast } from './ui.js'
 import { setFocus } from './views.js'
 
 async function loadEmbeddedCover(blob) {
@@ -48,7 +48,7 @@ export function updateNow() {
   const n = state.now
   document.body.classList.toggle('has-track', !!n.blob)
   updateLabel()
-  scramble($('#title'), n.blob ? n.title : 'Solte um som')
+  $('#title').textContent = n.blob ? n.title : 'Solte um som'
   $('#artist').textContent = n.blob ? n.artist || 'Artista desconhecido' : 'Adicione músicas para começar.'
   $('#cur').textContent = '0:00'
   $('#dur').textContent = '0:00'

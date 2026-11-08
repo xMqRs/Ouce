@@ -1,22 +1,13 @@
 import { engine } from './engine.js'
-import { $, $$ } from './lib/dom.js'
+import { $ } from './lib/dom.js'
 import { audio } from './state.js'
 import { theme } from './theme.js'
 
 const barsCv = $('#bars')
-
 const bc = barsCv.getContext('2d')
-
 const vinyl = $('#vinyl')
-
-const art = $('#art')
-
 let levels = new Float32Array(0)
-
 let angle = 0
-
-let pulse = 0
-
 let lastTick = performance.now()
 
 function sizeBars() {
@@ -35,7 +26,7 @@ function drawBars(now, playing) {
   const bw = step * 0.56
   const [r, g, b] = theme.hiRgb
   const grad = bc.createLinearGradient(0, h, 0, h * 0.25)
-  grad.addColorStop(0, `rgb(${r} ${g} ${b} / 0.17)`)
+  grad.addColorStop(0, `rgb(${r} ${g} ${b} / 0.14)`)
   grad.addColorStop(1, `rgb(${r} ${g} ${b} / 0)`)
   bc.clearRect(0, 0, w, h)
   bc.fillStyle = grad
@@ -59,15 +50,8 @@ function frame(now) {
   lastTick = now
   const playing = !audio.paused
   if (playing) angle += dt * 70 * audio.playbackRate
-  let bassLevel = 0
-  if (engine.nodes && playing) {
-    engine.nodes.an.getByteFrequencyData(engine.nodes.freq)
-    bassLevel = engine.nodes.freq.slice(0, 6).reduce((a, b) => a + b, 0) / 6 / 255
-  }
-  pulse += (bassLevel - pulse) * 0.25
-  document.body.style.setProperty('--pulse', pulse.toFixed(3))
+  if (engine.nodes && playing) engine.nodes.an.getByteFrequencyData(engine.nodes.freq)
   vinyl.style.transform = `rotate(${angle}deg)`
-  art.style.transform = `scale(${1 + pulse * 0.035})`
   drawBars(now, playing)
   requestAnimationFrame(frame)
 }
@@ -82,41 +66,14 @@ function bindTilt() {
     if (e.pointerType !== 'mouse' || !box) return
     const x = (e.clientX - box.left) / box.width - 0.5
     const y = (e.clientY - box.top) / box.height - 0.5
-    card.style.transform = `perspective(1100px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg)`
+    card.style.transform = `perspective(1100px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`
   })
   card.addEventListener('pointerleave', () => { card.style.transform = '' })
-}
-
-function bindMagnets() {
-  $$('.big, .btn, .tab').forEach(el => {
-    el.addEventListener('pointermove', e => {
-      if (e.pointerType !== 'mouse') return
-      const r = el.getBoundingClientRect()
-      el.style.translate = `${(e.clientX - r.left - r.width / 2) * 0.18}px ${(e.clientY - r.top - r.height / 2) * 0.18}px`
-    })
-    el.addEventListener('pointerleave', () => { el.style.translate = '' })
-  })
-}
-
-function bindRipple() {
-  document.addEventListener('pointerdown', e => {
-    const b = e.target.closest('button')
-    if (!b) return
-    const r = b.getBoundingClientRect()
-    const d = Math.max(r.width, r.height)
-    const dot = document.createElement('span')
-    dot.className = 'ripple'
-    dot.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`
-    b.appendChild(dot)
-    setTimeout(() => dot.remove(), 600)
-  })
 }
 
 export function startVisuals() {
   sizeBars()
   addEventListener('resize', sizeBars)
-  bindRipple()
-  bindMagnets()
   bindTilt()
   requestAnimationFrame(frame)
 }

@@ -77,7 +77,7 @@ Para aparecer no Google, adicione `ouce.site` como propriedade de domínio no Se
 
 - Slowed, speed up, reverb e grave ajustáveis na hora, com presets
 - Vinil que gira junto com a velocidade e equalizador de fundo que reage ao áudio
-- Cartão do player com inclinação em 3D ao passar o mouse
+- Capa em 3D com espessura e vinil que sai por trás; o cartão inclina ao passar o mouse
 - Modo foco com cartão largo, detalhes na cor do tema e painel de efeitos flutuante
 - Download da música já editada, em WAV, com os efeitos aplicados
 - A cor do site acompanha a capa da música, ou fica na cor que você escolher em hex
@@ -147,7 +147,7 @@ Ouce/
 │  ├─ robots.txt, sitemap.xml, vercel.json
 │  ├─ assets/              logo, wordmark, imagem de compartilhamento, ícones
 │  ├─ css/
-│  └─ js/                  demo de áudio, equalizador, animações
+│  └─ js/                  demo de áudio e cena 3D do topo
 └─ supabase/schema.sql     tabelas, funções e políticas
 ```
 
