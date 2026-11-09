@@ -11,6 +11,7 @@ export function syncFxUI() {
     paint(input)
     input.nextElementSibling.textContent = `${Math.round(state.fx[key] * 100)}%`
   }
+  document.documentElement.style.setProperty('--rv', state.fx.reverb)
   $('#rateNote').textContent = `${rateOf(state.fx).toFixed(2)}x`
   $$('.chip[data-preset]').forEach(chip => {
     const p = presets[chip.dataset.preset]

@@ -76,7 +76,8 @@ Para aparecer no Google, adicione `ouce.site` como propriedade de domínio no Se
 ## O que tem
 
 - Slowed, speed up, reverb e grave ajustáveis na hora, com presets
-- Vinil que gira junto com a velocidade e equalizador de fundo que reage ao áudio
+- Vinil que gira junto com a velocidade e, atrás de tudo, um terreno de barras em camadas (3D) que reage ao áudio, com uma luz bem leve na cor do tema embaixo
+- O reverb aparece como discos empilhados atrás do vinil, quanto mais reverb, mais ecos
 - Capa em 3D com espessura e vinil que sai por trás; o cartão inclina ao passar o mouse
 - Modo foco com cartão largo, detalhes na cor do tema e painel de efeitos flutuante
 - Download da música já editada, em WAV, com os efeitos aplicados
@@ -161,7 +162,7 @@ Ouce/
 │  ├─ robots.txt, sitemap.xml, vercel.json
 │  ├─ assets/              logo, wordmark, imagem de compartilhamento, ícones
 │  ├─ css/
-│  └─ js/                  demo de áudio e cena 3D do topo
+│  └─ js/                  demo de áudio, mesa 3D da demo e cena 3D ligada à rolagem
 └─ supabase/schema.sql     tabelas, funções e políticas
 ```
 

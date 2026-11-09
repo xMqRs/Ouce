@@ -1,5 +1,7 @@
 @media(max-width:900px){
   .links{display:none}
+  .story{height:auto}
+  .story-in{position:static;height:auto;display:block;padding:clamp(40px,9vw,72px) 0}
   .hero-grid{grid-template-columns:minmax(0,1fr)}
   .split{grid-template-columns:minmax(0,1fr);gap:20px}
 }
@@ -7,7 +9,7 @@
   .defs div{grid-template-columns:minmax(0,1fr);gap:4px}
   .list div{grid-template-columns:minmax(0,1fr);gap:4px}
   .demo{flex-direction:column;align-items:stretch}
-  .play{align-self:center}
+  .play,.deck3d{align-self:center}
   .knob{grid-template-columns:80px 1fr 48px}
   .dev{align-items:flex-start}
 }
@@ -18,6 +20,4 @@
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .grooves{animation:none}
-  .rig{transition:none}
 }

@@ -11,8 +11,8 @@
 .rail .add:hover{border-color:#333;color:#fff}
 main{flex:1;position:relative;min-width:0;min-height:0;z-index:1}
 .view{position:absolute;inset:0;overflow:auto;overflow-x:hidden;overscroll-behavior:contain;display:none;padding:34px clamp(20px,4vw,56px)}
-.view.on{display:block;animation:fade .25s ease-out}
-@keyframes fade{from{opacity:0}}
+.view.on{display:block;animation:lift .5s var(--ease)}
+@keyframes lift{from{opacity:0;transform:perspective(1000px) rotateX(7deg) translateY(22px)}}
 .me{width:42px;height:42px;border-radius:50%;background:#1a1a1a center/cover;border:1px solid var(--line);display:grid;place-items:center;font-size:19px;color:var(--mute);transition:border-color .2s}
 .me.in{border-color:var(--accent)}
 .me:hover{border-color:#333;color:#fff}

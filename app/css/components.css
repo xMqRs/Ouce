@@ -19,9 +19,11 @@ input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:line
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;margin-top:-5px;transition:transform .2s}
 input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:#fff}
 input[type=range]:active::-webkit-slider-thumb{transform:scale(1.5)}
-.btn{padding:12px 18px;border-radius:10px;background:var(--accent);color:var(--on-accent);display:inline-flex;gap:8px;align-items:center;font-weight:600;transition:background .2s}
+.btn{padding:12px 18px;border-radius:10px;background:var(--accent);color:var(--on-accent);display:inline-flex;gap:8px;align-items:center;font-weight:600;box-shadow:0 3px 0 var(--accent-lo);transition:background .2s,transform .08s,box-shadow .08s}
 .btn:hover{background:var(--accent-hi)}
-.btn.flat{background:var(--panel);border:1px solid var(--line);color:var(--mute)}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn.flat{background:var(--panel);border:1px solid var(--line);color:var(--mute);box-shadow:none}
+.btn.flat:active{transform:none}
 .btn.flat.on{border-color:var(--accent);color:#fff}
 .btn.small{padding:8px 13px;font-size:13px;border-radius:8px}
 .err{color:#ff6b7a;font-size:13px;min-height:18px;margin-bottom:6px}

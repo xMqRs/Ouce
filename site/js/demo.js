@@ -21,8 +21,31 @@ export function initDemo() {
   const reverbOut = document.querySelector('#reverbOut')
   const chips = [...document.querySelectorAll('#demoPresets .chip')]
 
+  const deck = document.querySelector('#deck3d')
+  const rec = document.querySelector('#demoRec')
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches
+
   let ctx, bus, wet, dry, timer, next, step
   let playing = false
+  let angle = 0
+  let speedNow = 0
+  let spinning = 0
+  let lastSpin = 0
+
+  function spin(now) {
+    const dt = Math.min(0.05, (now - lastSpin) / 1000)
+    lastSpin = now
+    speedNow += ((playing ? 110 * rate() : 0) - speedNow) * Math.min(1, dt * 3)
+    angle += speedNow * dt
+    rec.style.transform = `rotate(${angle}deg)`
+    spinning = playing || speedNow > 0.5 ? requestAnimationFrame(spin) : 0
+  }
+
+  function kick() {
+    if (calm || spinning) return
+    lastSpin = performance.now()
+    spinning = requestAnimationFrame(spin)
+  }
 
   function build() {
     ctx = new AudioContext()
@@ -82,6 +105,7 @@ export function initDemo() {
     playing = true
     schedule()
     sync()
+    kick()
   }
 
   function stop() {
@@ -98,6 +122,7 @@ export function initDemo() {
   function render() {
     speedOut.textContent = `${rate().toFixed(2)}x`
     reverbOut.textContent = `${reverb.value}%`
+    deck.style.setProperty('--v', reverb.value / 100)
     paint(speed)
     paint(reverb)
     chips.forEach(c => c.classList.toggle('on', +c.dataset.rate === +speed.value && +c.dataset.verb === +reverb.value))

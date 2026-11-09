@@ -8,8 +8,8 @@ ul{list-style:none}
 i{line-height:1}
 h1{font-family:var(--display);font-size:clamp(26px,3vw,34px);line-height:1.05;letter-spacing:-.035em;font-weight:800;overflow-wrap:anywhere}
 .intro{position:fixed;inset:0;z-index:50;background:var(--accent);display:grid;place-items:center;animation:curtain .7s var(--ease) 1.2s forwards}
-.intro img{width:min(46vw,250px);height:auto;opacity:0;transform:translateY(16px);animation:logoIn .7s var(--ease) .1s forwards}
-@keyframes logoIn{to{opacity:1;transform:none}}
+.intro img{width:min(46vw,250px);height:auto;opacity:0;transform:perspective(900px) rotateY(-75deg);animation:logoIn .9s var(--ease) .1s forwards}
+@keyframes logoIn{to{opacity:1;transform:perspective(900px) rotateY(0)}}
 @keyframes curtain{to{clip-path:inset(0 0 100% 0);visibility:hidden}}
-@keyframes pop{from{transform:translateY(16px);opacity:0}}
+@keyframes pop{from{transform:perspective(900px) rotateX(-10deg) translateY(16px);opacity:0}}
 [hidden]{display:none!important}

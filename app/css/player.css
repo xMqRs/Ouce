@@ -17,8 +17,13 @@
 .f-r{top:0;left:100%;width:var(--d);height:100%;background:#3a3a3a;transform-origin:left center;transform:rotateY(90deg)}
 .f-t{top:0;left:0;width:100%;height:var(--d);background:#505050;transform-origin:center top;transform:rotateX(-90deg)}
 .f-b{top:100%;left:0;width:100%;height:var(--d);background:#151515;transform-origin:center top;transform:translateZ(calc(var(--d) * -1)) rotateX(90deg)}
-.disc{position:absolute;inset:0 6%;transform:translateZ(calc(var(--d) * -.5));transition:transform .9s var(--ease)}
+.disc{position:absolute;inset:0 6%;transform-style:preserve-3d;transform:translateZ(calc(var(--d) * -.5));transition:transform .9s var(--ease)}
 .playing .disc{transform:translateZ(calc(var(--d) * -.5)) translateY(-15%)}
+.layer{position:absolute;inset:0;transform-style:preserve-3d}
+.l1{transform:translateZ(calc(var(--d) * -1.1)) scale(.97);opacity:calc(var(--rv,0) * .6)}
+.l2{transform:translateZ(calc(var(--d) * -2.2)) scale(.94);opacity:calc(var(--rv,0) * .38)}
+.l3{transform:translateZ(calc(var(--d) * -3.3)) scale(.91);opacity:calc(var(--rv,0) * .22)}
+.ring{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,#2a2a2a 0 2px,#131313 2px 4px);box-shadow:0 0 0 1px #3a3a3a}
 .vinyl{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,#1f1f1f 0 2px,#0d0d0d 2px 4px);box-shadow:0 0 0 1px #2e2e2e}
 .label{position:absolute;inset:34%;border-radius:50%;background:var(--cover,var(--accent));display:grid;place-items:center}
 .label::after{content:"";width:12%;aspect-ratio:1;border-radius:50%;background:var(--ink)}
@@ -32,8 +37,9 @@
 .ctrl button{width:44px;height:44px;border-radius:50%;font-size:21px;color:var(--mute);transition:color .2s,background .2s}
 .ctrl button:hover{color:#fff;background:#181818}
 .ctrl button.on{color:var(--accent-hi)}
-.ctrl .big{width:64px;height:64px;font-size:30px;background:var(--accent);color:var(--on-accent);margin:0 6px}
+.ctrl .big{width:64px;height:64px;font-size:30px;background:var(--accent);color:var(--on-accent);margin:0 6px;box-shadow:0 4px 0 var(--accent-lo);transition:background .2s,transform .08s,box-shadow .08s}
 .ctrl .big:hover{background:var(--accent-hi)}
+.ctrl .big:active{transform:translateY(4px);box-shadow:0 0 0 var(--accent-lo)}
 .fx{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:20px;display:grid;gap:16px}
 .fx h2{font-size:13px;font-weight:600;display:flex;gap:8px;align-items:center}
 .knob{display:grid;grid-template-columns:78px 1fr 52px;gap:12px;align-items:center;font-size:13px}

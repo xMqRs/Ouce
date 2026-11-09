@@ -1,4 +1,4 @@
-body.focus .rail,body.focus .mini,body.focus .quick,body.focus .foot,body.focus .side,body.focus .top .kicker,body.focus .disc{display:none}
+body.focus .rail,body.focus .mini,body.focus .quick,body.focus .foot,body.focus .side,body.focus .top .kicker{display:none}
 body.focus.fx-open .side{display:grid;position:fixed;left:50%;bottom:24px;translate:-50% 0;width:min(420px,92vw);z-index:8;animation:pop .3s var(--ease)}
 body.focus .side .fx{max-height:68vh;overflow:auto;box-shadow:0 20px 40px -20px #000}
 body.focus .view{padding-top:18px;padding-bottom:18px}

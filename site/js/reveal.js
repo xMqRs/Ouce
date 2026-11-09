@@ -1,15 +1,16 @@
 export function initReveal() {
-  const items = document.querySelectorAll('.reveal')
-  if (!('IntersectionObserver' in window)) {
-    items.forEach(el => el.classList.add('in'))
-    return
-  }
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const items = document.querySelectorAll('.defs div, .steps li, .list div, .faq details, .dev, .demo')
+  items.forEach((el, i) => {
+    el.classList.add('r3')
+    el.style.setProperty('--d', `${(i % 4) * 70}ms`)
+  })
   const io = new IntersectionObserver(entries => {
     for (const entry of entries) {
       if (!entry.isIntersecting) continue
       entry.target.classList.add('in')
       io.unobserve(entry.target)
     }
-  }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' })
+  }, { threshold: 0.12 })
   items.forEach(el => io.observe(el))
 }
