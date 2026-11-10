@@ -1,17 +1,17 @@
 <div align="center">
 
-<img src="site/assets/logo.png" alt="Ouce" width="120">
+<img src="site/assets/icon.png" alt="Ouce" width="112">
 
 # Ouce
 
 Player de música no navegador com slowed, reverb e speed up em tempo real. Cada pessoa guarda a própria biblioteca, monta playlists e pode publicar faixas para qualquer um ouvir.
 
-![Supabase](https://img.shields.io/badge/Supabase-5b1592?style=flat-square&labelColor=0B0B0B&logo=supabase&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-20%2B-5b1592?style=flat-square&labelColor=0B0B0B&logo=nodedotjs&logoColor=white)
-![Web Audio](https://img.shields.io/badge/Web_Audio-API-5b1592?style=flat-square&labelColor=0B0B0B)
-![ES Modules](https://img.shields.io/badge/JavaScript-ES_Modules-5b1592?style=flat-square&labelColor=0B0B0B&logo=javascript&logoColor=white)
-![Remix Icon](https://img.shields.io/badge/Remix_Icon-4.6-5b1592?style=flat-square&labelColor=0B0B0B)
-![Licença](https://img.shields.io/badge/licen%C3%A7a-PolyForm--Noncommercial--1.0.0-5b1592?style=flat-square&labelColor=0B0B0B)
+![Supabase](https://img.shields.io/badge/Supabase-4000ff?style=flat-square&labelColor=0B0B0B&logo=supabase&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-20%2B-4000ff?style=flat-square&labelColor=0B0B0B&logo=nodedotjs&logoColor=white)
+![Web Audio](https://img.shields.io/badge/Web_Audio-API-4000ff?style=flat-square&labelColor=0B0B0B)
+![ES Modules](https://img.shields.io/badge/JavaScript-ES_Modules-4000ff?style=flat-square&labelColor=0B0B0B&logo=javascript&logoColor=white)
+![Remix Icon](https://img.shields.io/badge/Remix_Icon-4.6-4000ff?style=flat-square&labelColor=0B0B0B)
+![Licença](https://img.shields.io/badge/licen%C3%A7a-PolyForm--Noncommercial--1.0.0-4000ff?style=flat-square&labelColor=0B0B0B)
 
 </div>
 
@@ -76,7 +76,7 @@ Para aparecer no Google, adicione `ouce.site` como propriedade de domínio no Se
 ## O que tem
 
 - Slowed, speed up, reverb e grave ajustáveis na hora, com presets
-- Vinil que gira junto com a velocidade e, atrás de tudo, um terreno de barras em camadas (3D) que reage ao áudio, com uma luz bem leve na cor do tema embaixo
+- Vinil que gira junto com a velocidade e, atrás de tudo, uma linha de barras que reage ao áudio, com uma luz bem leve na cor do tema embaixo
 - O reverb aparece como discos empilhados atrás do vinil, quanto mais reverb, mais ecos
 - Capa em 3D com espessura e vinil que sai por trás; o cartão inclina ao passar o mouse
 - Modo foco com cartão largo, detalhes na cor do tema e painel de efeitos flutuante
@@ -113,11 +113,11 @@ Slowed e speed up se anulam. O tom acompanha a velocidade (`preservesPitch` desl
 
 | Uso | Hex |
 |---|---|
-| Principal | ![#5b1592](https://img.shields.io/badge/-%235B1592-5b1592?style=flat-square) |
+| Principal | ![#4000ff](https://img.shields.io/badge/-%234000FF-4000ff?style=flat-square) |
 | Preto | ![#0B0B0B](https://img.shields.io/badge/-%230B0B0B-0B0B0B?style=flat-square) |
 | Cinza escuro | ![#0F0F0F](https://img.shields.io/badge/-%230F0F0F-0F0F0F?style=flat-square) |
 
-Os tons de destaque (`--accent-hi`, `--accent-lo`) são derivados da cor principal em `app/js/theme.js`. O logo "ouce" (`site/assets/logo.png` e `wordmark.png`) fica nos espaços grandes. O símbolo de música (`symbol.png`, `app/assets/logo.png`) fica nos pequenos, como o ícone da barra e da aba. A cor escolhida fica no `localStorage` (`ouce_pref_accent`); a que vem da capa vale só para a música atual e some ao recarregar.
+Os tons de destaque (`--accent-hi`, `--accent-lo`) são derivados da cor principal em `app/js/theme.js`. O logo "ouce" (`site/assets/wordmark.png` e `logo.png`) fica nos espaços grandes. O símbolo de música (`symbol.png`, `icon.png`) fica nos pequenos, como o ícone da barra e da aba. Todos os ícones são brancos sobre a cor principal. A cor escolhida fica no `localStorage` (`ouce_pref_accent`); a que vem da capa vale só para a música atual e some ao recarregar.
 
 ## Atalhos
 
