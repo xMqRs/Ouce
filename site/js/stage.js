@@ -37,9 +37,10 @@ export function initStage() {
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     const p = smooth(progress())
+    const t = now / 1000
     const want = {
-      ry: -26 - 154 * p + pointer.x * 18,
-      rx: 6 + 4 * p - pointer.y * 12,
+      ry: -26 - 154 * p + pointer.x * 18 + Math.sin(t * 0.6) * 3,
+      rx: 6 + 4 * p - pointer.y * 12 + Math.sin(t * 0.45) * 1.2,
       slide: 40 + 22 * smooth(clamp(p * 1.5))
     }
     for (const key of Object.keys(pose)) pose[key] += (want[key] - pose[key]) * 0.12

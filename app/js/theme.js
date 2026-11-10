@@ -2,7 +2,7 @@ import { $, clamp } from './lib/dom.js'
 import { store } from './lib/store.js'
 import { state } from './state.js'
 
-const DEFAULT_ACCENT = '#5b1592'
+const DEFAULT_ACCENT = '#4000ff'
 
 const hexToRgb = hex => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255] }
 
@@ -62,12 +62,19 @@ function pickAccent(img) {
   return rgbToHex(hslToRgb(hue, 0.08, clamp(l, 0.6, 0.78)))
 }
 
+function luminance([r, g, b]) {
+  const f = c => (c / 255 <= 0.03928 ? c / 255 / 12.92 : ((c / 255 + 0.055) / 1.055) ** 2.4)
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
+}
+
+const contrastOnInk = rgb => (luminance(rgb) + 0.05) / (luminance([11, 11, 11]) + 0.05)
+
 export const theme = {
   pref: normalizeHex(store.get('ouce_pref_accent') || '') || DEFAULT_ACCENT,
   locked: store.get('ouce_accent_lock') === '1',
   current: null,
-  rgb: [91, 21, 146],
-  hiRgb: [167, 86, 231]
+  rgb: [64, 0, 255],
+  hiRgb: [140, 102, 255]
 }
 
 const glyph = new Image()
@@ -100,7 +107,13 @@ export function applyAccent(hex) {
   const [r, g, b] = hexToRgb(hex)
   theme.rgb = [r, g, b]
   const [hue, s, l] = rgbToHsl(r, g, b)
-  const hiRgb = hslToRgb(hue, s, clamp(Math.max(l + 0.14, 0.62), 0, 0.78)).map(Math.round)
+  let hiL = Math.max(l + 0.14, 0.62)
+  let hiRgb = hslToRgb(hue, s, hiL)
+  while (contrastOnInk(hiRgb) < 4.8 && hiL < 0.8) {
+    hiL += 0.02
+    hiRgb = hslToRgb(hue, s, hiL)
+  }
+  hiRgb = hiRgb.map(Math.round)
   const hi = rgbToHex(hiRgb)
   theme.hiRgb = hiRgb
   const lo = rgbToHex(hslToRgb(hue, s, clamp(l - 0.12, 0.08, 1)))

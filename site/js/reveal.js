@@ -1,6 +1,6 @@
 export function initReveal() {
   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  const items = document.querySelectorAll('.defs div, .steps li, .list div, .faq details, .dev, .demo')
+  const items = document.querySelectorAll('.block h2, .defs div, .list div, .faq details, .dev, .demo')
   items.forEach((el, i) => {
     el.classList.add('r3')
     el.style.setProperty('--d', `${(i % 4) * 70}ms`)

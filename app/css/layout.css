@@ -4,15 +4,15 @@
 .rail .end{margin-top:auto;display:grid;gap:10px;justify-items:center}
 .rail nav{display:flex;flex-direction:column;gap:4px;margin-top:40px}
 .tab{width:64px;padding:12px 0 9px;border-radius:10px;display:grid;gap:5px;justify-items:center;color:var(--mute);font-size:11px;transition:color .2s,background .2s}
-.tab i{font-size:22px}
+.tab i{font-size:22px;color:var(--txt)}
 .tab:hover{color:var(--txt)}
 .tab.on{color:var(--on-accent);background:var(--accent)}
-.rail .add{width:42px;height:42px;border-radius:10px;border:1px solid var(--line);font-size:19px;color:var(--mute);transition:color .2s,border-color .2s}
-.rail .add:hover{border-color:#333;color:#fff}
+.rail .add{width:42px;height:42px;border-radius:10px;border:1px solid var(--line);font-size:19px;color:var(--txt);transition:border-color .2s}
+.rail .add:hover{border-color:#333}
 main{flex:1;position:relative;min-width:0;min-height:0;z-index:1}
 .view{position:absolute;inset:0;overflow:auto;overflow-x:hidden;overscroll-behavior:contain;display:none;padding:34px clamp(20px,4vw,56px)}
 .view.on{display:block;animation:lift .5s var(--ease)}
 @keyframes lift{from{opacity:0;transform:perspective(1000px) rotateX(7deg) translateY(22px)}}
-.me{width:42px;height:42px;border-radius:50%;background:#1a1a1a center/cover;border:1px solid var(--line);display:grid;place-items:center;font-size:19px;color:var(--mute);transition:border-color .2s}
+.me{width:42px;height:42px;border-radius:50%;background:#1a1a1a center/cover;border:1px solid var(--line);display:grid;place-items:center;font-size:19px;color:var(--txt);transition:border-color .2s}
 .me.in{border-color:var(--accent)}
 .me:hover{border-color:#333;color:#fff}

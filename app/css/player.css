@@ -4,7 +4,7 @@
 .card::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:#050505;transform:translateZ(-16px)}
 .top{display:flex;align-items:center;justify-content:space-between}
 .tbtns{display:flex;gap:4px}
-.round{width:36px;height:36px;border-radius:10px;font-size:18px;color:var(--mute);transition:color .2s,background .2s}
+.round{width:36px;height:36px;border-radius:10px;font-size:18px;color:var(--txt);transition:color .2s,background .2s}
 .round:hover{color:#fff;background:#181818}
 .sleeve{position:relative;width:clamp(150px,calc(100dvh - 470px),100%);justify-self:center;aspect-ratio:1;margin-top:clamp(40px,7dvh,66px);perspective:1000px}
 .tilt{--d:18px;position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(-16deg) rotateX(3deg)}
@@ -34,11 +34,11 @@
 .artist{color:var(--mute)}
 .seek{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;font-size:12px;color:var(--mute)}
 .ctrl{display:flex;align-items:center;justify-content:space-between}
-.ctrl button{width:44px;height:44px;border-radius:50%;font-size:21px;color:var(--mute);transition:color .2s,background .2s}
+.ctrl button{width:44px;height:44px;border-radius:50%;font-size:21px;color:var(--txt);transition:color .2s,background .2s}
 .ctrl button:hover{color:#fff;background:#181818}
 .ctrl button.on{color:var(--accent-hi)}
 .ctrl .big{width:64px;height:64px;font-size:30px;background:var(--accent);color:var(--on-accent);margin:0 6px;box-shadow:0 4px 0 var(--accent-lo);transition:background .2s,transform .08s,box-shadow .08s}
-.ctrl .big:hover{background:var(--accent-hi)}
+.ctrl .big:hover{background:color-mix(in srgb,var(--accent) 84%,#fff)}
 .ctrl .big:active{transform:translateY(4px);box-shadow:0 0 0 var(--accent-lo)}
 .fx{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:20px;display:grid;gap:16px}
 .fx h2{font-size:13px;font-weight:600;display:flex;gap:8px;align-items:center}

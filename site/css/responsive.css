@@ -20,4 +20,5 @@
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
+  .w>span{animation:none;transform:none}
 }

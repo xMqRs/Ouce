@@ -78,6 +78,7 @@
 </script>
 </head>
 <body>
+<div class="progress" id="progress"></div>
 
 <header class="nav">
   <div class="wrap nav-in">
@@ -102,7 +103,7 @@
         <h1>Slowed, reverb e speed up em qualquer música.</h1>
         <p class="lead">O Ouce é um player online. Abra uma música, ajuste velocidade, reverb e grave na hora e baixe a versão editada. Sem instalar nada.</p>
         <div class="cta">
-          <a class="btn" href="https://app.ouce.site">Abrir o player</a>
+          <a class="btn arrow" href="https://app.ouce.site">Abrir o player</a>
           <a class="link" href="#teste">Testar aqui mesmo</a>
         </div>
       </div>
@@ -128,6 +129,13 @@
     </div>
     </div>
   </section>
+
+  <div class="band" aria-hidden="true">
+    <div class="band-track" id="bandTrack">
+      <div class="band-set"><span class="fill">slowed</span><i></i><span>reverb</span><i></i><span class="fill">speed up</span><i></i><span>grave</span><i></i></div>
+      <div class="band-set"><span class="fill">slowed</span><i></i><span>reverb</span><i></i><span class="fill">speed up</span><i></i><span>grave</span><i></i></div>
+    </div>
+  </div>
 
   <section class="block" id="o-que-e">
     <div class="wrap split">
@@ -169,6 +177,7 @@
             </div>
             <label class="knob">Velocidade<input id="demoSpeed" type="range" min="50" max="180" value="100"><output id="speedOut">1.00x</output></label>
             <label class="knob">Reverb<input id="demoReverb" type="range" min="0" max="100" value="0"><output id="reverbOut">0%</output></label>
+            <canvas id="demoBars" height="56" aria-hidden="true"></canvas>
           </div>
         </div>
       </div>

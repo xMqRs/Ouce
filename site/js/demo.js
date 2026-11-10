@@ -21,16 +21,44 @@ export function initDemo() {
   const reverbOut = document.querySelector('#reverbOut')
   const chips = [...document.querySelectorAll('#demoPresets .chip')]
 
+  const barsCv = document.querySelector('#demoBars')
   const deck = document.querySelector('#deck3d')
   const rec = document.querySelector('#demoRec')
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  let ctx, bus, wet, dry, timer, next, step
+  let ctx, bus, wet, dry, analyser, freq, timer, next, step
   let playing = false
   let angle = 0
   let speedNow = 0
   let spinning = 0
   let lastSpin = 0
+
+  function drawBars() {
+    const dpr = devicePixelRatio || 1
+    const w = barsCv.clientWidth
+    const h = barsCv.clientHeight
+    if (barsCv.width !== Math.round(w * dpr)) {
+      barsCv.width = Math.round(w * dpr)
+      barsCv.height = Math.round(h * dpr)
+    }
+    const g = barsCv.getContext('2d')
+    g.setTransform(dpr, 0, 0, dpr, 0, 0)
+    g.clearRect(0, 0, w, h)
+    if (analyser && playing) analyser.getByteFrequencyData(freq)
+    const count = Math.max(12, Math.floor(w / 9))
+    const lit = getComputedStyle(document.documentElement).getPropertyValue('--accent-hi').trim()
+    g.fillStyle = lit
+    let top = 0
+    for (let i = 0; i < count; i++) {
+      const v = analyser && playing ? freq[Math.min(freq.length - 1, 1 + Math.floor((i / count) * 40))] / 255 : 0
+      top = Math.max(top, v)
+      const bh = 3 + v * (h - 6)
+      g.globalAlpha = 0.35 + v * 0.65
+      g.fillRect(i * (w / count), h - bh, Math.max(2, w / count - 3), bh)
+    }
+    g.globalAlpha = 1
+    return top
+  }
 
   function spin(now) {
     const dt = Math.min(0.05, (now - lastSpin) / 1000)
@@ -38,7 +66,8 @@ export function initDemo() {
     speedNow += ((playing ? 110 * rate() : 0) - speedNow) * Math.min(1, dt * 3)
     angle += speedNow * dt
     rec.style.transform = `rotate(${angle}deg)`
-    spinning = playing || speedNow > 0.5 ? requestAnimationFrame(spin) : 0
+    const level = drawBars()
+    spinning = playing || speedNow > 0.5 || level > 0.02 ? requestAnimationFrame(spin) : 0
   }
 
   function kick() {
@@ -53,12 +82,17 @@ export function initDemo() {
     dry = ctx.createGain()
     wet = ctx.createGain()
     const verb = ctx.createConvolver()
+    analyser = ctx.createAnalyser()
+    analyser.fftSize = 128
+    analyser.smoothingTimeConstant = 0.8
+    freq = new Uint8Array(analyser.frequencyBinCount)
     verb.buffer = makeImpulse(ctx)
     bus.connect(dry)
     bus.connect(verb)
     verb.connect(wet)
-    dry.connect(ctx.destination)
-    wet.connect(ctx.destination)
+    dry.connect(analyser)
+    wet.connect(analyser)
+    analyser.connect(ctx.destination)
     applyReverb()
   }
 
@@ -123,6 +157,7 @@ export function initDemo() {
     speedOut.textContent = `${rate().toFixed(2)}x`
     reverbOut.textContent = `${reverb.value}%`
     deck.style.setProperty('--v', reverb.value / 100)
+    if (!spinning) drawBars()
     paint(speed)
     paint(reverb)
     chips.forEach(c => c.classList.toggle('on', +c.dataset.rate === +speed.value && +c.dataset.verb === +reverb.value))

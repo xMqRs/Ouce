@@ -26,7 +26,7 @@ select{background:var(--panel);border:1px solid var(--line);color:var(--txt);bor
 .meta span{font-size:13px;color:var(--mute)}
 .dur{font:12px var(--sans);color:var(--mute)}
 .acts{display:flex;gap:2px}
-.acts button{width:36px;height:36px;border-radius:8px;font-size:18px;color:var(--mute);transition:all .2s}
+.acts button{width:36px;height:36px;border-radius:8px;font-size:18px;color:#d4d5db;transition:all .2s}
 .acts button:hover{background:#1b1b1b;color:#fff}
 .acts .del:hover{color:#ff5a6a}
 .acts .liked{color:var(--accent-hi)}
