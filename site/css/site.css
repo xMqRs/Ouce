@@ -129,12 +129,6 @@ footer{border-top:1px solid var(--line);padding:32px 0 40px;font-size:14px;color
 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.14em;margin-bottom:-.14em}
 .w>span{display:inline-block;transform:translateY(112%) rotateX(-35deg);transform-origin:0 100%;animation:wordIn .9s var(--ease) forwards;animation-delay:calc(var(--i) * 70ms + 120ms)}
 @keyframes wordIn{to{transform:none}}
-.band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:clamp(14px,2.2vw,26px) 0;user-select:none}
-.band-track{display:flex;width:max-content;will-change:transform}
-.band-set{display:flex;align-items:center;gap:clamp(24px,4vw,56px);padding-right:clamp(24px,4vw,56px)}
-.band span{font-family:var(--display);font-weight:800;font-size:clamp(48px,8vw,104px);letter-spacing:-.04em;line-height:1;color:transparent;-webkit-text-stroke:1px #555;white-space:nowrap}
-.band span.fill{color:var(--txt);-webkit-text-stroke:0}
-.band i{flex:none;width:14px;height:14px;border-radius:50%;background:var(--accent)}
 .steps{position:relative}
 .steps::before,.steps::after{content:"";position:absolute;left:21px;top:10px;bottom:10px;width:1px;background:var(--line)}
 .steps::after{background:var(--accent-hi);transform-origin:top;transform:scaleY(var(--p,0))}

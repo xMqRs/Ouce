@@ -30,29 +30,6 @@ export function initProgress() {
   update()
 }
 
-export function initBand() {
-  const track = document.querySelector('#bandTrack')
-  if (!track || calm) return
-  let x = 0
-  let vel = 0
-  let lastY = scrollY
-  let last = performance.now()
-  const frame = now => {
-    const dt = Math.min(0.05, (now - last) / 1000)
-    last = now
-    const fast = dt > 0 ? (scrollY - lastY) / dt : 0
-    lastY = scrollY
-    vel += (fast * 0.35 - vel) * 0.1
-    x -= (60 + vel) * dt
-    const width = track.firstElementChild.offsetWidth
-    if (x <= -width) x += width
-    if (x > 0) x -= width
-    track.style.transform = `translateX(${x.toFixed(1)}px) skewX(${clamp(-vel / 140, -9, 9).toFixed(2)}deg)`
-    requestAnimationFrame(frame)
-  }
-  requestAnimationFrame(frame)
-}
-
 export function initSteps() {
   const list = document.querySelector('.steps')
   if (!list) return
