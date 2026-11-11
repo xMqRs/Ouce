@@ -146,3 +146,28 @@ footer{border-top:1px solid var(--line);padding:32px 0 40px;font-size:14px;color
 .arrow::after{content:"\2192";margin-left:10px;display:inline-block;transition:transform .3s var(--ease)}
 .arrow:hover::after{transform:translateX(5px)}
 #demoBars{display:block;width:100%;height:56px}
+
+.splash{position:fixed;inset:0;z-index:60;background:var(--accent);display:grid;place-items:center;animation:curtain .8s var(--ease) 1.4s forwards}
+.splash img{width:min(46vw,250px);height:auto;opacity:0;transform:perspective(900px) rotateY(-75deg);animation:logoIn .9s var(--ease) .15s forwards}
+@keyframes logoIn{to{opacity:1;transform:perspective(900px) rotateY(0)}}
+@keyframes curtain{to{clip-path:inset(0 0 100% 0);visibility:hidden}}
+.seen .splash{display:none}
+.hero-grid{perspective:1400px}
+.hero-text{transform-style:preserve-3d;transform:rotateX(var(--hx,0deg)) rotateY(var(--hy,0deg))}
+.hero-text h1{transform-style:preserve-3d}
+.w{transform:translateZ(calc(var(--z,0) * 1px))}
+.hero-text .lead{transform:translateZ(18px)}
+.hero-text .cta{transform:translateZ(34px)}
+.links a{position:relative}
+.links a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--accent-hi);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.links a:hover::after{transform:scaleX(1)}
+.chip{margin-bottom:3px;background:#171717;box-shadow:0 3px 0 #050505,inset 0 1px 0 #2a2a2a;transition:color .2s,border-color .2s,transform .08s,box-shadow .08s}
+.chip:active{transform:translateY(3px);box-shadow:inset 0 1px 0 #2a2a2a}
+.chip.on{box-shadow:0 3px 0 var(--accent-lo),inset 0 1px 0 rgb(255 255 255/.25)}
+input[type=range]::-webkit-slider-thumb{background:#f4f4f6;box-shadow:0 2px 0 #8c8f99,0 3px 5px rgb(0 0 0/.5)}
+input[type=range]::-moz-range-thumb{background:#f4f4f6;box-shadow:0 2px 0 #8c8f99}
+.steps li{perspective:500px}
+.num.flip{animation:coin .9s var(--ease)}
+@keyframes coin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+.js .r3.done{transition:transform .25s ease-out,opacity .4s}
+.demo,.dev{will-change:transform}

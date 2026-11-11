@@ -13,6 +13,7 @@ export function splitWords(el) {
     const inner = document.createElement('span')
     inner.textContent = word
     inner.style.setProperty('--i', i)
+    outer.style.setProperty('--z', [34, 0, 52, 14, 40, 6, 26][i % 7])
     outer.append(inner)
     el.append(outer, ' ')
   })
@@ -60,7 +61,14 @@ export function initSteps() {
     const r = list.getBoundingClientRect()
     const line = innerHeight * 0.62
     list.style.setProperty('--p', clamp((line - r.top) / r.height).toFixed(3))
-    items.forEach(li => li.classList.toggle('on', li.getBoundingClientRect().top < line))
+    items.forEach(li => {
+      const on = li.getBoundingClientRect().top < line
+      li.classList.toggle('on', on)
+      if (on && !li.dataset.flipped && !calm) {
+        li.dataset.flipped = '1'
+        li.querySelector('.num').classList.add('flip')
+      }
+    })
   }
   addEventListener('scroll', update, { passive: true })
   addEventListener('resize', update)

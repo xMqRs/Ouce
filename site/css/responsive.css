@@ -20,5 +20,7 @@
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
+  .splash{display:none}
+  .num.flip{animation:none}
   .w>span{animation:none;transform:none}
 }

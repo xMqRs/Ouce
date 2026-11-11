@@ -8,28 +8,28 @@
 <link rel="canonical" href="https://ouce.site/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="xMqRs">
-<meta name="theme-color" content="#0B0B0B">
+<meta name="theme-color" content="#4000ff">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ouce">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://ouce.site/">
 <meta property="og:title" content="Ouce: player online de slowed + reverb e speed up">
 <meta property="og:description" content="Deixe qualquer música mais lenta, com reverb ou mais rápida. Direto no navegador, sem instalar nada.">
-<meta property="og:image" content="https://ouce.site/assets/og.png">
+<meta property="og:image" content="https://ouce.site/assets/og.png?v=4">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Ouce, player online de slowed, reverb e speed up">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ouce: player online de slowed + reverb e speed up">
 <meta name="twitter:description" content="Deixe qualquer música mais lenta, com reverb ou mais rápida. Direto no navegador, sem instalar nada.">
-<meta name="twitter:image" content="https://ouce.site/assets/og.png">
-<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
-<link rel="icon" href="assets/favicon-192.png" sizes="192x192" type="image/png">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="twitter:image" content="https://ouce.site/assets/og.png?v=4">
+<link rel="icon" href="assets/favicon-48.png?v=4" sizes="48x48" type="image/png">
+<link rel="icon" href="assets/favicon-192.png?v=4" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800&family=Inter:wght@400;500;600&display=swap">
-<script>document.documentElement.classList.add("js")</script>
+<script>document.documentElement.classList.add("js");try{if(sessionStorage.getItem("ouce_splash"))document.documentElement.classList.add("seen");else sessionStorage.setItem("ouce_splash","1")}catch(e){}</script>
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/responsive.css">
@@ -54,7 +54,7 @@
       "operatingSystem": "Qualquer sistema com navegador moderno",
       "browserRequirements": "Requer JavaScript e Web Audio API",
       "inLanguage": "pt-BR",
-      "image": "https://ouce.site/assets/og.png",
+      "image": "https://ouce.site/assets/og.png?v=4",
       "author": { "@id": "https://github.com/xMqRs" },
       "publisher": { "@id": "https://ouce.site/#org" }
     },
@@ -63,7 +63,7 @@
       "@id": "https://ouce.site/#org",
       "name": "Ouce",
       "url": "https://ouce.site/",
-      "logo": "https://ouce.site/assets/logo.png",
+      "logo": "https://ouce.site/assets/logo.png?v=4",
       "sameAs": ["https://github.com/Ouce-Project/Ouce"]
     },
     {
@@ -78,11 +78,12 @@
 </script>
 </head>
 <body>
+<div class="splash" aria-hidden="true"><img src="assets/wordmark.png?v=4" alt="" width="441" height="453"></div>
 <div class="progress" id="progress"></div>
 
 <header class="nav">
   <div class="wrap nav-in">
-    <a class="brand" href="/" aria-label="Ouce, página inicial"><img src="assets/symbol.png" alt="Ouce" width="36" height="36"></a>
+    <a class="brand" href="/" aria-label="Ouce, página inicial"><img src="assets/symbol.png?v=4" alt="Ouce" width="36" height="36"></a>
     <nav class="links" aria-label="Principal">
       <a href="#o-que-e">O que é</a>
       <a href="#teste">Teste</a>
@@ -99,7 +100,7 @@
   <section class="story" id="story">
     <div class="story-in">
     <div class="wrap hero-grid">
-      <div>
+      <div class="hero-text">
         <h1>Slowed, reverb e speed up em qualquer música.</h1>
         <p class="lead">O Ouce é um player online. Abra uma música, ajuste velocidade, reverb e grave na hora e baixe a versão editada. Sem instalar nada.</p>
         <div class="cta">
@@ -112,7 +113,7 @@
         <div class="rig">
           <div class="box">
             <div class="record"><div class="grooves"></div></div>
-            <div class="front"><img src="assets/logo.png" alt="" width="320" height="320"></div>
+            <div class="front"><img src="assets/logo.png?v=4" alt="" width="320" height="320"></div>
             <div class="face f-back">
               <b>ouce</b>
               <ul>
@@ -268,7 +269,7 @@
     <div class="wrap split">
       <h2>Desenvolvedores</h2>
       <div class="dev">
-        <img src="assets/logo.png" alt="Logo do Ouce Project" width="64" height="64" loading="lazy">
+        <img src="assets/logo.png?v=4" alt="Logo do Ouce Project" width="64" height="64" loading="lazy">
         <div>
           <h3>xMqRs</h3>
           <p>Criação e desenvolvimento, Ouce Project</p>
@@ -284,7 +285,7 @@
 
 <footer>
   <div class="wrap foot">
-    <a class="foot-logo" href="/" aria-label="Ouce, página inicial"><img src="assets/wordmark.png" alt="Ouce" width="43" height="44"></a>
+    <a class="foot-logo" href="/" aria-label="Ouce, página inicial"><img src="assets/wordmark.png?v=4" alt="Ouce" width="43" height="44"></a>
     <span>© 2026 Ouce</span>
     <span>Código sob <a class="link" href="https://polyformproject.org/licenses/noncommercial/1.0.0/" rel="noopener">PolyForm Noncommercial 1.0.0</a></span>
     <a class="link" href="https://github.com/Ouce-Project/Ouce" rel="noopener">GitHub</a>

@@ -78,7 +78,7 @@ export const theme = {
 }
 
 const glyph = new Image()
-glyph.src = 'assets/music-fill.png'
+glyph.src = 'assets/music-fill.png?v=4'
 
 function paintFavicon(hex, ink) {
   const draw = () => {

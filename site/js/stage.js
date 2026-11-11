@@ -27,6 +27,9 @@ export function initStage() {
     return clamp(scrollY / (innerHeight * 0.8))
   }
 
+  const heroText = document.querySelector('.hero-text')
+  const text = { hx: 0, hy: 0 }
+
   const apply = () => {
     stage.style.setProperty('--ry', `${pose.ry.toFixed(2)}deg`)
     stage.style.setProperty('--rx', `${pose.rx.toFixed(2)}deg`)
@@ -44,6 +47,12 @@ export function initStage() {
       slide: 40 + 22 * smooth(clamp(p * 1.5))
     }
     for (const key of Object.keys(pose)) pose[key] += (want[key] - pose[key]) * 0.12
+    if (heroText) {
+      text.hx += (-pointer.y * 5 - text.hx) * 0.1
+      text.hy += (pointer.x * 7 - text.hy) * 0.1
+      heroText.style.setProperty('--hx', `${text.hx.toFixed(2)}deg`)
+      heroText.style.setProperty('--hy', `${text.hy.toFixed(2)}deg`)
+    }
     apply()
     angle += dt * (30 + 240 * p)
     grooves.style.transform = `rotate(${angle}deg)`

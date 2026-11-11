@@ -8,6 +8,8 @@
 select{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:0 14px;font:inherit;outline:0}
 .row{display:grid;grid-template-columns:52px 1fr auto auto;gap:16px;align-items:center;padding:10px 12px;border-radius:10px;border:1px solid transparent;transition:background .2s,border-color .2s}
 .row:hover{background:var(--panel);border-color:var(--line)}
+.anim .row{animation:rowIn .6s var(--ease) both;animation-delay:calc(var(--i) * 40ms);transform-origin:50% 0}
+@keyframes rowIn{from{opacity:0;transform:perspective(800px) rotateX(-14deg) translateY(16px)}}
 .row:hover .cv{transform:rotateY(-26deg)}
 .row.now{border-color:var(--accent);background:rgb(var(--accent-rgb)/.08)}
 .row{perspective:700px}

@@ -40,6 +40,12 @@ export function syncQuick() {
   $('#qPub span').textContent = own && own.published ? 'Pública' : 'Publicar'
 }
 
+function replay(el, cls) {
+  el.classList.remove(cls)
+  void el.offsetWidth
+  el.classList.add(cls)
+}
+
 function syncKicker() {
   $('#kicker').textContent = !state.now.blob ? 'Nada tocando' : audio.paused ? 'Pausado' : 'Tocando agora'
 }
@@ -49,6 +55,10 @@ export function updateNow() {
   document.body.classList.toggle('has-track', !!n.blob)
   updateLabel()
   $('#title').textContent = n.blob ? n.title : 'Solte um som'
+  if (n.blob) {
+    replay($('.sleeve'), 'deal')
+    replay($('#title'), 'flip')
+  }
   $('#artist').textContent = n.blob ? n.artist || 'Artista desconhecido' : 'Adicione músicas para começar.'
   $('#cur').textContent = '0:00'
   $('#dur').textContent = '0:00'

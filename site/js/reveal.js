@@ -12,5 +12,8 @@ export function initReveal() {
       io.unobserve(entry.target)
     }
   }, { threshold: 0.12 })
-  items.forEach(el => io.observe(el))
+  items.forEach(el => {
+    el.addEventListener('transitionend', e => { if (e.propertyName === 'opacity' && el.classList.contains('in')) el.classList.add('done') })
+    io.observe(el)
+  })
 }
