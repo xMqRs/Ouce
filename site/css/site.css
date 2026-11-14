@@ -30,7 +30,7 @@ h3{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02
 .cta{display:flex;flex-wrap:wrap;align-items:center;gap:26px;margin-top:36px}
 
 .story{position:relative;height:230vh}
-.story-in{position:sticky;top:64px;min-height:calc(100dvh - 64px);display:flex;align-items:center;padding:24px 0 clamp(32px,6vw,72px)}
+.story-in{position:sticky;top:64px;height:calc(100dvh - 64px);display:flex;align-items:center}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(32px,6vw,80px);align-items:center}
 
 .stage{position:relative;width:min(100%,470px);aspect-ratio:1;justify-self:center;perspective:1500px}
@@ -126,9 +126,15 @@ footer{border-top:1px solid var(--line);padding:32px 0 40px;font-size:14px;color
 .js .r3.in{opacity:1;transform:none}
 
 .progress{position:fixed;left:0;top:0;width:100%;height:2px;background:var(--accent-hi);transform-origin:left;transform:scaleX(0);z-index:30}
-.w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .08em .14em;margin:0 -.08em -.14em}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.14em;margin-bottom:-.14em}
 .w>span{display:inline-block;transform:translateY(112%) rotateX(-35deg);transform-origin:0 100%;animation:wordIn .9s var(--ease) forwards;animation-delay:calc(var(--i) * 70ms + 120ms)}
 @keyframes wordIn{to{transform:none}}
+.band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:clamp(14px,2.2vw,26px) 0;user-select:none}
+.band-track{display:flex;width:max-content;will-change:transform}
+.band-set{display:flex;align-items:center;gap:clamp(24px,4vw,56px);padding-right:clamp(24px,4vw,56px)}
+.band span{font-family:var(--display);font-weight:800;font-size:clamp(48px,8vw,104px);letter-spacing:-.04em;line-height:1;color:transparent;-webkit-text-stroke:1px #555;white-space:nowrap}
+.band span.fill{color:var(--txt);-webkit-text-stroke:0}
+.band i{flex:none;width:14px;height:14px;border-radius:50%;background:var(--accent)}
 .steps{position:relative}
 .steps::before,.steps::after{content:"";position:absolute;left:21px;top:10px;bottom:10px;width:1px;background:var(--line)}
 .steps::after{background:var(--accent-hi);transform-origin:top;transform:scaleY(var(--p,0))}
@@ -147,7 +153,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 40px;font-size:14px;color
 @keyframes curtain{to{clip-path:inset(0 0 100% 0);visibility:hidden}}
 .seen .splash{display:none}
 .hero-grid{perspective:1400px}
-.hero-text{transform:rotateX(var(--hx,0deg)) rotateY(var(--hy,0deg))}
+.hero-text{transform-style:preserve-3d;transform:rotateX(var(--hx,0deg)) rotateY(var(--hy,0deg))}
+.hero-text h1{transform-style:preserve-3d}
+.w{transform:translateZ(calc(var(--z,0) * 1px))}
+.hero-text .lead{transform:translateZ(18px)}
+.hero-text .cta{transform:translateZ(34px)}
 .links a{position:relative}
 .links a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--accent-hi);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
 .links a:hover::after{transform:scaleX(1)}

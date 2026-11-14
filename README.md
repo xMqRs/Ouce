@@ -85,6 +85,7 @@ Para aparecer no Google, adicione `ouce.site` como propriedade de domínio no Se
 - Editor de corte com forma de onda: mantém ou remove um trecho
 - A cor do site acompanha a capa da música, ou fica na cor que você escolher em hex
 - Histórico, playlists e biblioteca pública com login
+- Busca na biblioteca com sugestões enquanto digita (ignora acentos, aceita pequenos erros de digitação, destaca o trecho encontrado) e filtros por Slowed, Speed up, Reverb e Grave
 - Upload por clique ou arrastando arquivos, com capa lida direto do MP3
 - Layout para desktop e celular
 
@@ -145,6 +146,7 @@ Ouce/
 │     ├─ player.js         reprodução e fila
 │     ├─ effects.js        sliders e presets
 │     ├─ library.js        listas e abas
+│     ├─ suggest.js        busca com sugestões e filtros
 │     ├─ tracks.js         envio, edição, publicação, exclusão
 │     ├─ download.js       exporta a música editada em WAV
 │     ├─ editor.js         editor de corte com forma de onda
@@ -156,7 +158,7 @@ Ouce/
 │     ├─ visuals.js        equalizador de fundo e animações
 │     ├─ stats.js          contadores do site
 │     ├─ ui.js             avisos e utilitários de interface
-│     └─ lib/              funções puras (dom, áudio, imagem, ID3, efeitos)
+│     └─ lib/              funções puras (dom, áudio, busca, imagem, ID3, efeitos)
 ├─ site/                   página de info (ouce.site)
 │  ├─ index.html           conteúdo, SEO e dados estruturados
 │  ├─ robots.txt, sitemap.xml, vercel.json

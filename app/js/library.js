@@ -1,23 +1,29 @@
 import { openAuth } from './auth.js'
 import { $, $$, esc, sid } from './lib/dom.js'
+import { highlight, passFilters, score, tokensOf } from './lib/search.js'
 import { coverOf, tagOf } from './lib/track.js'
 import { openRow, syncQuick } from './player.js'
 import { createPlaylist, deletePlaylist, openPicker, setInPlaylist } from './playlists.js'
 import { audio, byId, mine, state } from './state.js'
+import { clearSearch, renderFilters } from './suggest.js'
 import { sb } from './supabase.js'
 import { openEdit, removeRow, setPublished } from './tracks.js'
 import { toast } from './ui.js'
 
+export const sourceRows = () => (state.tab === 'library' ? state.pub : state.rows)
+
 export function visibleRows() {
-  const q = state.query.toLowerCase()
+  const tokens = tokensOf(state.query)
   const sorters = {
     recent: (a, b) => new Date(b.created_at) - new Date(a.created_at),
     title: (a, b) => a.title.localeCompare(b.title),
     artist: (a, b) => (a.artist || '').localeCompare(b.artist || '')
   }
-  return (state.tab === 'library' ? state.pub : state.rows)
-    .filter(r => `${r.title} ${r.artist || ''}`.toLowerCase().includes(q))
-    .sort(sorters[state.sort])
+  const found = sourceRows()
+    .map(r => [r, score(r, tokens)])
+    .filter(([r, s]) => s > 0 && passFilters(r, state.filters))
+  found.sort((a, b) => (tokens.length ? b[1] - a[1] : 0) || sorters[state.sort](a[0], b[0]))
+  return found.map(([r]) => r)
 }
 
 function trackRow(r, i) {
@@ -30,7 +36,7 @@ function trackRow(r, i) {
   return `
     <li class="row${now ? ' now' : ''}${now && !audio.paused ? ' live' : ''}" data-id="${esc(r.id)}" style="--i:${Math.min(i, 14)}">
       <button class="cv" data-act="play" style="background:${esc(bg)}"><i class="ri-play-fill"></i><b class="bars"><u></u><u></u><u></u></b></button>
-      <div class="meta"><strong>${esc(r.title)}</strong><span>${esc(r.artist || 'Artista desconhecido')}${tag ? ` · <em class="tag">${tag}</em>` : ''}${badge}</span></div>
+      <div class="meta"><strong>${highlight(r.title, state.query)}</strong><span>${highlight(r.artist || 'Artista desconhecido', state.query)}${tag ? ` · <em class="tag">${tag}</em>` : ''}${badge}</span></div>
       <span class="dur">${date}</span>
       <div class="acts">
         ${own ? `<button data-act="pub" title="${r.published ? 'Tirar da biblioteca pública' : 'Publicar na biblioteca pública'}" class="${r.published ? 'liked' : ''}"><i class="${r.published ? 'ri-global-fill' : 'ri-global-line'}"></i></button>` : ''}
@@ -62,6 +68,7 @@ export function renderLibrary(anim = false) {
   const list = $('#list')
   list.classList.toggle('anim', anim)
   $('#tools').hidden = state.tab === 'playlists'
+  renderFilters()
   const loggedOnly = state.tab !== 'library'
   $('#stats').textContent = state.tab === 'library'
     ? `${state.pub.length} músicas públicas`
@@ -79,7 +86,7 @@ export function renderLibrary(anim = false) {
   if (!rows.length) {
     const source = state.tab === 'library' ? state.pub : state.rows
     list.innerHTML = source.length
-      ? `<div class="empty"><i class="ri-search-line" style="font-size:36px"></i><p>Nada encontrado.</p></div>`
+      ? `<div class="empty"><i class="ri-search-line" style="font-size:36px"></i><p>Nada encontrado${state.query ? ` para "${esc(state.query)}"` : ''}.</p>${state.query || state.filters.size ? '<button class="btn flat" data-clear>Limpar busca e filtros</button>' : ''}</div>`
       : state.tab === 'library'
         ? `<div class="empty"><div class="rings"><i class="ri-global-line"></i></div><p>Ninguém publicou nada ainda.<br>Publique uma música sua com o ícone de globo.</p></div>`
       : `<div class="empty"><div class="rings"><i class="ri-music-2-line"></i></div><p>Nada por aqui ainda.</p><button class="btn" data-pick><i class="ri-upload-2-line"></i>Escolher músicas</button></div>`
@@ -138,7 +145,6 @@ export function bindLibrary() {
     const chip = e.target.closest('[data-tab]')
     if (chip) setTab(chip.dataset.tab)
   })
-  $('#q').addEventListener('input', e => { state.query = e.target.value; renderLibrary() })
   $('#sort').addEventListener('change', e => { state.sort = e.target.value; renderLibrary(true) })
   $('#list').addEventListener('click', onListClick)
   $('#list').addEventListener('submit', async e => {
@@ -152,6 +158,7 @@ export function bindLibrary() {
 function onListClick(e) {
   if (e.target.closest('[data-auth]')) return openAuth('login')
   if (e.target.closest('[data-pick]')) return $('#file').click()
+  if (e.target.closest('[data-clear]')) return clearSearch()
   const btn = e.target.closest('[data-act]')
   if (!btn) return
   const act = btn.dataset.act

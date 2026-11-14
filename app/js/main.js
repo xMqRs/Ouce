@@ -6,6 +6,7 @@ import { bindLibrary, loadPublic, renderLibrary } from './library.js'
 import { bindPlayer } from './player.js'
 import { bindPlaylists } from './playlists.js'
 import { loadStats } from './stats.js'
+import { bindSearch } from './suggest.js'
 import { applyAccent, bindSettings, theme } from './theme.js'
 import { bindTracks } from './tracks.js'
 import { bindDialogs } from './ui.js'
@@ -24,6 +25,7 @@ function start() {
   bindPlayer()
   bindEffects()
   bindLibrary()
+  bindSearch()
   bindTracks()
   bindEditor()
   bindPlaylists()

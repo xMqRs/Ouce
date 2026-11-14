@@ -8,6 +8,7 @@ export const state = {
   open: new Set(),
   tab: 'library',
   query: '',
+  filters: new Set(),
   sort: 'recent',
   queue: [],
   shuffle: false,

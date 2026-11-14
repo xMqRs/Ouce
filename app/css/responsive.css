@@ -24,7 +24,7 @@
   .dur{display:none}
   .acts button{width:32px;height:32px;font-size:17px}
   .head h1{font-size:44px}
-  .tools .search{min-width:100%}
+  .searchbox{min-width:100%}
   .knob{grid-template-columns:70px 1fr 46px}
   body.focus .card{grid-template-columns:minmax(0,1fr);grid-template-areas:"art" "info" "seek" "ctrl"}
   body.focus .sleeve{justify-self:center;width:clamp(120px,min(68vw,36dvh),300px);margin-top:50px}
