@@ -7,7 +7,7 @@ import { isPreset, presetFile, presetUrl } from './autocover.js'
 import { coverMime, coverThumb, embeddedCover, squareJpeg, toDataURL } from './lib/image.js'
 import { coverOf } from './lib/track.js'
 import { markNow, renderLibrary, visibleRows } from './library.js'
-import { audio, byId, cache, mine, state } from './state.js'
+import { audio, byId, cache, canEdit, mine, state } from './state.js'
 import { sb } from './supabase.js'
 import { accentFromCover, applyAccent, theme } from './theme.js'
 import { toast } from './ui.js'
@@ -52,7 +52,7 @@ export function updateLabel() {
 
 export function syncQuick() {
   const n = state.now
-  const own = n.id !== null ? mine(n.id) : null
+  const own = n.id !== null ? canEdit(n.id) : null
   $('#quick').hidden = !n.blob
   $('#dlBtn').hidden = !n.blob
   $('#qPl').hidden = !(state.user && n.id !== null && byId(n.id))

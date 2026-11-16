@@ -5,7 +5,7 @@ import { isPreset, pickAutoCover, presetPath, presetThumb } from './autocover.js
 import { coverExt, coverThumb, embeddedCover, prepareCover, toDataURL } from './lib/image.js'
 import { markNow, renderLibrary } from './library.js'
 import { play, setNow, syncQuick, updateLabel, updateNow } from './player.js'
-import { audio, cache, mine, state } from './state.js'
+import { audio, cache, canEdit, mine, state } from './state.js'
 import { sb } from './supabase.js'
 import { accentFromCover, applyAccent, theme } from './theme.js'
 import { toast, undoable } from './ui.js'
@@ -28,7 +28,7 @@ async function uploadFile(file) {
 }
 
 async function attachCover(row, blob) {
-  const path = `${state.user.id}/cover-${row.id}.${coverExt(blob)}`
+  const path = `${row.user_id || state.user.id}/cover-${row.id}.${coverExt(blob)}`
   const stale = [path, row.cover_path].filter((p, i, all) => p && !isPreset(p) && all.indexOf(p) === i)
   await sb.storage.from(config.bucket).remove(stale)
   const up = await sb.storage.from(config.bucket).upload(path, blob, { contentType: blob.type || 'image/jpeg' })
@@ -145,7 +145,7 @@ export async function saveNow() {
 }
 
 export async function setPublished(id, on) {
-  const row = mine(id)
+  const row = canEdit(id)
   if (!row) return
   const fields = { published: on }
   if (on && sid(row.id) === sid(state.now.id)) {
@@ -165,8 +165,9 @@ export async function setPublished(id, on) {
 }
 
 export function removeRow(id) {
-  const row = mine(id)
+  const row = canEdit(id)
   if (!row) return
+  const wasOwn = state.rows.includes(row)
   state.rows = state.rows.filter(r => r !== row)
   state.pub = state.pub.filter(r => r !== row)
   if (sid(state.now.id) === sid(row.id)) {
@@ -181,7 +182,7 @@ export function removeRow(id) {
     const { error } = await sb.from('history').delete().eq('id', row.id)
     if (error) {
       console.error(error)
-      state.rows.push(row)
+      if (wasOwn) state.rows.push(row)
       if (row.published) state.pub.push(row)
       renderLibrary()
       return toast('Sem permissão para excluir. Falta a policy de delete no Supabase.')
@@ -194,11 +195,11 @@ export function removeRow(id) {
       sb.from('playlists').update({ track_ids: pl.track_ids }).eq('id', pl.id)
     }
     if (state.tab === 'playlists') renderLibrary()
-  }, () => { state.rows.push(row); if (row.published) state.pub.push(row); renderLibrary() })
+  }, () => { if (wasOwn) state.rows.push(row); if (row.published) state.pub.push(row); renderLibrary() })
 }
 
 export function openEdit(id) {
-  const row = mine(id)
+  const row = canEdit(id)
   if (!row) return
   state.editing = row.id
   const form = $('#editForm')
@@ -208,7 +209,7 @@ export function openEdit(id) {
 }
 
 async function saveEdit() {
-  const row = mine(state.editing)
+  const row = canEdit(state.editing)
   const form = $('#editForm')
   const fields = { title: form.title.value.trim() || row.title, artist: form.artist.value.trim() }
   const { error } = await sb.from('history').update(fields).eq('id', row.id)
@@ -228,7 +229,7 @@ export function bindTracks() {
   $('#videoBtn').addEventListener('click', () => $('#videoFile').click())
   $('#videoFile').addEventListener('change', e => { addFiles(e.target.files); e.target.value = '' })
   $('#editForm').addEventListener('submit', e => { if (e.submitter && e.submitter.value === 'ok') saveEdit() })
-  $('#qPub').addEventListener('click', () => { const r = mine(state.now.id); if (r) setPublished(r.id, !r.published) })
+  $('#qPub').addEventListener('click', () => { const r = canEdit(state.now.id); if (r) setPublished(r.id, !r.published) })
   $('#dlBtn').addEventListener('click', downloadEdited)
   $('#qCover').addEventListener('click', () => $('#coverFile').click())
   $('#coverFile').addEventListener('change', onCoverPicked)
@@ -259,7 +260,7 @@ async function onCoverPicked(e) {
   }
   updateLabel()
   accentFromCover(state.now.cover)
-  const row = mine(state.now.id)
+  const row = canEdit(state.now.id)
   if (!row) return toast('Capa aplicada.')
   try {
     await attachCover(row, state.now.coverBlob)

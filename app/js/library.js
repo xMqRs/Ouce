@@ -4,7 +4,7 @@ import { highlight, passFilters, score, tokensOf } from './lib/search.js'
 import { coverOf, tagOf } from './lib/track.js'
 import { openRow, syncQuick } from './player.js'
 import { createPlaylist, deletePlaylist, openPicker, setInPlaylist } from './playlists.js'
-import { audio, byId, mine, state } from './state.js'
+import { audio, byId, canEdit, mine, state } from './state.js'
 import { clearSearch, renderFilters } from './suggest.js'
 import { sb } from './supabase.js'
 import { openEdit, removeRow, setPublished } from './tracks.js'
@@ -32,6 +32,7 @@ function trackRow(r, i) {
   const date = new Date(r.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
   const now = sid(r.id) === sid(state.now.id)
   const own = !!mine(r.id)
+  const edit = !!canEdit(r.id)
   const badge = own && r.published && state.tab === 'history' ? ' · <em class="tag">pública</em>' : own && state.tab === 'library' ? ' · <em class="tag">sua</em>' : ''
   return `
     <li class="row${now ? ' now' : ''}${now && !audio.paused ? ' live' : ''}" data-id="${esc(r.id)}" style="--i:${Math.min(i, 14)}">
@@ -39,9 +40,9 @@ function trackRow(r, i) {
       <div class="meta"><strong>${highlight(r.title, state.query)}</strong><span>${highlight(r.artist || 'Artista desconhecido', state.query)}${tag ? ` · <em class="tag">${tag}</em>` : ''}${badge}</span></div>
       <span class="dur">${date}</span>
       <div class="acts">
-        ${own ? `<button data-act="pub" title="${r.published ? 'Tirar da biblioteca pública' : 'Publicar na biblioteca pública'}" class="${r.published ? 'liked' : ''}"><i class="${r.published ? 'ri-global-fill' : 'ri-global-line'}"></i></button>` : ''}
+        ${edit ? `<button data-act="pub" title="${r.published ? 'Tirar da biblioteca pública' : 'Publicar na biblioteca pública'}" class="${r.published ? 'liked' : ''}"><i class="${r.published ? 'ri-global-fill' : 'ri-global-line'}"></i></button>` : ''}
         ${state.user ? '<button data-act="pick" title="Playlist"><i class="ri-play-list-add-line"></i></button>' : ''}
-        ${own ? '<button data-act="edit" title="Editar"><i class="ri-pencil-line"></i></button><button data-act="del" class="del" title="Excluir"><i class="ri-delete-bin-6-line"></i></button>' : ''}
+        ${edit ? '<button data-act="edit" title="Editar"><i class="ri-pencil-line"></i></button><button data-act="del" class="del" title="Excluir"><i class="ri-delete-bin-6-line"></i></button>' : ''}
       </div>
     </li>`
 }
@@ -168,7 +169,7 @@ function onListClick(e) {
   const playlistIds = () => (pl.track_ids || []).filter(x => byId(x))
 
   if (act === 'play') openRow(id, visibleRows().map(r => r.id))
-  if (act === 'pub') { const r = mine(id); if (r) setPublished(r.id, !r.published) }
+  if (act === 'pub') { const r = canEdit(id); if (r) setPublished(r.id, !r.published) }
   if (act === 'pick') openPicker(id)
   if (act === 'edit') openEdit(id)
   if (act === 'del') removeRow(id)

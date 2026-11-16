@@ -24,6 +24,14 @@ export const cache = new Map()
 
 export const mine = id => state.rows.find(r => sid(r.id) === sid(id))
 
+export const ADMIN_EMAIL = 'contato.xmqr@gmail.com'
+
+export const isAdmin = () => !!state.user && String(state.user.email || '').toLowerCase() === ADMIN_EMAIL
+
+// Músicas que o usuário pode editar: as dele e, para a conta admin, as da biblioteca pública.
+// A permissão de verdade fica nas policies do Supabase (supabase/admin.sql).
+export const canEdit = id => mine(id) || (isAdmin() ? state.pub.find(r => sid(r.id) === sid(id)) : undefined)
+
 export const byId = id => mine(id) || state.pub.find(r => sid(r.id) === sid(id))
 
 export const audio = new Audio()
