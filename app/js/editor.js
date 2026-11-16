@@ -129,7 +129,7 @@ async function apply() {
   const base = `${n.artist ? `${n.artist} - ` : ''}${n.title} (recorte)`.replace(/[\\/:*?"<>|]+/g, '')
   const file = new File([toWav(out)], `${base}.wav`, { type: 'audio/wav' })
   $('#editorDlg').close()
-  await addFiles([file], { cover: n.cover, coverBlob: n.coverBlob })
+  await addFiles([file], { cover: n.cover, coverBlob: n.coverBlob, coverPreset: n.coverPreset })
 }
 
 export async function openEditor() {

@@ -3,6 +3,7 @@ import { setFx } from './effects.js'
 import { applyFx, resumeAudio } from './engine.js'
 import { $, fmt, paint, sid } from './lib/dom.js'
 import { presets } from './lib/fx.js'
+import { isPreset, presetFile, presetUrl } from './autocover.js'
 import { coverMime, coverThumb, embeddedCover, squareJpeg, toDataURL } from './lib/image.js'
 import { coverOf } from './lib/track.js'
 import { markNow, renderLibrary, visibleRows } from './library.js'
@@ -24,8 +25,10 @@ async function rememberThumb(img, id) {
 }
 
 async function loadEmbeddedCover(blob) {
+  if (state.now.cover) return true
   const img = await embeddedCover(blob)
-  if (!img || state.now.blob !== blob || state.now.cover) return
+  if (!img || state.now.blob !== blob) return false
+  if (state.now.cover) return true
   let cover = img
   if (img.type !== 'image/gif') {
     try { cover = (await squareJpeg(img, 512)) || img } catch {}
@@ -37,6 +40,7 @@ async function loadEmbeddedCover(blob) {
   updateLabel()
   accentFromCover(url)
   rememberThumb(cover, state.now.id)
+  return true
 }
 
 export function updateLabel() {
@@ -100,8 +104,12 @@ export function setNow(patch, fx) {
   if (fx) setFx({ ...presets.original, ...fx }, false)
   else applyFx()
   updateNow()
-  if (state.now.cover) accentFromCover(state.now.cover)
-  else loadEmbeddedCover(state.now.blob)
+  if (state.now.cover) {
+    accentFromCover(state.now.cover)
+    state.now.coverReady = Promise.resolve(true)
+  } else {
+    state.now.coverReady = loadEmbeddedCover(state.now.blob)
+  }
 }
 
 export async function play() {
@@ -127,14 +135,18 @@ export async function openRow(id, ids) {
   }
   let cover = null
   let coverBlob = null
-  if (row.cover_path) {
+  let coverPreset = null
+  if (isPreset(row.cover_path)) {
+    coverPreset = presetFile(row.cover_path)
+    cover = presetUrl(coverPreset)
+  } else if (row.cover_path) {
     const res = await sb.storage.from(config.bucket).download(row.cover_path)
     if (!res.error) {
       coverBlob = new Blob([res.data], { type: coverMime(row.cover_path) })
       cover = await toDataURL(coverBlob)
     }
   }
-  setNow({ id: row.id, blob, title: row.title, artist: row.artist || '', cover, coverBlob }, row.settings || {})
+  setNow({ id: row.id, blob, title: row.title, artist: row.artist || '', cover, coverBlob, coverPreset }, row.settings || {})
   await play()
 }
 

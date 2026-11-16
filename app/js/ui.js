@@ -1,8 +1,8 @@
 import { $, $$, esc } from './lib/dom.js'
 
-export function toast(msg, undo) {
+export function toast(msg, undo, label = 'Desfazer') {
   const el = $('#toast')
-  el.innerHTML = `<span>${esc(msg)}</span>${undo ? '<button>Desfazer</button>' : ''}`
+  el.innerHTML = `<span>${esc(msg)}</span>${undo ? `<button>${esc(label)}</button>` : ''}`
   el.classList.add('on')
   clearTimeout(el._t)
   el._t = setTimeout(() => el.classList.remove('on'), 5000)

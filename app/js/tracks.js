@@ -1,7 +1,8 @@
 import { config } from './config.js'
 import { downloadEdited } from './download.js'
 import { $, sid } from './lib/dom.js'
-import { coverExt, coverThumb, prepareCover, toDataURL } from './lib/image.js'
+import { isPreset, pickAutoCover, presetPath, presetThumb } from './autocover.js'
+import { coverExt, coverThumb, embeddedCover, prepareCover, toDataURL } from './lib/image.js'
 import { markNow, renderLibrary } from './library.js'
 import { play, setNow, syncQuick, updateLabel, updateNow } from './player.js'
 import { audio, cache, mine, state } from './state.js'
@@ -28,7 +29,7 @@ async function uploadFile(file) {
 
 async function attachCover(row, blob) {
   const path = `${state.user.id}/cover-${row.id}.${coverExt(blob)}`
-  const stale = [path, row.cover_path].filter((p, i, all) => p && all.indexOf(p) === i)
+  const stale = [path, row.cover_path].filter((p, i, all) => p && !isPreset(p) && all.indexOf(p) === i)
   await sb.storage.from(config.bucket).remove(stale)
   const up = await sb.storage.from(config.bucket).upload(path, blob, { contentType: blob.type || 'image/jpeg' })
   if (up.error) throw up.error
@@ -37,6 +38,26 @@ async function attachCover(row, blob) {
   if (error) throw error
   Object.assign(row, data)
 }
+
+async function attachPreset(row, file) {
+  const thumb = await presetThumb(file)
+  const fields = { cover_path: presetPath(file), ...(thumb ? { cover_thumb: thumb } : {}) }
+  const { data, error } = await sb.from('history').update(fields).eq('id', row.id).select().single()
+  if (error) throw error
+  Object.assign(row, data)
+}
+
+async function giveAutoCover(file) {
+  const pick = await pickAutoCover()
+  if (!pick || state.now.blob !== file) return null
+  Object.assign(state.now, { cover: pick.url, coverBlob: null, coverPreset: pick.file })
+  updateLabel()
+  accentFromCover(pick.url)
+  return pick
+}
+
+const coverNote = () => 'Capa automática do Ouce.'
+const swapCover = () => $('#coverFile').click()
 
 const coverFail = err => (/column|cover_/i.test((err && err.message) || '') ? 'Falta rodar o SQL novo no Supabase.' : 'Não consegui enviar a capa.')
 
@@ -70,19 +91,32 @@ export async function addFiles(files, extra = {}) {
   const first = valid[0]
   setNow({ blob: first, ...parseName(first.name), ...extra })
   play()
-  if (!state.user) return toast('Entre na sua conta para salvar na biblioteca')
+  let auto = null
+  if (!extra.cover && !(await state.now.coverReady) && state.now.blob === first) auto = await giveAutoCover(first)
+  if (!state.user) {
+    return auto ? toast(`${coverNote(auto)} Entre na sua conta para salvar.`, swapCover, 'Trocar') : toast('Entre na sua conta para salvar na biblioteca')
+  }
 
   const saveable = valid.filter(f => f.size <= MAX_UPLOAD)
   const skipped = valid.length - saveable.length
   if (!saveable.length) return toast('Arquivo grande demais para guardar na conta (limite de 50 MB). Ele toca normalmente.')
-  toast(saveable.length === 1 ? 'Salvando…' : `Salvando ${saveable.length} músicas…`)
+  if (auto) toast(`${coverNote(auto)} Toque em Trocar se quiser outra.`, swapCover, 'Trocar')
+  else toast(saveable.length === 1 ? 'Salvando…' : `Salvando ${saveable.length} músicas…`)
   let saved = 0
   for (const f of saveable) {
     try {
       const row = await uploadFile(f)
       state.rows.unshift(row)
       cache.set(sid(row.id), f)
-      if (f === first && extra.coverBlob) await attachCover(row, extra.coverBlob).catch(err => console.error(err))
+      if (f === first) {
+        if (auto) await attachPreset(row, auto.file).catch(err => console.error(err))
+        else if (extra.coverBlob) await attachCover(row, extra.coverBlob).catch(err => console.error(err))
+        else if (extra.coverPreset) await attachPreset(row, extra.coverPreset).catch(err => console.error(err))
+      } else {
+        const own = await embeddedCover(f)
+        const pick = own ? null : await pickAutoCover()
+        if (pick) await attachPreset(row, pick.file).catch(err => console.error(err))
+      }
       saved++
       if (f === first && state.now.blob === f) {
         state.now.id = row.id
@@ -96,7 +130,9 @@ export async function addFiles(files, extra = {}) {
   }
   renderLibrary(true)
   const note = skipped ? ' Arquivos acima de 50 MB não foram guardados.' : ''
-  toast(saved ? (saved === 1 ? 'Música salva.' : `${saved} músicas salvas.`) + note : 'Não consegui salvar. Tente de novo.')
+  const done = saved ? (saved === 1 ? 'Música salva.' : `${saved} músicas salvas.`) + note : 'Não consegui salvar. Tente de novo.'
+  if (auto && saved) toast(`${done} ${coverNote(auto)}`, swapCover, 'Trocar')
+  else toast(done)
 }
 
 export async function saveNow() {
@@ -150,7 +186,7 @@ export function removeRow(id) {
       renderLibrary()
       return toast('Sem permissão para excluir. Falta a policy de delete no Supabase.')
     }
-    const paths = [row.storage_path, row.cover_path].filter(Boolean)
+    const paths = [row.storage_path, row.cover_path].filter(p => p && !isPreset(p))
     if (paths.length) sb.storage.from(config.bucket).remove(paths)
     cache.delete(sid(row.id))
     for (const pl of state.playlists.filter(p => (p.track_ids || []).some(x => sid(x) === sid(row.id)))) {
@@ -217,6 +253,7 @@ async function onCoverPicked(e) {
   try {
     state.now.coverBlob = await prepareCover(file)
     state.now.cover = await toDataURL(state.now.coverBlob)
+    state.now.coverPreset = null
   } catch (err) {
     return toast(err && err.message === 'gif-grande' ? 'Esse GIF passa de 4 MB. Use um menor.' : 'Não consegui abrir essa imagem.')
   }
