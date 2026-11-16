@@ -13,7 +13,7 @@ export function splitWords(el) {
     const inner = document.createElement('span')
     inner.textContent = word
     inner.style.setProperty('--i', i)
-    outer.style.setProperty('--z', [34, 0, 52, 14, 40, 6, 26][i % 7])
+    outer.style.setProperty('--z', [10, 0, 14, 5, 12, 2, 8][i % 7])
     outer.append(inner)
     el.append(outer, ' ')
   })

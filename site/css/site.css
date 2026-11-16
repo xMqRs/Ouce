@@ -25,7 +25,7 @@ main{overflow-x:clip}
 .link{border-bottom:1px solid #3a3a3a;transition:border-color .2s}
 .link:hover{border-color:var(--accent-hi)}
 
-h1{font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,92px);line-height:.98;letter-spacing:-.045em}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,92px);line-height:.98;letter-spacing:-.045em;word-spacing:.1em}
 h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,3vw,34px);line-height:1.1;letter-spacing:-.03em}
 h3{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02em}
 .lead{max-width:44ch;color:#b4b7c2;margin-top:28px;font-size:clamp(17px,1.6vw,20px)}

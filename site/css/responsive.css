@@ -4,6 +4,8 @@
   .story-in{position:static;height:auto;display:block;padding:clamp(40px,9vw,72px) 0}
   .hero-grid{grid-template-columns:minmax(0,1fr)}
   .stage{width:min(100%,380px)}
+  .hero-grid{perspective:none}
+  .hero-text,.hero-text .lead,.hero-text .cta,.w{transform:none}
   .split{grid-template-columns:minmax(0,1fr);gap:20px}
   .defs div{grid-template-columns:100px 130px minmax(0,1fr);gap:16px}
   .list div{grid-template-columns:170px minmax(0,1fr)}
