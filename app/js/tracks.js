@@ -1,7 +1,7 @@
 import { config } from './config.js'
 import { downloadEdited } from './download.js'
 import { $, sid } from './lib/dom.js'
-import { squareJpeg, toDataURL } from './lib/image.js'
+import { coverExt, coverThumb, prepareCover, toDataURL } from './lib/image.js'
 import { markNow, renderLibrary } from './library.js'
 import { play, setNow, syncQuick, updateLabel, updateNow } from './player.js'
 import { audio, cache, mine, state } from './state.js'
@@ -25,6 +25,20 @@ async function uploadFile(file) {
   if (error) throw error
   return data
 }
+
+async function attachCover(row, blob) {
+  const path = `${state.user.id}/cover-${row.id}.${coverExt(blob)}`
+  const stale = [path, row.cover_path].filter((p, i, all) => p && all.indexOf(p) === i)
+  await sb.storage.from(config.bucket).remove(stale)
+  const up = await sb.storage.from(config.bucket).upload(path, blob, { contentType: blob.type || 'image/jpeg' })
+  if (up.error) throw up.error
+  const fields = { cover_path: path, cover_thumb: await coverThumb(blob) }
+  const { data, error } = await sb.from('history').update(fields).eq('id', row.id).select().single()
+  if (error) throw error
+  Object.assign(row, data)
+}
+
+const coverFail = err => (/column|cover_/i.test((err && err.message) || '') ? 'Falta rodar o SQL novo no Supabase.' : 'Não consegui enviar a capa.')
 
 const AUDIO_EXT = /\.(mp3|wav|ogg|m4a|flac|aac|opus)$/i
 const MAX_UPLOAD = 50 * 1024 * 1024
@@ -68,6 +82,7 @@ export async function addFiles(files, extra = {}) {
       const row = await uploadFile(f)
       state.rows.unshift(row)
       cache.set(sid(row.id), f)
+      if (f === first && extra.coverBlob) await attachCover(row, extra.coverBlob).catch(err => console.error(err))
       saved++
       if (f === first && state.now.blob === f) {
         state.now.id = row.id
@@ -99,13 +114,8 @@ export async function setPublished(id, on) {
   const fields = { published: on }
   if (on && sid(row.id) === sid(state.now.id)) {
     fields.settings = { ...state.fx }
-    if (state.now.coverBlob) {
-      const path = `${state.user.id}/cover-${row.id}.jpg`
-      await sb.storage.from(config.bucket).remove([path])
-      const up = await sb.storage.from(config.bucket).upload(path, state.now.coverBlob, { contentType: 'image/jpeg' })
-      if (up.error) return toast('Não consegui enviar a capa.')
-      fields.cover_path = path
-      fields.cover_thumb = await toDataURL(await squareJpeg(state.now.coverBlob, 96))
+    if (state.now.coverBlob && !row.cover_path) {
+      try { await attachCover(row, state.now.coverBlob) } catch (err) { return toast(coverFail(err)) }
     }
   }
   const { data, error } = await sb.from('history').update(fields).eq('id', row.id).select().single()
@@ -205,14 +215,21 @@ async function onCoverPicked(e) {
   e.target.value = ''
   if (!file || !state.now.blob) return
   try {
-    state.now.coverBlob = await squareJpeg(file, 512)
+    state.now.coverBlob = await prepareCover(file)
     state.now.cover = await toDataURL(state.now.coverBlob)
-  } catch {
-    return toast('Não consegui abrir essa imagem.')
+  } catch (err) {
+    return toast(err && err.message === 'gif-grande' ? 'Esse GIF passa de 4 MB. Use um menor.' : 'Não consegui abrir essa imagem.')
   }
   updateLabel()
   accentFromCover(state.now.cover)
   const row = mine(state.now.id)
-  if (row && row.published) setPublished(row.id, true)
-  else toast(row ? 'Capa pronta. Ela é salva quando você publica a música.' : 'Capa aplicada.')
+  if (!row) return toast('Capa aplicada.')
+  try {
+    await attachCover(row, state.now.coverBlob)
+  } catch (err) {
+    console.error(err)
+    return toast(coverFail(err))
+  }
+  renderLibrary()
+  toast('Capa salva.')
 }

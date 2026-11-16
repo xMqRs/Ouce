@@ -3,23 +3,40 @@ import { setFx } from './effects.js'
 import { applyFx, resumeAudio } from './engine.js'
 import { $, fmt, paint, sid } from './lib/dom.js'
 import { presets } from './lib/fx.js'
-import { embeddedCover, toDataURL } from './lib/image.js'
+import { coverMime, coverThumb, embeddedCover, squareJpeg, toDataURL } from './lib/image.js'
 import { coverOf } from './lib/track.js'
-import { markNow, visibleRows } from './library.js'
+import { markNow, renderLibrary, visibleRows } from './library.js'
 import { audio, byId, cache, mine, state } from './state.js'
 import { sb } from './supabase.js'
 import { accentFromCover, applyAccent, theme } from './theme.js'
 import { toast } from './ui.js'
 import { setFocus } from './views.js'
 
+async function rememberThumb(img, id) {
+  const row = state.user && id !== null ? mine(id) : null
+  if (!row || row.cover_thumb) return
+  try {
+    const thumb = await coverThumb(img)
+    row.cover_thumb = thumb
+    renderLibrary()
+    sb.from('history').update({ cover_thumb: thumb }).eq('id', row.id).then(() => {}, () => {})
+  } catch {}
+}
+
 async function loadEmbeddedCover(blob) {
   const img = await embeddedCover(blob)
   if (!img || state.now.blob !== blob || state.now.cover) return
-  const url = await toDataURL(img)
+  let cover = img
+  if (img.type !== 'image/gif') {
+    try { cover = (await squareJpeg(img, 512)) || img } catch {}
+  }
+  const url = await toDataURL(cover)
   if (state.now.blob !== blob) return
   state.now.cover = url
+  state.now.coverBlob = cover
   updateLabel()
   accentFromCover(url)
+  rememberThumb(cover, state.now.id)
 }
 
 export function updateLabel() {
@@ -109,11 +126,15 @@ export async function openRow(id, ids) {
     cache.set(sid(row.id), blob)
   }
   let cover = null
+  let coverBlob = null
   if (row.cover_path) {
     const res = await sb.storage.from(config.bucket).download(row.cover_path)
-    if (!res.error) cover = await toDataURL(new Blob([res.data], { type: 'image/jpeg' }))
+    if (!res.error) {
+      coverBlob = new Blob([res.data], { type: coverMime(row.cover_path) })
+      cover = await toDataURL(coverBlob)
+    }
   }
-  setNow({ id: row.id, blob, title: row.title, artist: row.artist || '', cover }, row.settings || {})
+  setNow({ id: row.id, blob, title: row.title, artist: row.artist || '', cover, coverBlob }, row.settings || {})
   await play()
 }
 

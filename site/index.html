@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ouce: Sua música, do seu jeito.</title>
 <meta name="description" content="Player online para deixar qualquer música em slowed + reverb ou speed up. Ajuste velocidade, reverb e grave em tempo real e guarde sua biblioteca.">
 <link rel="canonical" href="https://ouce.site/">
@@ -84,7 +84,7 @@
 <header class="nav">
   <div class="wrap nav-in">
     <a class="brand" href="/" aria-label="Ouce, página inicial"><img src="assets/symbol.png?v=4" alt="Ouce" width="36" height="36"></a>
-    <nav class="links" aria-label="Principal">
+    <nav class="links" id="menu" aria-label="Principal">
       <a href="#o-que-e">O que é</a>
       <a href="#teste">Teste</a>
       <a href="#como-funciona">Como funciona</a>
@@ -92,7 +92,10 @@
       <a href="#faq">Perguntas</a>
       <a href="#desenvolvedores">Desenvolvedores</a>
     </nav>
-    <a class="btn small" href="https://app.ouce.site">Abrir o player</a>
+    <div class="nav-end">
+      <a class="btn small" href="https://app.ouce.site">Abrir o player</a>
+      <button class="burger" id="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+    </div>
   </div>
 </header>
 
@@ -131,12 +134,6 @@
     </div>
   </section>
 
-  <div class="band" aria-hidden="true">
-    <div class="band-track" id="bandTrack">
-      <div class="band-set"><span class="fill">slowed</span><i></i><span>reverb</span><i></i><span class="fill">speed up</span><i></i><span>grave</span><i></i></div>
-      <div class="band-set"><span class="fill">slowed</span><i></i><span>reverb</span><i></i><span class="fill">speed up</span><i></i><span>grave</span><i></i></div>
-    </div>
-  </div>
 
   <section class="block" id="o-que-e">
     <div class="wrap split">
