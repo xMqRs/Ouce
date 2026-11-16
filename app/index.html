@@ -73,7 +73,9 @@
         </div>
         <div class="info">
           <h1 id="title">Solte um som</h1>
+          <input class="edit-in t" id="titleIn" maxlength="120" placeholder="Título" aria-label="Título" autocomplete="off" hidden>
           <p class="artist" id="artist">Adicione músicas para começar.</p>
+          <input class="edit-in a" id="artistIn" maxlength="120" placeholder="Artista" aria-label="Artista" autocomplete="off" hidden>
         </div>
         <div class="seek"><span id="cur">0:00</span><input type="range" id="seek" min="0" max="1000" value="0"><span id="dur">0:00</span></div>
         <div class="ctrl">
@@ -89,7 +91,15 @@
           <button class="btn flat small" id="qPub"><i class="ri-global-line"></i><span>Publicar</span></button>
           <button class="btn flat small" id="qPl"><i class="ri-play-list-add-line"></i>Playlist</button>
           <button class="btn flat small" id="qCut"><i class="ri-scissors-2-line"></i>Cortar</button>
-          <button class="btn flat small" id="qCover"><i class="ri-image-add-line"></i>Capa</button>
+          <button class="btn flat small" id="qEdit" hidden><i class="ri-edit-2-line"></i>Modo editor</button>
+        </div>
+        <div class="editbar" id="editBar" hidden>
+          <p><i class="ri-edit-2-line"></i><b>Modo editor</b><span>Edite título, artista, capa e som. Nada muda na música até você salvar.</span></p>
+          <div class="editbar-act">
+            <button class="btn flat small" id="qCover"><i class="ri-image-add-line"></i>Capa</button>
+            <button class="btn flat small" id="editCancel">Cancelar</button>
+            <button class="btn small" id="editSave"><i class="ri-save-3-line"></i>Salvar</button>
+          </div>
         </div>
         <div class="fx">
           <h2><i class="ri-equalizer-3-line"></i>Personalizar som</h2>

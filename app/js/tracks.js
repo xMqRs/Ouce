@@ -5,7 +5,7 @@ import { isPreset, pickAutoCover, presetPath, presetThumb } from './autocover.js
 import { coverExt, coverThumb, embeddedCover, prepareCover, toDataURL } from './lib/image.js'
 import { markNow, renderLibrary } from './library.js'
 import { play, setNow, syncQuick, updateLabel, updateNow } from './player.js'
-import { audio, cache, canEdit, mine, state } from './state.js'
+import { audio, cache, canEdit, state } from './state.js'
 import { sb } from './supabase.js'
 import { accentFromCover, applyAccent, theme } from './theme.js'
 import { toast, undoable } from './ui.js'
@@ -27,7 +27,7 @@ async function uploadFile(file) {
   return data
 }
 
-async function attachCover(row, blob) {
+export async function attachCover(row, blob) {
   const path = `${row.user_id || state.user.id}/cover-${row.id}.${coverExt(blob)}`
   const stale = [path, row.cover_path].filter((p, i, all) => p && !isPreset(p) && all.indexOf(p) === i)
   await sb.storage.from(config.bucket).remove(stale)
@@ -57,9 +57,12 @@ async function giveAutoCover(file) {
 }
 
 const coverNote = () => 'Capa automática do Ouce.'
-const swapCover = () => $('#coverFile').click()
+const swapCover = () => {
+  if (!state.editor.on) $('#qEdit').click()
+  $('#coverFile').click()
+}
 
-const coverFail = err => (/column|cover_/i.test((err && err.message) || '') ? 'Falta rodar o SQL novo no Supabase.' : 'Não consegui enviar a capa.')
+export const coverFail = err => (/column|cover_/i.test((err && err.message) || '') ? 'Falta rodar o SQL novo no Supabase.' : 'Não consegui enviar a capa.')
 
 const AUDIO_EXT = /\.(mp3|wav|ogg|m4a|flac|aac|opus)$/i
 const MAX_UPLOAD = 50 * 1024 * 1024
@@ -133,15 +136,6 @@ export async function addFiles(files, extra = {}) {
   const done = saved ? (saved === 1 ? 'Música salva.' : `${saved} músicas salvas.`) + note : 'Não consegui salvar. Tente de novo.'
   if (auto && saved) toast(`${done} ${coverNote(auto)}`, swapCover, 'Trocar')
   else toast(done)
-}
-
-export async function saveNow() {
-  const n = state.now
-  if (!state.user || n.id === null || !mine(n.id)) return
-  const fields = { title: n.title, artist: n.artist, settings: { ...state.fx } }
-  const { error } = await sb.from('history').update(fields).eq('id', n.id)
-  if (error) return console.error(error)
-  Object.assign(mine(n.id), fields)
 }
 
 export async function setPublished(id, on) {
@@ -251,6 +245,7 @@ async function onCoverPicked(e) {
   const file = e.target.files[0]
   e.target.value = ''
   if (!file || !state.now.blob) return
+  if (!state.editor.on) return toast('Abra o Modo editor para trocar a capa.')
   try {
     state.now.coverBlob = await prepareCover(file)
     state.now.cover = await toDataURL(state.now.coverBlob)
@@ -258,16 +253,8 @@ async function onCoverPicked(e) {
   } catch (err) {
     return toast(err && err.message === 'gif-grande' ? 'Esse GIF passa de 4 MB. Use um menor.' : 'Não consegui abrir essa imagem.')
   }
+  state.editor.coverDirty = true
   updateLabel()
   accentFromCover(state.now.cover)
-  const row = canEdit(state.now.id)
-  if (!row) return toast('Capa aplicada.')
-  try {
-    await attachCover(row, state.now.coverBlob)
-  } catch (err) {
-    console.error(err)
-    return toast(coverFail(err))
-  }
-  renderLibrary()
-  toast('Capa salva.')
+  toast('Capa pronta. Toque em Salvar para guardar.')
 }

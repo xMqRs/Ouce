@@ -17,6 +17,7 @@ export const state = {
   counted: false,
   authMode: 'login',
   fx: { slowed: 0, speedup: 0, reverb: 0, bass: 0 },
+  editor: { on: false },
   now: { id: null, blob: null, title: '', artist: '', cover: null, coverBlob: null }
 }
 

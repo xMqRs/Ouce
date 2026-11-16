@@ -50,6 +50,17 @@ export function updateLabel() {
   $('#miniCover').style.background = value || ''
 }
 
+export function syncEditor() {
+  const on = state.editor.on && !!state.now.blob
+  document.body.classList.toggle('editing', on)
+  $('#quick').hidden = !state.now.blob || on
+  $('#editBar').hidden = !on
+  $('#title').hidden = on
+  $('#artist').hidden = on
+  $('#titleIn').hidden = !on
+  $('#artistIn').hidden = !on
+}
+
 export function syncQuick() {
   const n = state.now
   const own = n.id !== null ? canEdit(n.id) : null
@@ -59,6 +70,8 @@ export function syncQuick() {
   $('#qPub').hidden = !own
   $('#qPub i').className = own && own.published ? 'ri-global-fill' : 'ri-global-line'
   $('#qPub span').textContent = own && own.published ? 'Pública' : 'Publicar'
+  $('#qEdit').hidden = !(n.blob && (n.id === null || own))
+  syncEditor()
 }
 
 function replay(el, cls) {
@@ -71,24 +84,29 @@ function syncKicker() {
   $('#kicker').textContent = !state.now.blob ? 'Nada tocando' : audio.paused ? 'Pausado' : 'Tocando agora'
 }
 
-export function updateNow() {
+export function refreshMeta() {
   const n = state.now
-  document.body.classList.toggle('has-track', !!n.blob)
-  updateLabel()
   $('#title').textContent = n.blob ? n.title : 'Solte um som'
-  if (n.blob) {
-    replay($('.sleeve'), 'deal')
-    replay($('#title'), 'flip')
-  }
   $('#artist').textContent = n.blob ? n.artist || 'Artista desconhecido' : 'Adicione músicas para começar.'
-  $('#cur').textContent = '0:00'
-  $('#dur').textContent = '0:00'
-  $('#seek').value = 0
-  paint($('#seek'))
   document.title = n.blob ? `${n.title} · Ouce` : 'Ouce'
   $('#miniTitle').textContent = n.title
   $('#miniArtist').textContent = n.artist || ''
   if (n.blob && 'mediaSession' in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title: n.title, artist: n.artist || '' })
+}
+
+export function updateNow() {
+  const n = state.now
+  document.body.classList.toggle('has-track', !!n.blob)
+  updateLabel()
+  refreshMeta()
+  if (n.blob) {
+    replay($('.sleeve'), 'deal')
+    replay($('#title'), 'flip')
+  }
+  $('#cur').textContent = '0:00'
+  $('#dur').textContent = '0:00'
+  $('#seek').value = 0
+  paint($('#seek'))
   syncQuick()
   syncKicker()
   markNow()
@@ -96,6 +114,7 @@ export function updateNow() {
 
 export function setNow(patch, fx) {
   if (state.url) URL.revokeObjectURL(state.url)
+  state.editor = { on: false }
   state.now = { id: null, blob: null, title: '', artist: '', cover: null, coverBlob: null, ...patch }
   state.url = URL.createObjectURL(state.now.blob)
   state.counted = false
