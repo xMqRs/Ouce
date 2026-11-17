@@ -69,6 +69,23 @@ function luminance([r, g, b]) {
 
 const contrastOnInk = rgb => (luminance(rgb) + 0.05) / (luminance([11, 11, 11]) + 0.05)
 
+const STYLES = ['default', 'glass']
+
+export const look = { current: STYLES.includes(store.get('ouce_style')) ? store.get('ouce_style') : 'default' }
+
+export function applyStyle(name) {
+  if (!STYLES.includes(name)) return
+  look.current = name
+  if (name === 'glass') document.documentElement.dataset.style = 'glass'
+  else delete document.documentElement.dataset.style
+  store.set('ouce_style', name)
+  document.querySelectorAll('.theme-opt').forEach(b => {
+    const on = b.dataset.style === name
+    b.classList.toggle('on', on)
+    b.setAttribute('aria-checked', String(on))
+  })
+}
+
 export const theme = {
   pref: normalizeHex(store.get('ouce_pref_accent') || '') || DEFAULT_ACCENT,
   locked: store.get('ouce_accent_lock') === '1',
@@ -149,6 +166,7 @@ function setUserColor(input) {
 }
 
 function syncSettings() {
+  applyStyle(look.current)
   $('#hex').value = theme.current.toUpperCase()
   $('#colorPick').value = theme.current
   $('#lock').checked = theme.locked
@@ -161,6 +179,7 @@ export function bindSettings() {
     else msg.textContent = 'Use uma cor no formato #RRGGBB.'
   }
   $('#setBtn').addEventListener('click', () => { msg.textContent = ''; syncSettings(); $('#setDlg').showModal() })
+  document.querySelectorAll('.theme-opt').forEach(b => b.addEventListener('click', () => applyStyle(b.dataset.style)))
   $('#hexApply').addEventListener('click', () => apply($('#hex').value))
   $('#hex').addEventListener('keydown', e => { if (e.key === 'Enter') apply(e.target.value) })
   $('#colorPick').addEventListener('input', e => apply(e.target.value))
