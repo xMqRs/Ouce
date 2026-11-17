@@ -55,7 +55,8 @@ html[data-style=glass] .fx,html[data-style=glass] .editbar{border-radius:28px}
 html[data-style=glass] .sug{border-radius:22px}
 html[data-style=glass] .sug li.on{background:rgb(255 255 255/.14)}
 html[data-style=glass] .sg-ico{background:rgb(255 255 255/.12)}
-html[data-style=glass] dialog{border-radius:30px;background:rgb(16 18 36/.5);-webkit-backdrop-filter:blur(36px) saturate(1.5);backdrop-filter:blur(36px) saturate(1.5)}
+html[data-style=glass] dialog::before{display:none}
+html[data-style=glass] dialog{border:1px solid rgb(255 255 255/.3);max-height:min(88dvh,720px);overflow:auto;overscroll-behavior:contain;border-radius:30px;background:rgb(16 18 36/.5);-webkit-backdrop-filter:blur(36px) saturate(1.5);backdrop-filter:blur(36px) saturate(1.5)}
 html[data-style=glass] dialog::backdrop{background:rgb(4 5 14/.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 
 /* cartão do player: capa quadrada, título, barra e ícones */
@@ -78,6 +79,17 @@ html[data-style=glass] #cur{grid-area:cur}
 html[data-style=glass] #dur{grid-area:dur;justify-self:end}
 html[data-style=glass] .ctrl{grid-area:ctrl;justify-content:space-between;padding:0 4px}
 html[data-style=glass] body.focus .card::after{border-radius:0 0 32px 32px;background:rgb(255 255 255/.85)}
+
+/* modo foco */
+html[data-style=glass] body.focus .deck{grid-template-columns:minmax(0,min(720px,100%))}
+html[data-style=glass] body.focus .card{padding:clamp(20px,3vw,32px);column-gap:clamp(18px,3vw,30px)}
+html[data-style=glass] body.focus .info{padding-right:104px}
+html[data-style=glass] body.focus h1{font-size:clamp(22px,3.2vw,32px)}
+html[data-style=glass] body.focus .artist{font-size:clamp(14px,1.8vw,17px)}
+html[data-style=glass] body:not(.focus) .info{padding-right:76px}
+@media(min-width:561px){
+  html[data-style=glass] body.focus .sleeve{width:clamp(110px,min(22vw,26dvh),170px)}
+}
 
 /* botões: só ícone, sem caixas */
 html[data-style=glass] .round,
@@ -186,6 +198,8 @@ html[data-style=glass] .theme-opt.on{border-color:rgb(255 255 255/.75);backgroun
   html[data-style=glass] .toast{bottom:calc(92px + env(safe-area-inset-bottom))}
 }
 @media(max-width:560px){
+  html[data-style=glass] body:not(.focus) .info,html[data-style=glass] body.focus .info{padding-right:0}
+  html[data-style=glass] dialog{padding:20px;border-radius:26px}
   html[data-style=glass] .card{grid-template-columns:minmax(0,1fr);grid-template-areas:"art" "info" "seek" "ctrl";padding:20px}
   html[data-style=glass] .sleeve{justify-self:center;width:clamp(150px,min(60vw,34dvh),270px);margin-top:34px}
   html[data-style=glass] .info{padding-top:0;text-align:center}

@@ -209,7 +209,10 @@
 </dialog>
 
 <dialog id="setDlg">
-  <h3>Configurações</h3>
+  <div class="dlg-head">
+    <h3>Configurações</h3>
+    <button type="button" class="round dlg-x" data-close aria-label="Fechar"><i class="ri-close-line"></i></button>
+  </div>
   <h4 class="set-title">Tema</h4>
   <div class="theme-pick" role="radiogroup" aria-label="Tema">
     <button type="button" class="theme-opt" data-style="default" role="radio" aria-checked="true"><span class="sw sw-default"></span>Padrão</button>
@@ -230,7 +233,6 @@
   </div>
   <div class="stack">
     <button class="btn flat" id="hexReset">Voltar à cor padrão do Ouce</button>
-    <button class="btn flat" data-close>Fechar</button>
   </div>
 </dialog>
 
