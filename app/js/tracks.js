@@ -95,9 +95,15 @@ export async function addFiles(files, extra = {}) {
   setNow({ blob: first, ...parseName(first.name), ...extra })
   play()
   let auto = null
-  if (!extra.cover && !(await state.now.coverReady) && state.now.blob === first) auto = await giveAutoCover(first)
+  let autoFailed = false
+  const hasCover = extra.cover || (await state.now.coverReady.catch(() => false))
+  if (!hasCover && state.now.blob === first) {
+    auto = await giveAutoCover(first).catch(err => (console.error(err), null))
+    autoFailed = !auto
+  }
+  const noAuto = autoFailed ? ' Não consegui carregar as capas automáticas.' : ''
   if (!state.user) {
-    return auto ? toast(`${coverNote(auto)} Entre na sua conta para salvar.`, swapCover, 'Trocar') : toast('Entre na sua conta para salvar na biblioteca')
+    return auto ? toast(`${coverNote(auto)} Entre na sua conta para salvar.`, swapCover, 'Trocar') : toast(`Entre na sua conta para salvar na biblioteca.${noAuto}`)
   }
 
   const saveable = valid.filter(f => f.size <= MAX_UPLOAD)
@@ -135,7 +141,7 @@ export async function addFiles(files, extra = {}) {
   const note = skipped ? ' Arquivos acima de 50 MB não foram guardados.' : ''
   const done = saved ? (saved === 1 ? 'Música salva.' : `${saved} músicas salvas.`) + note : 'Não consegui salvar. Tente de novo.'
   if (auto && saved) toast(`${done} ${coverNote(auto)}`, swapCover, 'Trocar')
-  else toast(done)
+  else toast(done + noAuto)
 }
 
 export async function setPublished(id, on) {
