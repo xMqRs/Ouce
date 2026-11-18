@@ -1,5 +1,6 @@
 import { bindAuth, watchSession } from './auth.js'
 import { bindEditMode } from './editmode.js'
+import { initLight } from './light.js'
 import { bindEditor } from './editor.js'
 import { bindEffects, drawChips, syncFxUI } from './effects.js'
 import { $, paint } from './lib/dom.js'
@@ -30,6 +31,7 @@ function start() {
   bindTracks()
   bindEditor()
   bindEditMode()
+  initLight()
   bindPlaylists()
   bindAuth()
   bindSettings()

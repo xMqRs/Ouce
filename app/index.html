@@ -28,7 +28,7 @@
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/editor.css">
 <link rel="stylesheet" href="css/responsive.css">
-<link rel="stylesheet" href="css/glass.css?v=3">
+<link rel="stylesheet" href="css/glass.css?v=5">
 <script>try{if(localStorage.getItem("ouce_style")==="glass")document.documentElement.dataset.style="glass"}catch(e){}</script>
 </head>
 <body data-view="player">
@@ -209,13 +209,16 @@
 </dialog>
 
 <dialog id="setDlg">
-  <h3>Configurações</h3>
+  <div class="dlg-head">
+    <h3>Configurações</h3>
+    <button class="round dlg-x" type="button" data-close aria-label="Fechar"><i class="ri-close-line"></i></button>
+  </div>
   <h4 class="set-title">Tema</h4>
   <div class="theme-pick" role="radiogroup" aria-label="Tema">
     <button type="button" class="theme-opt" data-style="default" role="radio" aria-checked="true"><span class="sw sw-default"></span>Padrão</button>
     <button type="button" class="theme-opt" data-style="glass" role="radio" aria-checked="false"><span class="sw sw-glass"></span>Liquid Glass</button>
   </div>
-  <p class="hint" style="margin-top:8px">O Liquid Glass deixa o player translúcido, com vidro, brilho e reflexos da cor da capa.</p>
+  <p class="hint" style="margin-top:8px">O Liquid Glass deixa tudo em vidro transparente, com reflexos que mudam conforme a luz.</p>
   <h4 class="set-title">Cor</h4>
   <p class="hint">A cor do site vem da capa da música que está tocando. Aqui você escolhe a sua.</p>
   <div class="color-row">
@@ -230,7 +233,6 @@
   </div>
   <div class="stack">
     <button class="btn flat" id="hexReset">Voltar à cor padrão do Ouce</button>
-    <button class="btn flat" data-close>Fechar</button>
   </div>
 </dialog>
 
