@@ -1,7 +1,7 @@
 import { openAuth } from './auth.js'
 import { $, $$, esc, sid } from './lib/dom.js'
 import { highlight, passFilters, score, tokensOf } from './lib/search.js'
-import { coverOf, tagOf } from './lib/track.js'
+import { pickCover, tagOf } from './lib/track.js'
 import { openRow, syncQuick } from './player.js'
 import { createPlaylist, deletePlaylist, openPicker, setInPlaylist } from './playlists.js'
 import { audio, byId, canEdit, mine, state } from './state.js'
@@ -27,7 +27,7 @@ export function visibleRows() {
 }
 
 function trackRow(r, i) {
-  const bg = r.cover_thumb ? `url("${r.cover_thumb}") center/cover` : coverOf(r.id)
+  const bg = pickCover(r.cover_thumb, r.id, r.title, r.artist)
   const tag = tagOf(r.settings)
   const date = new Date(r.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
   const now = sid(r.id) === sid(state.now.id)

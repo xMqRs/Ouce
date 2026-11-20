@@ -1,3 +1,5 @@
+import { aeroCover } from '../aero-icons.js'
+import { look } from '../theme.js'
 import { hash, sid } from './dom.js'
 
 const covers = [
@@ -6,6 +8,10 @@ const covers = [
   a => `radial-gradient(circle at ${a % 100}% 30%,var(--accent-hi),var(--accent) 40%,#0f0f0f)`,
   a => `linear-gradient(${a}deg,#0f0f0f,var(--accent) 70%,var(--accent-hi))`
 ]
+
+// capa da música: no tema Frutiger Aero vira um ícone de vidro; nos outros, a imagem ou o degradê
+export const pickCover = (src, id, title, artist) =>
+  look.current === 'aero' ? aeroCover(title, artist) : src ? `url("${src}") center/cover` : coverOf(id)
 
 export const coverOf = key => { const h = hash(sid(key)); return covers[h % 4](h % 360) }
 

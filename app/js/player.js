@@ -5,7 +5,7 @@ import { $, fmt, paint, sid } from './lib/dom.js'
 import { presets } from './lib/fx.js'
 import { isPreset, presetFile, presetUrl } from './autocover.js'
 import { coverMime, coverThumb, embeddedCover, squareJpeg, toDataURL } from './lib/image.js'
-import { coverOf } from './lib/track.js'
+import { pickCover } from './lib/track.js'
 import { markNow, renderLibrary, visibleRows } from './library.js'
 import { audio, byId, cache, canEdit, mine, state } from './state.js'
 import { sb } from './supabase.js'
@@ -45,7 +45,7 @@ async function loadEmbeddedCover(blob) {
 
 export function updateLabel() {
   const n = state.now
-  const value = !n.blob ? '' : n.cover ? `url("${n.cover}") center/cover` : coverOf(n.id ?? n.title)
+  const value = !n.blob ? '' : pickCover(n.cover, n.id ?? n.title, n.title, n.artist)
   for (const el of [$('#art'), $('#label')]) value ? el.style.setProperty('--cover', value) : el.style.removeProperty('--cover')
   $('#miniCover').style.background = value || ''
 }

@@ -1,6 +1,6 @@
 import { $, $$, esc } from './lib/dom.js'
 import { FILTERS, highlight, score, suggest, tokensOf } from './lib/search.js'
-import { coverOf, tagOf } from './lib/track.js'
+import { pickCover, tagOf } from './lib/track.js'
 import { renderLibrary, sourceRows, visibleRows } from './library.js'
 import { openRow } from './player.js'
 import { state } from './state.js'
@@ -53,7 +53,7 @@ function renderSuggestions() {
     if (it.kind === 'filter') {
       html += `<li id="sg${i}" role="option" data-i="${i}"><span class="sg-ico"><i class="ri-equalizer-3-line"></i></span><div class="sg-meta"><strong>Filtrar por ${esc(it.f.label)}</strong><span>Mostrar só músicas com esse efeito</span></div></li>`
     } else if (it.kind === 'track') {
-      const bg = it.r.cover_thumb ? `url("${it.r.cover_thumb}") center/cover` : coverOf(it.r.id)
+      const bg = pickCover(it.r.cover_thumb, it.r.id, it.r.title, it.r.artist)
       const tag = tagOf(it.r.settings)
       html += `<li id="sg${i}" role="option" data-i="${i}"><span class="sg-cv" style="background:${esc(bg)}"></span><div class="sg-meta"><strong>${highlight(it.r.title, q)}</strong><span>${highlight(it.r.artist || 'Artista desconhecido', q)}${tag ? ` · <em class="tag">${tag}</em>` : ''}</span></div><button type="button" class="sg-play" data-play="${i}" aria-label="Tocar agora"><i class="ri-play-fill"></i></button></li>`
     } else {

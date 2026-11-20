@@ -69,21 +69,32 @@ function luminance([r, g, b]) {
 
 const contrastOnInk = rgb => (luminance(rgb) + 0.05) / (luminance([11, 11, 11]) + 0.05)
 
-const STYLES = ['default', 'glass']
+const STYLES = ['default', 'glass', 'aero']
+
+// No Frutiger Aero a paleta é fixa: nem a cor da capa nem a cor personalizada valem.
+const AERO_ACCENT = '#1e9be0'
 
 export const look = { current: STYLES.includes(store.get('ouce_style')) ? store.get('ouce_style') : 'default' }
 
 export function applyStyle(name) {
   if (!STYLES.includes(name)) return
+  const was = look.current
   look.current = name
-  if (name === 'glass') document.documentElement.dataset.style = 'glass'
-  else delete document.documentElement.dataset.style
+  if (name === 'default') delete document.documentElement.dataset.style
+  else document.documentElement.dataset.style = name
   store.set('ouce_style', name)
   document.querySelectorAll('.theme-opt').forEach(b => {
     const on = b.dataset.style === name
     b.classList.toggle('on', on)
     b.setAttribute('aria-checked', String(on))
   })
+  if (was === name) return
+  if (name === 'aero') applyAccent(AERO_ACCENT)
+  else if (was === 'aero') {
+    theme.current = null
+    applyAccent(theme.pref)
+  }
+  document.dispatchEvent(new CustomEvent('ouce:style', { detail: { name, was } }))
 }
 
 export const theme = {
@@ -119,6 +130,7 @@ function paintFavicon(hex, ink) {
 }
 
 export function applyAccent(hex) {
+  if (look.current === 'aero') hex = AERO_ACCENT
   if (hex === theme.current) return
   theme.current = hex
   const [r, g, b] = hexToRgb(hex)

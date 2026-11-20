@@ -7,7 +7,7 @@ import { markNow, renderLibrary } from './library.js'
 import { play, setNow, syncQuick, updateLabel, updateNow } from './player.js'
 import { audio, cache, canEdit, state } from './state.js'
 import { sb } from './supabase.js'
-import { accentFromCover, applyAccent, theme } from './theme.js'
+import { accentFromCover, applyAccent, look, theme } from './theme.js'
 import { toast, undoable } from './ui.js'
 import { extractAudio, isVideo, videoError } from './video.js'
 
@@ -101,15 +101,16 @@ export async function addFiles(files, extra = {}) {
     auto = await giveAutoCover(first).catch(err => (console.error(err), null))
     autoFailed = !auto
   }
+  const autoNote = auto && look.current !== 'aero' ? auto : null
   const noAuto = autoFailed ? ' Não consegui carregar as capas automáticas.' : ''
   if (!state.user) {
-    return auto ? toast(`${coverNote(auto)} Entre na sua conta para salvar.`, swapCover, 'Trocar') : toast(`Entre na sua conta para salvar na biblioteca.${noAuto}`)
+    return autoNote ? toast(`${coverNote(autoNote)} Entre na sua conta para salvar.`, swapCover, 'Trocar') : toast(`Entre na sua conta para salvar na biblioteca.${noAuto}`)
   }
 
   const saveable = valid.filter(f => f.size <= MAX_UPLOAD)
   const skipped = valid.length - saveable.length
   if (!saveable.length) return toast('Arquivo grande demais para guardar na conta (limite de 50 MB). Ele toca normalmente.')
-  if (auto) toast(`${coverNote(auto)} Toque em Trocar se quiser outra.`, swapCover, 'Trocar')
+  if (autoNote) toast(`${coverNote(autoNote)} Toque em Trocar se quiser outra.`, swapCover, 'Trocar')
   else toast(saveable.length === 1 ? 'Salvando…' : `Salvando ${saveable.length} músicas…`)
   let saved = 0
   for (const f of saveable) {
@@ -140,7 +141,7 @@ export async function addFiles(files, extra = {}) {
   renderLibrary(true)
   const note = skipped ? ' Arquivos acima de 50 MB não foram guardados.' : ''
   const done = saved ? (saved === 1 ? 'Música salva.' : `${saved} músicas salvas.`) + note : 'Não consegui salvar. Tente de novo.'
-  if (auto && saved) toast(`${done} ${coverNote(auto)}`, swapCover, 'Trocar')
+  if (autoNote && saved) toast(`${done} ${coverNote(autoNote)}`, swapCover, 'Trocar')
   else toast(done + noAuto)
 }
 

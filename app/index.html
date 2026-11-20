@@ -29,7 +29,8 @@
 <link rel="stylesheet" href="css/editor.css">
 <link rel="stylesheet" href="css/responsive.css">
 <link rel="stylesheet" href="css/glass.css?v=5">
-<script>try{if(localStorage.getItem("ouce_style")==="glass")document.documentElement.dataset.style="glass"}catch(e){}</script>
+<link rel="stylesheet" href="css/aero.css?v=1">
+<script>try{var s=localStorage.getItem("ouce_style");if(s==="glass"||s==="aero")document.documentElement.dataset.style=s}catch(e){}</script>
 </head>
 <body data-view="player">
 
@@ -217,8 +218,11 @@
   <div class="theme-pick" role="radiogroup" aria-label="Tema">
     <button type="button" class="theme-opt" data-style="default" role="radio" aria-checked="true"><span class="sw sw-default"></span>Padrão</button>
     <button type="button" class="theme-opt" data-style="glass" role="radio" aria-checked="false"><span class="sw sw-glass"></span>Liquid Glass</button>
+    <button type="button" class="theme-opt" data-style="aero" role="radio" aria-checked="false"><span class="sw sw-aero"></span>Frutiger Aero</button>
   </div>
-  <p class="hint" style="margin-top:8px">O Liquid Glass deixa tudo em vidro transparente, com reflexos que mudam conforme a luz.</p>
+  <p class="hint" style="margin-top:8px">O Liquid Glass deixa tudo em vidro transparente, com reflexos que mudam conforme a luz. O Frutiger Aero usa céu, água e brilho, com ícones no lugar das capas.</p>
+  <p class="hint aero-note">No Frutiger Aero as cores são fixas (azul e verde-água). A cor da capa e a cor personalizada ficam desligadas.</p>
+  <div id="colorBox">
   <h4 class="set-title">Cor</h4>
   <p class="hint">A cor do site vem da capa da música que está tocando. Aqui você escolhe a sua.</p>
   <div class="color-row">
@@ -233,6 +237,7 @@
   </div>
   <div class="stack">
     <button class="btn flat" id="hexReset">Voltar à cor padrão do Ouce</button>
+  </div>
   </div>
 </dialog>
 
