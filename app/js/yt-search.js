@@ -92,7 +92,19 @@ async function searchYoutube(query) {
 }
 
 async function fetchAudioBlob(videoId) {
-  // 1. Tenta obter o link através do endpoint de streams do Piped e baixa usando rota segura
+  // 1. Tenta baixar através do proxy de áudio do Invidious (contorna restrições de IP)
+  for (const base of INVIDIOUS_INSTANCES) {
+    try {
+      const proxyUrl = `${base}/latest_version?id=${videoId}&itag=140&local=true`
+      const res = await fetch(proxyUrl)
+      if (res.ok) {
+        const blob = await res.blob()
+        if (blob.size > 20000) return blob
+      }
+    } catch {}
+  }
+
+  // 2. Tenta via streams do Piped utilizando requisição com modo cors se possível
   for (const base of PIPED_INSTANCES) {
     try {
       const res = await fetch(`${base}/streams/${videoId}`)
@@ -104,26 +116,13 @@ async function fetchAudioBlob(videoId) {
       
       for (const stream of streams) {
         try {
-          // Se houver uma URL de proxy interna do piped ou a própria url direta tratada
           const targetUrl = stream.url.startsWith('http') ? stream.url : `${base}${stream.url}`
-          const audioRes = await fetch(targetUrl)
+          const audioRes = await fetch(targetUrl, { mode: 'cors' })
           if (audioRes.ok) {
             const blob = await audioRes.blob()
             if (blob.size > 20000) return blob
           }
         } catch {}
-      }
-    } catch {}
-  }
-
-  // 2. Fallback usando Invidious latest_version (proxy nativo de download)
-  for (const base of INVIDIOUS_INSTANCES) {
-    try {
-      const proxyUrl = `${base}/latest_version?id=${videoId}&itag=140&local=true`
-      const audioRes = await fetch(proxyUrl)
-      if (audioRes.ok) {
-        const blob = await audioRes.blob()
-        if (blob.size > 20000) return blob
       }
     } catch {}
   }
@@ -229,7 +228,7 @@ async function selectTrack(idx) {
       ...(cover ? { cover } : {})
     })
   } catch {
-    status.textContent = 'Erro ao baixar o áudio. Tente outro resultado.'
+    status.textContent = 'Erro ao processar o áudio. O YouTube impôs proteções nesta faixa. Tente outro resultado.'
     toast('Falha ao obter o áudio. Tente outra música.')
   } finally {
     busyId = null
