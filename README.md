@@ -84,6 +84,7 @@ Depois de publicar uma mudança de visual e não ver diferença, faça um recarr
 - Modo foco com cartão largo, detalhes na cor do tema e painel de efeitos flutuante
 - Três temas: Padrão, Liquid Glass e Frutiger Aero, escolhidos em Configurações
 - Modo editor no player: título, artista, capa (inclusive GIF) e som só mudam quando você salva
+- Etiqueta embaixo do artista mostrando de onde a música está tocando: Biblioteca, Histórico ou Playlist com o nome
 - Capa automática da biblioteca do Ouce para músicas sem capa embutida
 - Download da música já editada, em WAV, com os efeitos aplicados
 - Extração de áudio de vídeos (MP4, WebM, MOV e outros que o navegador abra)
