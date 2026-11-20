@@ -92,6 +92,7 @@ export async function addFiles(files, extra = {}) {
   const valid = await prepare(incoming)
   if (!valid.length) return
   const first = valid[0]
+  state.source = null
   setNow({ blob: first, ...parseName(first.name), ...extra })
   play()
   let auto = null
@@ -131,6 +132,7 @@ export async function addFiles(files, extra = {}) {
       if (f === first && state.now.blob === f) {
         state.now.id = row.id
         state.queue = [row.id]
+        state.source = { kind: 'history' }
         syncQuick()
         markNow()
       }

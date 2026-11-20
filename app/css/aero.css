@@ -150,3 +150,5 @@ html[data-style=aero] .aero-note{display:block}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   html[data-style=aero] .rail,html[data-style=aero] .card,html[data-style=aero] .fx,html[data-style=aero] .editbar,html[data-style=aero] .sug,html[data-style=aero] dialog,html[data-style=aero] .toast{background:rgb(236 247 255/.94)}
 }
+
+html[data-style=aero] .src-tag{background:rgb(255 255 255/.62);border-color:#fff;color:#0b5f9e;box-shadow:0 1px 3px rgb(5 70 120/.25)}

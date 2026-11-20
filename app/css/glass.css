@@ -136,3 +136,5 @@ html[data-style=glass] .theme-opt.on{border-color:rgb(255 255 255/.6);background
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   html[data-style=glass] .rail,html[data-style=glass] .card,html[data-style=glass] .fx,html[data-style=glass] .editbar,html[data-style=glass] .sug,html[data-style=glass] dialog,html[data-style=glass] .toast{background:rgb(22 24 44/.92)}
 }
+
+html[data-style=glass] .src-tag{background:rgb(255 255 255/.05);border-color:rgb(255 255 255/.16)}

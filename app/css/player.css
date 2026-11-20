@@ -65,3 +65,7 @@
 .editbar span{flex-basis:100%;font-size:13px;color:var(--mute)}
 .editbar-act{display:flex;flex-wrap:wrap;gap:8px}
 .editbar-act #editSave{margin-left:auto}
+
+.src-tag{display:inline-flex;align-self:flex-start;width:fit-content;align-items:center;gap:5px;max-width:100%;margin-top:8px;padding:3px 10px 3px 8px;border:1px solid var(--line);border-radius:99px;font-size:11px;line-height:1.5;letter-spacing:.02em;color:var(--mute)}
+.src-tag i{font-size:12px}
+.src-tag span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

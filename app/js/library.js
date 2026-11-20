@@ -176,9 +176,9 @@ function onListClick(e) {
   if (act === 'pl-toggle') { state.open.has(pl.id) ? state.open.delete(pl.id) : state.open.add(pl.id); renderLibrary() }
   if (act === 'pl-play') {
     const ids = playlistIds()
-    ids.length ? openRow(ids[0], ids) : toast('Essa playlist está vazia.')
+    ids.length ? openRow(ids[0], ids, { kind: 'playlist', id: pl.id }) : toast('Essa playlist está vazia.')
   }
   if (act === 'pl-del') deletePlaylist(pl)
-  if (act === 'pt-play') openRow(id, playlistIds())
+  if (act === 'pt-play') openRow(id, playlistIds(), { kind: 'playlist', id: pl.id })
   if (act === 'pt-rm') setInPlaylist(pl, byId(id)?.id ?? id, false)
 }

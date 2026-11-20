@@ -1,7 +1,7 @@
 import { config } from './config.js'
 import { setFx } from './effects.js'
 import { applyFx, resumeAudio } from './engine.js'
-import { $, fmt, paint, sid } from './lib/dom.js'
+import { $, esc, fmt, paint, sid } from './lib/dom.js'
 import { presets } from './lib/fx.js'
 import { isPreset, presetFile, presetUrl } from './autocover.js'
 import { coverMime, coverThumb, embeddedCover, squareJpeg, toDataURL } from './lib/image.js'
@@ -72,6 +72,7 @@ export function syncQuick() {
   $('#qPub span').textContent = own && own.published ? 'Pública' : 'Publicar'
   $('#qEdit').hidden = !(n.blob && (n.id === null || own))
   syncEditor()
+  syncSource()
 }
 
 function replay(el, cls) {
@@ -140,10 +141,26 @@ export async function play() {
   }
 }
 
-export async function openRow(id, ids) {
+// de onde a música está tocando: biblioteca, histórico ou uma playlist
+const tabSource = () => (state.tab === 'library' ? { kind: 'library' } : state.tab === 'history' ? { kind: 'history' } : null)
+
+const SOURCES = { library: ['ri-global-line', 'Biblioteca'], history: ['ri-history-line', 'Histórico'], playlist: ['ri-play-list-2-line', 'Playlist'] }
+
+export function syncSource() {
+  const el = $('#srcTag')
+  const s = state.source
+  if (!s || !state.now.blob || !SOURCES[s.kind]) { el.hidden = true; return }
+  const [icon, label] = SOURCES[s.kind]
+  const pl = s.kind === 'playlist' ? state.playlists.find(p => sid(p.id) === sid(s.id)) : null
+  el.innerHTML = `<i class="${icon}"></i><span>${esc(pl ? `${label} · ${pl.name}` : label)}</span>`
+  el.hidden = false
+}
+
+export async function openRow(id, ids, source) {
   const row = byId(id)
   if (!row) return
   state.queue = ids || [row.id]
+  state.source = source === undefined ? tabSource() : source
   let blob = cache.get(sid(row.id))
   if (!blob) {
     toast('Carregando…')
@@ -188,7 +205,7 @@ function step(dir, auto = false) {
   } else {
     next = ids[(idx + dir + ids.length) % ids.length]
   }
-  openRow(next, ids)
+  openRow(next, ids, state.source)
 }
 
 function syncPlayState() {
