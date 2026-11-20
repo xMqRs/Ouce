@@ -53,3 +53,32 @@ dialog menu{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
 .round.busy{pointer-events:none}
 .round.busy i{animation:turn .9s linear infinite}
 @keyframes turn{to{transform:rotate(360deg)}}
+
+
+/* Pesquisa YouTube no menu lateral */
+dialog.yt-dlg{width:min(94vw,540px);max-height:84dvh;display:flex;flex-direction:column}
+dialog.yt-dlg:not([open]){display:none}
+.yt-search-wrap{position:relative;margin-bottom:10px}
+.yt-input-box{display:flex;align-items:center;gap:10px;background:var(--ink);border:1px solid #262626;border-radius:10px;padding:0 12px;margin:0}
+.yt-input-box:focus-within{border-color:var(--accent)}
+.yt-input-box i{color:var(--mute);font-size:17px;flex:none}
+.yt-input-box input{flex:1;min-width:0;border:0;background:transparent;padding:12px 0;font-size:15px;color:var(--txt);outline:0}
+.yt-clear{color:var(--mute);font-size:18px;padding:4px;display:grid;place-items:center}
+.yt-clear:hover{color:var(--txt)}
+.yt-sug{list-style:none;margin:6px 0 0;padding:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;display:grid;gap:2px;max-height:170px;overflow:auto}
+.yt-sug[hidden]{display:none}
+.yt-sug li{padding:8px 10px;border-radius:8px;font-size:13px;color:var(--mute);cursor:pointer;display:flex;align-items:center;gap:8px}
+.yt-sug li:hover,.yt-sug li.on{background:rgb(255 255 255/.08);color:var(--txt)}
+.yt-status{font-size:12px;color:var(--mute);margin-bottom:10px;min-height:18px}
+.yt-results{list-style:none;margin:0;padding:0;display:grid;gap:8px;overflow-y:auto;max-height:46dvh;padding-right:2px}
+.yt-item{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:8px;border-radius:10px;background:rgb(255 255 255/.03);border:1px solid transparent;cursor:pointer;transition:background .18s,border-color .18s}
+.yt-item:hover{background:rgb(255 255 255/.07);border-color:var(--line)}
+.yt-item.loading{opacity:.65;pointer-events:none}
+.yt-thumb{width:56px;height:42px;border-radius:6px;object-fit:cover;background:#1a1a1a}
+.yt-meta{min-width:0}
+.yt-meta strong{display:block;font-size:14px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yt-meta span{display:block;font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.yt-pick{width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:16px;flex:none}
+html[data-style=aero] .yt-input-box{background:rgb(255 255 255/.75);border-color:rgb(255 255 255/.9)}
+html[data-style=aero] .yt-item{background:rgb(255 255 255/.45)}
+html[data-style=aero] .yt-item:hover{background:rgb(255 255 255/.75)}
