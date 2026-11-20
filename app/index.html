@@ -42,7 +42,6 @@
   <nav>
     <button class="tab on" data-view="player"><i class="ri-disc-line"></i>Tocando</button>
     <button class="tab" data-view="library"><i class="ri-folder-music-line"></i>Biblioteca</button>
-    <button class="tab" id="ytSearchBtn" title="Pesquisar no YouTube"><i class="ri-search-line"></i>Pesquisar</button>
   </nav>
   <div class="end">
     <button class="add" id="setBtn" title="Configurações"><i class="ri-settings-3-line"></i></button>
@@ -265,23 +264,6 @@
     <button type="button" class="btn flat" data-close>Cancelar</button>
     <button type="button" class="btn" id="edApply">Aplicar</button>
   </menu>
-</dialog>
-
-<dialog id="ytDlg" class="yt-dlg">
-  <div class="dlg-head">
-    <h3>Pesquisar música</h3>
-    <button class="round dlg-x" type="button" data-close aria-label="Fechar"><i class="ri-close-line"></i></button>
-  </div>
-  <div class="yt-search-wrap">
-    <label class="yt-input-box">
-      <i class="ri-search-line"></i>
-      <input id="ytInput" type="search" placeholder="Nome da música ou artista no YouTube..." autocomplete="off">
-      <button type="button" class="yt-clear" id="ytClear" aria-label="Limpar" hidden><i class="ri-close-line"></i></button>
-    </label>
-    <ul class="yt-sug" id="ytSug" hidden></ul>
-  </div>
-  <div class="yt-status" id="ytStatus">Digite algo para buscar no YouTube e carregar o áudio direto no player.</div>
-  <ul class="yt-results" id="ytResults"></ul>
 </dialog>
 
 <div class="toast" id="toast"></div>
