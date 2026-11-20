@@ -92,7 +92,7 @@ async function searchYoutube(query) {
 }
 
 async function fetchAudioBlob(videoId) {
-
+  // 1. Tenta obter o link através do endpoint de streams do Piped e baixa usando rota segura
   for (const base of PIPED_INSTANCES) {
     try {
       const res = await fetch(`${base}/streams/${videoId}`)
@@ -102,37 +102,28 @@ async function fetchAudioBlob(videoId) {
       if (!streams.length) continue
       streams.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))
       
-
       for (const stream of streams) {
         try {
-          const audioRes = await fetch(stream.url)
+          // Se houver uma URL de proxy interna do piped ou a própria url direta tratada
+          const targetUrl = stream.url.startsWith('http') ? stream.url : `${base}${stream.url}`
+          const audioRes = await fetch(targetUrl)
           if (audioRes.ok) {
             const blob = await audioRes.blob()
-            if (blob.size > 15000) return blob
+            if (blob.size > 20000) return blob
           }
         } catch {}
       }
     } catch {}
   }
 
-
+  // 2. Fallback usando Invidious latest_version (proxy nativo de download)
   for (const base of INVIDIOUS_INSTANCES) {
     try {
-      const res = await fetch(`${base}/api/v1/videos/${videoId}`)
-      if (!res.ok) continue
-      const data = await res.json()
-      const formats = (data.adaptiveFormats || []).filter(f => f.type && f.type.startsWith('audio/') && f.url)
-      if (!formats.length) continue
-      formats.sort((a, b) => (parseInt(b.bitrate, 10) || 0) - (parseInt(a.bitrate, 10) || 0))
-      
-      for (const format of formats) {
-        try {
-          const audioRes = await fetch(format.url)
-          if (audioRes.ok) {
-            const blob = await audioRes.blob()
-            if (blob.size > 15000) return blob
-          }
-        } catch {}
+      const proxyUrl = `${base}/latest_version?id=${videoId}&itag=140&local=true`
+      const audioRes = await fetch(proxyUrl)
+      if (audioRes.ok) {
+        const blob = await audioRes.blob()
+        if (blob.size > 20000) return blob
       }
     } catch {}
   }
@@ -238,7 +229,7 @@ async function selectTrack(idx) {
       ...(cover ? { cover } : {})
     })
   } catch {
-    status.textContent = 'Erro ao baixar o áudio. O YouTube bloqueou o stream direto desta faixa. Tente outro resultado.'
+    status.textContent = 'Erro ao baixar o áudio. Tente outro resultado.'
     toast('Falha ao obter o áudio. Tente outra música.')
   } finally {
     busyId = null
