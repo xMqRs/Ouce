@@ -1,0 +1,15 @@
+{
+  "name": "ouce",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Player de música com slowed, reverb e speed up direto no navegador",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "npx --yes serve app -l 3000",
+    "dev:site": "npx --yes serve site -l 3001"
+  }
+}
