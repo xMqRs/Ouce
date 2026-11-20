@@ -9,6 +9,7 @@ import { bindPlayer, updateLabel } from './player.js'
 import { bindPlaylists } from './playlists.js'
 import { loadStats } from './stats.js'
 import { bindSearch } from './suggest.js'
+import { bindYtSearch } from './yt-search.js'
 import { accentFromCover, applyAccent, bindSettings, theme } from './theme.js'
 import { bindTracks } from './tracks.js'
 import { bindDialogs } from './ui.js'
@@ -29,6 +30,7 @@ function start() {
   bindEffects()
   bindLibrary()
   bindSearch()
+  bindYtSearch()
   bindTracks()
   bindEditor()
   bindEditMode()
