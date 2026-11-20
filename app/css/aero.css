@@ -1,0 +1,152 @@
+/* Tema Frutiger Aero: céu, água, brilho e vidro com gloss. Só material e cor: nenhuma posição ou tamanho muda.
+   A paleta é fixa (azul e verde-água, com um verde de folha para tocar); a cor da capa e a cor personalizada não valem aqui. */
+
+.aero-note{display:none}
+.sw-aero{background:linear-gradient(180deg,#9bdcff 0%,#d9f4ff 48%,#3bc2e8 52%,#168ccf 100%);border:1px solid #b9e6fa}
+.sw-aero::after{content:"";position:absolute;left:14px;top:8px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,rgb(255 255 255/.25) 60%,rgb(255 255 255/.05));box-shadow:inset 0 0 0 1px rgb(255 255 255/.8)}
+
+html[data-style=aero]{
+  color-scheme:light;
+  --ink:#74c9ee;
+  --panel:rgb(255 255 255/.45);
+  --line:rgb(255 255 255/.75);
+  --txt:#0b3452;
+  --mute:rgb(11 52 82/.64);
+  --on-accent:#fff;
+  --glass:linear-gradient(180deg,rgb(255 255 255/.8),rgb(255 255 255/.36) 48%,rgb(190 234 255/.34) 49%,rgb(255 255 255/.52));
+  --orb:linear-gradient(180deg,#fff 0%,#e1f4fd 47%,#b4def2 51%,#eaf9ff 100%);
+  --aqua:linear-gradient(180deg,#b4ecff 0%,#4cc4f4 46%,#0e8be0 50%,#27c7ee 100%);
+  --leaf:linear-gradient(180deg,#d9ffb4 0%,#7fe05a 46%,#33ae35 50%,#78de66 100%);
+  --edge:inset 0 1px 0 #fff;
+}
+
+/* fundo: foto de céu e água, desfocada */
+html[data-style=aero] body{background:var(--ink)}
+html[data-style=aero] body::before{content:"";position:fixed;inset:-24px;z-index:0;pointer-events:none;background:url(../assets/aero/bg.jpg) center/cover no-repeat;filter:blur(5px) saturate(1.1)}
+html[data-style=aero] body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgb(255 255 255/.14),rgb(255 255 255/0) 45%)}
+
+/* vidro com gloss */
+html[data-style=aero] .rail,
+html[data-style=aero] .card,
+html[data-style=aero] .fx,
+html[data-style=aero] .editbar,
+html[data-style=aero] .sug,
+html[data-style=aero] .pl-head,
+html[data-style=aero] dialog{
+  background:var(--glass);color:var(--txt);
+  -webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);
+  border-color:rgb(255 255 255/.92);
+  box-shadow:inset 0 0 0 1px rgb(255 255 255/.4),0 12px 32px rgb(5 70 120/.36)}
+html[data-style=aero] .card{border-radius:20px}
+html[data-style=aero] .card::before{display:none}
+html[data-style=aero] .fx{border-radius:18px}
+html[data-style=aero] .editbar{border-radius:16px;border-color:#2cb6f0}
+html[data-style=aero] .sug{border-radius:14px}
+html[data-style=aero] .pl-head{border-radius:12px;box-shadow:inset 0 0 0 1px rgb(255 255 255/.4)}
+html[data-style=aero] dialog{border-radius:22px}
+html[data-style=aero] dialog::backdrop{background:rgb(10 70 115/.38);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+html[data-style=aero] body.focus .card::after{background:#27c7ee}
+
+/* capa em acrílico e disco em CD */
+html[data-style=aero] .art{border-radius:8px;box-shadow:0 8px 20px rgb(5 70 120/.4),inset 0 0 0 1px rgb(255 255 255/.7)}
+html[data-style=aero] .f-back{background:rgb(255 255 255/.5)}
+html[data-style=aero] .f-l{background:rgb(204 238 255/.7)}
+html[data-style=aero] .f-r{background:rgb(255 255 255/.75)}
+html[data-style=aero] .f-t{background:rgb(255 255 255/.9)}
+html[data-style=aero] .f-b{background:rgb(150 210 240/.7)}
+html[data-style=aero] .vinyl{background:conic-gradient(from 30deg,#eef8ff,#b9d9ea,#f8fcff,#a9d0e4,#eaf7ff,#c4e0f0,#eef8ff);box-shadow:0 0 0 1px rgb(255 255 255/.9)}
+html[data-style=aero] .ring{background:repeating-radial-gradient(circle,rgb(255 255 255/.65) 0 2px,rgb(150 205 235/.4) 2px 4px);box-shadow:0 0 0 1px #fff}
+html[data-style=aero] .label::after{background:rgb(255 255 255/.95);box-shadow:inset 0 0 0 1px rgb(120 190 225/.6)}
+
+/* botões redondos: bolhas de vidro */
+html[data-style=aero] .round,
+html[data-style=aero] .ctrl button,
+html[data-style=aero] .rail .add,
+html[data-style=aero] .sg-play,
+html[data-style=aero] .me{
+  background:var(--orb);border:1px solid rgb(255 255 255/.95);color:#0b6aa8;
+  box-shadow:0 2px 6px rgb(5 70 120/.4),var(--edge)}
+html[data-style=aero] .round:hover,html[data-style=aero] .ctrl button:hover,html[data-style=aero] .rail .add:hover,html[data-style=aero] .sg-play:hover{filter:brightness(1.05);color:#0a5a96}
+html[data-style=aero] .round:active,html[data-style=aero] .ctrl button:active,html[data-style=aero] .rail .add:active,html[data-style=aero] .sg-play:active,html[data-style=aero] .me:active{box-shadow:inset 0 2px 5px rgb(5 70 120/.35)}
+html[data-style=aero] .ctrl button.on{background:var(--aqua);color:#fff;border-color:#0b73b3;text-shadow:0 -1px 0 rgb(0 70 120/.5)}
+html[data-style=aero] .ctrl .big{background:var(--leaf);border:1px solid #2d8a30;color:#fff;text-shadow:0 -1px 0 rgb(20 90 30/.5);box-shadow:0 3px 8px rgb(20 110 40/.45),inset 0 1px 0 rgb(255 255 255/.85)}
+html[data-style=aero] .ctrl .big:hover{filter:brightness(1.06);color:#fff}
+
+/* abas, chips e botões: pílulas de vidro */
+html[data-style=aero] .tab,
+html[data-style=aero] .chip,
+html[data-style=aero] .btn.flat{
+  background:var(--orb);border:1px solid rgb(255 255 255/.95);color:#0b5f9e;
+  box-shadow:0 2px 5px rgb(5 70 120/.3),var(--edge);text-shadow:none}
+html[data-style=aero] .tab i{color:inherit}
+html[data-style=aero] .tab:hover,html[data-style=aero] .chip:hover,html[data-style=aero] .btn.flat:hover{filter:brightness(1.05);color:#0a5a96}
+html[data-style=aero] .tab.on,
+html[data-style=aero] .chip.on,
+html[data-style=aero] .btn{
+  background:var(--aqua);border:1px solid #0b73b3;color:#fff;text-shadow:0 -1px 0 rgb(0 70 120/.55);
+  box-shadow:0 2px 6px rgb(5 70 130/.42),inset 0 1px 0 rgb(255 255 255/.8)}
+html[data-style=aero] .tab.on:hover,html[data-style=aero] .chip.on:hover,html[data-style=aero] .btn:hover{filter:brightness(1.07);color:#fff}
+html[data-style=aero] .btn.flat.on{border-color:#2cb6f0;color:#0a5a96}
+html[data-style=aero] .acts button:hover{background:rgb(255 255 255/.55)}
+html[data-style=aero] .pick:hover{background:rgb(255 255 255/.5)}
+html[data-style=aero] .btn:active,html[data-style=aero] .btn.flat:active,html[data-style=aero] .tab:active,html[data-style=aero] .chip:active{box-shadow:inset 0 2px 5px rgb(5 70 120/.35)}
+
+/* campos */
+html[data-style=aero] .search,
+html[data-style=aero] select,
+html[data-style=aero] dialog input:not([type=color]):not(.switch),
+html[data-style=aero] .edit-in{background:rgb(255 255 255/.78);border:1px solid rgb(120 190 230/.85);color:var(--txt);box-shadow:inset 0 2px 4px rgb(5 70 120/.18)}
+html[data-style=aero] .search input{background:none;color:var(--txt)}
+html[data-style=aero] .search:focus-within,html[data-style=aero] dialog input:focus,html[data-style=aero] .edit-in:focus{border-color:#1e9be0;box-shadow:inset 0 2px 4px rgb(5 70 120/.18),0 0 0 3px rgb(30 155 224/.25)}
+html[data-style=aero] .wave{background:rgb(255 255 255/.55);border-color:rgb(120 190 230/.8)}
+html[data-style=aero] select option{background:#fff;color:#0b3452}
+html[data-style=aero] ::placeholder{color:rgb(11 52 82/.45)}
+
+/* sliders e interruptor */
+html[data-style=aero] input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:6px;background:linear-gradient(90deg,#27b2ee var(--p,0%),rgb(255 255 255/.8) 0);box-shadow:inset 0 1px 2px rgb(5 70 120/.3),0 0 0 1px rgb(120 190 230/.7)}
+html[data-style=aero] input[type=range]::-moz-range-track{height:6px;border-radius:6px;background:linear-gradient(90deg,#27b2ee var(--p,0%),rgb(255 255 255/.8) 0);box-shadow:inset 0 1px 2px rgb(5 70 120/.3),0 0 0 1px rgb(120 190 230/.7)}
+html[data-style=aero] body.focus #seek::-webkit-slider-runnable-track{background:linear-gradient(90deg,#27b2ee var(--p,0%),rgb(255 255 255/.8) 0)}
+html[data-style=aero] body.focus #seek::-moz-range-track{background:linear-gradient(90deg,#27b2ee var(--p,0%),rgb(255 255 255/.8) 0)}
+html[data-style=aero] input[type=range]::-webkit-slider-thumb{margin-top:-5px;background:var(--orb);border:1px solid #5fb7e0;box-shadow:0 2px 4px rgb(5 70 120/.45)}
+html[data-style=aero] input[type=range]::-moz-range-thumb{background:var(--orb);border:1px solid #5fb7e0;box-shadow:0 2px 4px rgb(5 70 120/.45)}
+html[data-style=aero] .switch{background:rgb(255 255 255/.8);border:1px solid #8cc7e6;box-shadow:inset 0 2px 4px rgb(5 70 120/.2)}
+html[data-style=aero] .switch::after{background:var(--orb);box-shadow:0 1px 3px rgb(5 70 120/.4);top:2px;left:2px}
+html[data-style=aero] .switch:checked{background:var(--aqua);border-color:#0b73b3}
+
+/* biblioteca */
+html[data-style=aero] .row{border-radius:14px}
+html[data-style=aero] .row:hover{background:rgb(255 255 255/.45);border-color:rgb(255 255 255/.8)}
+html[data-style=aero] .row.now{background:rgb(255 255 255/.62);border-color:#fff;box-shadow:0 4px 12px rgb(5 70 120/.25)}
+html[data-style=aero] .cv{border-radius:12px;box-shadow:0 3px 8px rgb(5 70 120/.4),inset 0 0 0 1px rgb(255 255 255/.6)}
+html[data-style=aero] .cv i{color:#fff;text-shadow:0 1px 3px rgb(5 70 120/.6)}
+html[data-style=aero] .sug li.on{background:rgb(255 255 255/.6)}
+html[data-style=aero] .sg-ico{background:rgb(255 255 255/.7);color:#0b6aa8}
+html[data-style=aero] .pl-track:hover{background:rgb(255 255 255/.5)}
+html[data-style=aero] .tag{color:#0b6aa8}
+html[data-style=aero] mark{background:rgb(255 255 255/.8);color:#0b3452}
+
+/* mini player, aviso e área de soltar */
+html[data-style=aero] .mini{background:var(--aqua);color:#fff;border:1px solid #0b73b3;box-shadow:0 8px 20px rgb(5 70 130/.45),inset 0 1px 0 rgb(255 255 255/.8);text-shadow:0 -1px 0 rgb(0 70 120/.5)}
+html[data-style=aero] .mini #miniPlay{background:var(--orb);color:#0b6aa8;text-shadow:none}
+html[data-style=aero] .mini-bar{background:#fff}
+html[data-style=aero] .toast{background:var(--glass);color:var(--txt);border:1px solid #fff;-webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);box-shadow:0 10px 26px rgb(5 70 120/.4)}
+html[data-style=aero] .toast button{color:#0b6aa8;text-decoration:underline}
+html[data-style=aero] .drop{background:rgb(255 255 255/.55);border-color:#27b2ee;color:var(--txt);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+html[data-style=aero] .hint,html[data-style=aero] .foot{color:var(--mute)}
+html[data-style=aero] .foot b{color:var(--txt)}
+
+/* configurações */
+html[data-style=aero] .set-title{color:#0b5f9e}
+html[data-style=aero] .theme-opt{background:rgb(255 255 255/.55);border-color:rgb(255 255 255/.9);color:var(--mute)}
+html[data-style=aero] .theme-opt:hover{color:var(--txt)}
+html[data-style=aero] .theme-opt.on{border-color:#1e9be0;color:var(--txt);background:rgb(255 255 255/.85);box-shadow:0 0 0 2px rgb(30 155 224/.25)}
+html[data-style=aero] #colorBox{display:none}
+html[data-style=aero] .aero-note{display:block}
+
+@media(prefers-reduced-transparency:reduce){
+  html[data-style=aero] .rail,html[data-style=aero] .card,html[data-style=aero] .fx,html[data-style=aero] .editbar,html[data-style=aero] .sug,html[data-style=aero] dialog,html[data-style=aero] .toast{
+    -webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(236 247 255/.96)}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  html[data-style=aero] .rail,html[data-style=aero] .card,html[data-style=aero] .fx,html[data-style=aero] .editbar,html[data-style=aero] .sug,html[data-style=aero] dialog,html[data-style=aero] .toast{background:rgb(236 247 255/.94)}
+}
