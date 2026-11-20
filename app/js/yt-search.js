@@ -2,12 +2,11 @@ import { $, $$, esc, fmt } from './lib/dom.js'
 import { addFiles } from './tracks.js'
 import { toast } from './ui.js'
 
-// Instâncias públicas Piped / Invidious para busca no YouTube e stream de áudio direto no navegador
 const PIPED_INSTANCES = [
   'https://pipedapi.kavin.rocks',
-  'https://pipedapi.tokhmi.xyz',
   'https://api.piped.private.coffee',
-  'https://pipedapi.adminforge.de'
+  'https://pipedapi.adminforge.de',
+  'https://pipedapi.tokhmi.xyz'
 ]
 
 const INVIDIOUS_INSTANCES = [
@@ -21,7 +20,7 @@ let sugTimer = null
 let currentResults = []
 let busyId = null
 
-async function fetchJsonWithFallback(urls, timeoutMs = 6500) {
+async function fetchJsonWithFallback(urls, timeoutMs = 6000) {
   for (const url of urls) {
     const ctrl = new AbortController()
     const id = setTimeout(() => ctrl.abort(), timeoutMs)
@@ -42,14 +41,14 @@ async function fetchSuggestions(query) {
   try {
     const data = await fetchJsonWithFallback(
       PIPED_INSTANCES.map(base => `${base}/suggestions?query=${q}`),
-      3500
+      3000
     )
     if (Array.isArray(data)) return data.slice(0, 5)
   } catch {}
   try {
     const data = await fetchJsonWithFallback(
       INVIDIOUS_INSTANCES.map(base => `${base}/api/v1/search/suggestions?q=${q}`),
-      3500
+      3000
     )
     if (data && Array.isArray(data.suggestions)) return data.suggestions.slice(0, 5)
   } catch {}
@@ -58,7 +57,6 @@ async function fetchSuggestions(query) {
 
 async function searchYoutube(query) {
   const q = encodeURIComponent(query)
-  // 1. Tenta Piped API (filtra music_songs e videos)
   try {
     const data = await fetchJsonWithFallback(
       PIPED_INSTANCES.map(base => `${base}/search?q=${q}&filter=music_songs`)
@@ -78,7 +76,6 @@ async function searchYoutube(query) {
     }
   } catch {}
 
-  // 2. Fallback para Invidious API
   const invData = await fetchJsonWithFallback(
     INVIDIOUS_INSTANCES.map(base => `${base}/api/v1/search?q=${q}&type=video`)
   )
@@ -95,43 +92,38 @@ async function searchYoutube(query) {
 }
 
 async function fetchAudioBlob(videoId) {
-  // 1. Tenta obter stream de áudio via Piped
+  // 1. Tenta baixar através do proxy de áudio do Invidious (contorna restrições de IP)
+  for (const base of INVIDIOUS_INSTANCES) {
+    try {
+      const proxyUrl = `${base}/latest_version?id=${videoId}&itag=140&local=true`
+      const res = await fetch(proxyUrl)
+      if (res.ok) {
+        const blob = await res.blob()
+        if (blob.size > 20000) return blob
+      }
+    } catch {}
+  }
+
+  // 2. Tenta via streams do Piped utilizando requisição com modo cors se possível
   for (const base of PIPED_INSTANCES) {
     try {
-      const ctrl = new AbortController()
-      const t = setTimeout(() => ctrl.abort(), 7000)
-      const res = await fetch(`${base}/streams/${videoId}`, { signal: ctrl.signal })
-      clearTimeout(t)
+      const res = await fetch(`${base}/streams/${videoId}`)
       if (!res.ok) continue
       const data = await res.json()
       const streams = (data.audioStreams || []).filter(s => s.url)
       if (!streams.length) continue
-      // Prioriza m4a/mp4 ou melhor bitrate
       streams.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))
-      const chosen = streams.find(s => /mp4|m4a|mpeg/i.test(s.mimeType || '')) || streams[0]
-      const audioRes = await fetch(chosen.url)
-      if (!audioRes.ok) continue
-      const blob = await audioRes.blob()
-      if (blob.size > 10000) return blob
-    } catch {}
-  }
-
-  // 2. Fallback via Invidious adaptiveFormats (audio only)
-  for (const base of INVIDIOUS_INSTANCES) {
-    try {
-      const ctrl = new AbortController()
-      const t = setTimeout(() => ctrl.abort(), 7000)
-      const res = await fetch(`${base}/api/v1/videos/${videoId}`, { signal: ctrl.signal })
-      clearTimeout(t)
-      if (!res.ok) continue
-      const data = await res.json()
-      const formats = (data.adaptiveFormats || []).filter(f => f.type && f.type.startsWith('audio/') && f.url)
-      if (!formats.length) continue
-      formats.sort((a, b) => (parseInt(b.bitrate, 10) || 0) - (parseInt(a.bitrate, 10) || 0))
-      const audioRes = await fetch(formats[0].url)
-      if (!audioRes.ok) continue
-      const blob = await audioRes.blob()
-      if (blob.size > 10000) return blob
+      
+      for (const stream of streams) {
+        try {
+          const targetUrl = stream.url.startsWith('http') ? stream.url : `${base}${stream.url}`
+          const audioRes = await fetch(targetUrl, { mode: 'cors' })
+          if (audioRes.ok) {
+            const blob = await audioRes.blob()
+            if (blob.size > 20000) return blob
+          }
+        } catch {}
+      }
     } catch {}
   }
 
@@ -225,7 +217,7 @@ async function selectTrack(idx) {
 
   try {
     const blob = await fetchAudioBlob(item.id)
-    const safeName = `${item.author} - ${item.title}`.replace(/[\/:*?"<>|]/g, '').trim() || item.id
+    const safeName = `${item.author} - ${item.title}`.replace(/[\\/:*?"<>|]/g, '').trim() || item.id
     const file = new File([blob], `${safeName}.mp3`, { type: 'audio/mpeg' })
     const cover = await fetchCoverDataUrl(item.thumb)
 
@@ -236,8 +228,8 @@ async function selectTrack(idx) {
       ...(cover ? { cover } : {})
     })
   } catch {
-    status.textContent = 'Não consegui extrair o áudio desse vídeo. Tente outro resultado.'
-    toast('Falha ao obter o áudio desse vídeo. Tente outro resultado.')
+    status.textContent = 'Erro ao processar o áudio. O YouTube impôs proteções nesta faixa. Tente outro resultado.'
+    toast('Falha ao obter o áudio. Tente outra música.')
   } finally {
     busyId = null
     if (li) li.classList.remove('loading')
