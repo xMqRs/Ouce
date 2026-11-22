@@ -132,6 +132,7 @@ Use só imagens que você pode usar publicamente. Se o `covers.json` não carreg
 - No cadastro há um campo de username (3 a 20 caracteres: letras minúsculas, números, ponto e underline). Ele aparece como `@nome` nas playlists públicas.
 - Quem já tinha conta e ainda não tem username vê um pop-up ao entrar. Ele não fecha até o username ser definido, pede o nome duas vezes para confirmar e tem só a saída "Sair da conta".
 - Em Configurações dá para trocar o username: 2 trocas a cada 30 dias. O limite é aplicado no banco (`profiles_guard`), e não só no app. A primeira escolha não conta como troca.
+- O pop-up da conta (clique na sua foto, no menu lateral) mostra a foto, o `@username`, o e-mail, desde quando você é membro e quantas músicas, públicas e playlists você tem. Dele dá para trocar a foto, trocar o username e sair. Fecha pelo X no canto.
 - Os perfis ficam na tabela `profiles` (só `id` e `username`, legíveis por todos; o e-mail nunca é exposto).
 
 ## Playlists públicas
