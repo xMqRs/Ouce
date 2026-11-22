@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="css/library.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/editor.css">
+<link rel="stylesheet" href="css/playlists.css">
 <link rel="stylesheet" href="css/responsive.css">
 <link rel="stylesheet" href="css/glass.css?v=5">
 <link rel="stylesheet" href="css/aero.css?v=1">
@@ -132,6 +133,7 @@
       <button class="chip on" data-tab="library"><i class="ri-global-line"></i> Biblioteca</button>
       <button class="chip" data-tab="history">Histórico</button>
       <button class="chip" data-tab="playlists">Playlists</button>
+      <button class="chip" data-tab="plpub"><i class="ri-group-line"></i> Playlists públicas</button>
     </div>
     <div id="tools">
       <div class="tools">
@@ -181,6 +183,7 @@
       <button type="button" class="chip" data-mode="signup">Criar conta</button>
     </div>
     <label>EMAIL<input name="email" type="email" required autocomplete="email"></label>
+    <label id="authUserBox" hidden>USERNAME<span class="at-input"><b>@</b><input name="username" maxlength="20" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="seunome"></span><small class="hint">3 a 20 caracteres: letras minúsculas, números, ponto e underline. Aparece como autor das suas playlists.</small></label>
     <label>SENHA<input name="password" type="password" required minlength="6" autocomplete="current-password"></label>
     <p class="err" id="authErr"></p>
     <menu>
@@ -190,9 +193,73 @@
   </form>
 </dialog>
 
+<dialog id="plEditDlg" class="ple">
+  <div class="dlg-head">
+    <h3>Editar playlist</h3>
+    <button class="round dlg-x" type="button" data-close aria-label="Fechar"><i class="ri-close-line"></i></button>
+  </div>
+  <div class="ple-top">
+    <button type="button" class="ple-cover" id="pleCover" aria-label="Trocar capa">
+      <span class="ple-cv" id="pleCv"></span>
+      <span class="ple-cover-hint"><i class="ri-image-edit-line"></i>Trocar capa</span>
+    </button>
+    <div class="ple-fields">
+      <label>NOME<input id="pleName" maxlength="60" autocomplete="off"></label>
+      <p class="ple-by" id="pleBy"></p>
+      <div class="switch-row">
+        <label for="plePub">Postar na biblioteca pública<small>Todos veem a playlist e as faixas dela passam a ser públicas.</small></label>
+        <input type="checkbox" class="switch" id="plePub">
+      </div>
+      <button type="button" class="btn flat small" id="pleCoverClear">Remover capa</button>
+    </div>
+  </div>
+  <input type="file" id="pleFile" accept="image/*" hidden>
+  <h4 class="set-title">Faixas <span id="pleCount"></span></h4>
+  <ul class="ple-list" id="pleTracks"></ul>
+  <h4 class="set-title">Adicionar músicas</h4>
+  <div class="ple-find">
+    <div class="search"><i class="ri-search-line"></i><input id="pleQ" placeholder="Buscar por nome ou artista" autocomplete="off"></div>
+    <div class="chips" id="pleSrc">
+      <button type="button" class="chip on" data-src="mine">Minhas</button>
+      <button type="button" class="chip" data-src="pub">Biblioteca pública</button>
+    </div>
+  </div>
+  <ul class="ple-list" id="pleResults"></ul>
+  <div class="ple-add"><button type="button" class="btn small" id="pleAdd" disabled>Adicionar selecionadas</button></div>
+  <p class="err" id="pleErr"></p>
+  <menu>
+    <button type="button" class="btn flat" data-close>Cancelar</button>
+    <button type="button" class="btn" id="pleSave"><i class="ri-save-3-line"></i>Salvar</button>
+  </menu>
+</dialog>
+<dialog id="userDlg">
+  <form id="userForm" novalidate>
+    <div class="dlg-head">
+      <h3 id="userTitle">Escolha seu username</h3>
+      <button class="round dlg-x" type="button" id="userX" aria-label="Fechar" hidden><i class="ri-close-line"></i></button>
+    </div>
+    <div id="userStep1">
+      <label>USERNAME<span class="at-input"><b>@</b><input name="u1" maxlength="20" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="seunome"></span></label>
+      <p class="hint" id="userWhy"></p>
+      <p class="hint">3 a 20 caracteres: letras minúsculas, números, ponto e underline.</p>
+    </div>
+    <div id="userStep2" hidden>
+      <p class="who">Você escolheu <b id="userPicked"></b></p>
+      <label>DIGITE DE NOVO PARA CONFIRMAR<span class="at-input"><b>@</b><input name="u2" maxlength="20" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="seunome"></span></label>
+      <p class="hint">Confira com calma: depois de salvar, você só pode trocar o username 2 vezes a cada 30 dias.</p>
+    </div>
+    <p class="err" id="userErr"></p>
+    <menu>
+      <button type="button" class="btn flat" id="userLogout" hidden>Sair da conta</button>
+      <button type="button" class="btn flat" id="userBack" hidden>Voltar</button>
+      <button class="btn" id="userGo">Continuar</button>
+    </menu>
+  </form>
+</dialog>
 <dialog id="accDlg">
   <h3>Sua conta</h3>
   <p class="who" id="accMail"></p>
+  <p class="who acc-user" id="accUser" hidden></p>
   <div class="stack">
     <button class="btn flat" id="accPhoto"><i class="ri-image-edit-line"></i>Trocar foto</button>
     <button class="btn flat" id="accOut"><i class="ri-logout-box-r-line"></i>Sair</button>
@@ -239,6 +306,11 @@
   <div class="stack">
     <button class="btn flat" id="hexReset">Voltar à cor padrão do Ouce</button>
   </div>
+  </div>
+  <div id="userBox" hidden>
+    <h4 class="set-title">Username</h4>
+    <div class="user-row"><strong id="setUser">@</strong><button type="button" class="btn small" id="setUserBtn">Trocar</button></div>
+    <p class="hint" id="setUserHint"></p>
   </div>
 </dialog>
 

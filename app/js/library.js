@@ -3,7 +3,8 @@ import { $, $$, esc, sid } from './lib/dom.js'
 import { highlight, passFilters, score, tokensOf } from './lib/search.js'
 import { pickCover, tagOf } from './lib/track.js'
 import { openRow, syncQuick } from './player.js'
-import { createPlaylist, deletePlaylist, openPicker, setInPlaylist } from './playlists.js'
+import { openPlEditor } from './plEditor.js'
+import { authorName, createPlaylist, deletePlaylist, findPlaylist, isOwner, loadPublicPlaylists, openPicker, playlistCover, setInPlaylist, setPlaylistPublic, trackCount } from './playlists.js'
 import { audio, byId, canEdit, mine, state } from './state.js'
 import { clearSearch, renderFilters } from './suggest.js'
 import { sb } from './supabase.js'
@@ -50,16 +51,26 @@ function trackRow(r, i) {
 function playlistBlock(pl) {
   const ids = pl.track_ids || []
   const open = state.open.has(pl.id)
-  const items = ids.map(id => {
+  const own = isOwner(pl)
+  const by = authorName(pl)
+  const count = trackCount(pl)
+  const items = ids.filter(id => own || byId(id)).map(id => {
     const r = byId(id)
     return `<li class="pl-track" data-pl="${esc(pl.id)}" data-id="${esc(id)}">
       <button class="meta" data-act="pt-play"><strong>${esc(r ? r.title : '(removida)')}</strong><span>${esc(r ? r.artist || '' : '')}</span></button>
-      <button class="x" data-act="pt-rm" title="Tirar da playlist"><i class="ri-close-line"></i></button></li>`
+      ${own ? '<button class="x" data-act="pt-rm" title="Tirar da playlist"><i class="ri-close-line"></i></button>' : ''}</li>`
   }).join('')
+  const tools = own
+    ? `<button data-act="pl-play" title="Tocar"><i class="ri-play-fill"></i></button>
+       <button data-act="pl-edit" title="Editar playlist"><i class="ri-pencil-line"></i></button>
+       <button data-act="pl-pub" class="${pl.published ? 'liked' : ''}" title="${pl.published ? 'Tirar da biblioteca pública' : 'Postar na biblioteca pública'}"><i class="${pl.published ? 'ri-global-fill' : 'ri-global-line'}"></i></button>
+       <button data-act="pl-del" class="del" title="Excluir playlist"><i class="ri-delete-bin-6-line"></i></button>`
+    : '<button data-act="pl-play" title="Tocar"><i class="ri-play-fill"></i></button>'
+  const meta = `${by ? `<b>@${esc(by)}</b> · ` : ''}${count} faixa${count === 1 ? '' : 's'}${own && pl.published && state.tab !== 'plpub' ? ' · pública' : ''}`
   return `<li class="pl" data-pl="${esc(pl.id)}">
     <div class="pl-head">
-      <button class="pl-name" data-act="pl-toggle"><i class="ri-arrow-right-s-line${open ? ' rot' : ''}"></i><strong>${esc(pl.name)}</strong><span>${ids.length} faixa${ids.length === 1 ? '' : 's'}</span></button>
-      <div class="acts"><button data-act="pl-play" title="Tocar"><i class="ri-play-fill"></i></button><button data-act="pl-del" class="del" title="Excluir playlist"><i class="ri-delete-bin-6-line"></i></button></div>
+      <button class="pl-name" data-act="pl-toggle"><span class="pl-cv" style="background:${esc(playlistCover(pl))}"></span><span class="pl-info"><strong>${esc(pl.name)}</strong><span class="pl-meta">${meta}</span></span><i class="ri-arrow-right-s-line${open ? ' rot' : ''}"></i></button>
+      <div class="acts">${tools}</div>
     </div>
     ${open ? `<ul class="pl-tracks">${items || '<p class="hint" style="padding-left:30px">Vazia por enquanto.</p>'}</ul>` : ''}
   </li>`
@@ -68,14 +79,23 @@ function playlistBlock(pl) {
 export function renderLibrary(anim = false) {
   const list = $('#list')
   list.classList.toggle('anim', anim)
-  $('#tools').hidden = state.tab === 'playlists'
+  $('#tools').hidden = state.tab === 'playlists' || state.tab === 'plpub'
   renderFilters()
-  const loggedOnly = state.tab !== 'library'
-  $('#stats').textContent = state.tab === 'library'
+  const loggedOnly = state.tab !== 'library' && state.tab !== 'plpub'
+  const nPub = state.pubPlaylists.length
+  $('#stats').textContent = state.tab === 'plpub'
+    ? `${nPub} playlist${nPub === 1 ? '' : 's'} pública${nPub === 1 ? '' : 's'}`
+    : state.tab === 'library'
     ? `${state.pub.length} músicas públicas`
     : state.user ? `${state.rows.length} músicas · ${state.rows.filter(r => r.published).length} públicas · ${state.playlists.length} playlists` : 'Você não está logado'
   if (!state.user && loggedOnly) {
     list.innerHTML = `<div class="empty"><div class="rings"><i class="ri-user-3-line"></i></div><p>Entre para guardar suas músicas, playlists e histórico.</p><button class="btn" data-auth><i class="ri-login-box-line"></i>Entrar</button></div>`
+    return
+  }
+  if (state.tab === 'plpub') {
+    list.innerHTML = nPub
+      ? state.pubPlaylists.map(playlistBlock).join('')
+      : '<div class="empty"><div class="rings"><i class="ri-group-line"></i></div><p>Ninguém postou uma playlist ainda.<br>Poste uma das suas pelo ícone de globo, na aba Playlists.</p></div>'
     return
   }
   if (state.tab === 'playlists') {
@@ -123,7 +143,7 @@ export async function loadPublic(force = false) {
 
 export async function loadLibrary() {
   const [lists, saved] = await Promise.all([
-    sb.from('playlists').select('*').order('created_at', { ascending: false }),
+    sb.from('playlists').select('*').eq('user_id', state.user.id).order('created_at', { ascending: false }),
     sb.from('history').select('*').eq('user_id', state.user.id).order('created_at', { ascending: false }).limit(500)
   ])
   if (lists.error || saved.error) return console.error(lists.error || saved.error)
@@ -139,6 +159,7 @@ function setTab(tab) {
   $$('#seg .chip').forEach(c => c.classList.toggle('on', c.dataset.tab === tab))
   renderLibrary(true)
   if (tab === 'library') loadPublic()
+  if (tab === 'plpub') loadPublicPlaylists()
 }
 
 export function bindLibrary() {
@@ -165,7 +186,7 @@ function onListClick(e) {
   const act = btn.dataset.act
   const id = btn.closest('[data-id]')?.dataset.id
   const plEl = btn.closest('[data-pl]')
-  const pl = plEl && state.playlists.find(p => sid(p.id) === plEl.dataset.pl)
+  const pl = plEl && findPlaylist(plEl.dataset.pl)
   const playlistIds = () => (pl.track_ids || []).filter(x => byId(x))
 
   if (act === 'play') openRow(id, visibleRows().map(r => r.id))
@@ -178,6 +199,8 @@ function onListClick(e) {
     const ids = playlistIds()
     ids.length ? openRow(ids[0], ids, { kind: 'playlist', id: pl.id }) : toast('Essa playlist está vazia.')
   }
+  if (act === 'pl-edit') openPlEditor(pl)
+  if (act === 'pl-pub') setPlaylistPublic(pl, !pl.published)
   if (act === 'pl-del') deletePlaylist(pl)
   if (act === 'pt-play') openRow(id, playlistIds(), { kind: 'playlist', id: pl.id })
   if (act === 'pt-rm') setInPlaylist(pl, byId(id)?.id ?? id, false)

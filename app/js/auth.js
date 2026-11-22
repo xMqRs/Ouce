@@ -2,6 +2,7 @@ import { config } from './config.js'
 import { $, $$ } from './lib/dom.js'
 import { squareJpeg, toDataURL } from './lib/image.js'
 import { loadLibrary, renderLibrary } from './library.js'
+import { checkSignup, clearProfile, loadProfile } from './profile.js'
 import { syncQuick } from './player.js'
 import { state } from './state.js'
 import { sb } from './supabase.js'
@@ -12,6 +13,8 @@ export function openAuth(mode = 'login') {
   $$('#authTabs .chip').forEach(c => c.classList.toggle('on', c.dataset.mode === mode))
   $('#authSubmit').textContent = mode === 'login' ? 'Entrar' : 'Criar conta'
   $('#authForm').password.autocomplete = mode === 'login' ? 'current-password' : 'new-password'
+  $('#authUserBox').hidden = mode !== 'signup'
+  $('#authForm').username.required = mode === 'signup'
   $('#authErr').textContent = ''
   $('#authDlg').showModal()
 }
@@ -28,7 +31,15 @@ async function submitAuth(e) {
   const credentials = { email: form.email.value.trim().toLowerCase(), password: form.password.value }
   const btn = $('#authSubmit')
   btn.disabled = true
-  const { data, error } = state.authMode === 'signup' ? await sb.auth.signUp(credentials) : await sb.auth.signInWithPassword(credentials)
+  let username = ''
+  if (state.authMode === 'signup') {
+    const check = await checkSignup(form.username.value)
+    if (check.error) { btn.disabled = false; return ($('#authErr').textContent = check.error) }
+    username = check.name
+  }
+  const { data, error } = state.authMode === 'signup'
+    ? await sb.auth.signUp({ ...credentials, options: { data: { username } } })
+    : await sb.auth.signInWithPassword(credentials)
   btn.disabled = false
   if (error) return ($('#authErr').textContent = friendly(error.message))
   if (state.authMode === 'signup' && !data.session) return ($('#authErr').textContent = 'Conta criada! Confirme seu email antes de entrar.')
@@ -79,12 +90,14 @@ function signedIn(user) {
   if ($('#authDlg').open) $('#authDlg').close()
   loadAvatar()
   loadLibrary()
+  loadProfile()
 }
 
 function signedOut() {
   state.user = null
   state.rows = []
   state.playlists = []
+  clearProfile()
   $('#me').classList.remove('in')
   setAvatar(null)
   renderLibrary(true)

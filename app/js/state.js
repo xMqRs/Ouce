@@ -19,6 +19,11 @@ export const state = {
   fx: { slowed: 0, speedup: 0, reverb: 0, bass: 0 },
   editor: { on: false },
   source: null,
+  profile: null,
+  profileOk: null,
+  authors: new Map(),
+  pubPlaylists: [],
+  plTracks: new Map(),
   now: { id: null, blob: null, title: '', artist: '', cover: null, coverBlob: null }
 }
 
@@ -34,7 +39,7 @@ export const isAdmin = () => !!state.user && String(state.user.email || '').toLo
 // A permissão de verdade fica nas policies do Supabase (supabase/admin.sql).
 export const canEdit = id => mine(id) || (isAdmin() ? state.pub.find(r => sid(r.id) === sid(id)) : undefined)
 
-export const byId = id => mine(id) || state.pub.find(r => sid(r.id) === sid(id))
+export const byId = id => mine(id) || state.pub.find(r => sid(r.id) === sid(id)) || state.plTracks.get(sid(id))
 
 export const audio = new Audio()
 

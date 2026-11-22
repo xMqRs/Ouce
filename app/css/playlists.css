@@ -1,0 +1,91 @@
+/* username, cartões de playlist e o popup de edição de playlist */
+
+.at-input{display:flex;align-items:center;background:var(--ink);border:1px solid #262626;border-radius:8px;transition:border-color .2s}
+.at-input:focus-within{border-color:var(--accent)}
+.at-input b{padding-left:12px;color:var(--mute);font-weight:600}
+dialog .at-input input{flex:1;min-width:0;border:0;background:none;padding:12px 12px 12px 4px;border-radius:0}
+dialog label small.hint{margin-top:2px}
+.acc-user{margin:-8px 0 14px;color:var(--accent-hi)}
+.user-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+.user-row strong{font-size:17px;overflow-wrap:anywhere}
+#userDlg .who{margin-bottom:12px}
+#userDlg .who b{color:var(--txt)}
+
+/* cartão da playlist (aba Playlists e Playlists públicas) */
+.pl-head{padding:8px 12px 8px 8px}
+.pl-name{padding:0;min-width:0}
+.pl-cv{display:block;flex:none;width:52px;height:52px;border-radius:10px;background:#1a1a1a center/cover;box-shadow:0 6px 14px -6px rgb(0 0 0/.7)}
+.pl-info{display:flex;flex-direction:column;gap:2px;min-width:0;text-align:left}
+.pl-info strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-info .pl-meta{color:var(--mute);font:12px var(--sans);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-meta b{color:var(--accent-hi);font-weight:600}
+.pl-badge{margin-left:6px;padding:1px 7px;border-radius:99px;border:1px solid var(--line);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
+.pl-name i{margin-left:auto}
+
+/* popup de edição */
+dialog.ple{width:min(94vw,640px);max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;padding:24px 26px 20px;border-radius:24px}
+.dlg-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px}
+.ple-top{display:grid;grid-template-columns:132px minmax(0,1fr);gap:18px;margin:8px 0 4px}
+.ple-cover{position:relative;width:132px;height:132px;border-radius:18px;overflow:hidden;background:#1a1a1a;box-shadow:0 14px 28px -12px rgb(0 0 0/.7)}
+.ple-cv{position:absolute;inset:0;background:#1a1a1a center/cover}
+.ple-cover-hint{position:absolute;inset:auto 0 0;display:flex;align-items:center;justify-content:center;gap:6px;padding:20px 0 9px;font-size:12px;font-weight:600;color:#fff;background:linear-gradient(transparent,rgb(0 0 0/.7));opacity:.92;transition:opacity .2s}
+.ple-cover:hover .ple-cover-hint{opacity:1}
+.ple-cover:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
+.ple-fields{min-width:0;display:flex;flex-direction:column;gap:8px}
+.ple-fields label{margin-bottom:0}
+.ple-by{font-size:13px;color:var(--mute)}
+.ple-by b{color:var(--accent-hi);font-weight:600}
+.ple-fields .switch-row{margin:2px 0 0}
+.ple-fields .btn{align-self:flex-start}
+.ple .set-title{display:flex;align-items:center;gap:8px;margin:18px 0 8px}
+.ple .set-title span{font-weight:500;letter-spacing:0;text-transform:none;color:var(--mute)}
+.ple-list{list-style:none;display:grid;gap:4px;max-height:176px;overflow-y:auto;overscroll-behavior:contain;padding:2px;margin:0}
+.ple-empty{padding:14px;text-align:center;font-size:13px;color:var(--mute)}
+.ple-item{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:12px;border:1px solid transparent;transition:background .2s,border-color .2s}
+.ple-item:hover{background:rgb(255 255 255/.04)}
+.ple-item .cv{flex:none;width:38px;height:38px;border-radius:8px}
+.ple-item .meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;text-align:left}
+.ple-item .meta strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ple-item .meta span{font-size:12px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ple-item .ic{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;color:var(--mute);transition:background .2s,color .2s}
+.ple-item .ic:hover{background:rgb(255 255 255/.08);color:var(--txt)}
+.ple-item .ic:disabled{opacity:.3;pointer-events:none}
+.ple-pick{cursor:pointer}
+.ple-pick.on{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:color-mix(in srgb,var(--accent-hi) 50%,transparent)}
+.ple-pick .ic{color:var(--accent-hi)}
+.ple-find{display:grid;gap:8px;margin-bottom:8px}
+.ple-find .search{min-width:0}
+.ple-add{display:flex;justify-content:flex-end;margin:8px 0 0}
+.ple .err{min-height:18px;margin-top:6px}
+
+@media(max-width:520px){
+  .ple-top{grid-template-columns:1fr;justify-items:center}
+  .ple-fields{width:100%}
+  dialog.ple{padding:20px 16px 16px}
+}
+
+/* temas */
+html[data-style=glass] .at-input,
+html[data-style=glass] .ple-item .ic:hover{background:rgb(255 255 255/.06)}
+html[data-style=glass] .at-input{border-color:rgb(255 255 255/.18)}
+html[data-style=glass] .at-input:focus-within{border-color:rgb(255 255 255/.6)}
+html[data-style=glass] dialog .at-input input{background:none!important;border:0!important;box-shadow:none!important}
+html[data-style=glass] .ple-cover{box-shadow:0 14px 28px -12px rgb(0 0 0/.6),inset 0 0 0 1px rgb(255 255 255/.18)}
+html[data-style=glass] .ple-pick.on{background:rgb(var(--accent-rgb)/.22);border-color:rgb(255 255 255/.28)}
+html[data-style=glass] .pl-cv{box-shadow:0 6px 14px -6px rgb(0 0 0/.6),inset 0 0 0 1px rgb(255 255 255/.14)}
+html[data-style=glass] .pl-badge{border-color:rgb(255 255 255/.2)}
+
+html[data-style=aero] .at-input{background:rgb(255 255 255/.78);border-color:rgb(120 190 230/.85);box-shadow:inset 0 2px 4px rgb(5 70 120/.18)}
+html[data-style=aero] .at-input:focus-within{border-color:#1e9be0}
+html[data-style=aero] dialog .at-input input{background:none!important;border:0!important;box-shadow:none!important;color:var(--txt)}
+html[data-style=aero] .at-input b,html[data-style=aero] .acc-user,html[data-style=aero] .pl-meta b,html[data-style=aero] .ple-by b{color:#0b6aa8}
+html[data-style=aero] .pl-cv{box-shadow:0 3px 8px rgb(5 70 120/.4),inset 0 0 0 1px rgb(255 255 255/.7)}
+html[data-style=aero] .pl-badge{background:rgb(255 255 255/.6);border-color:#fff;color:#0b6aa8}
+html[data-style=aero] .ple-cover{box-shadow:0 8px 20px rgb(5 70 120/.4),inset 0 0 0 1px rgb(255 255 255/.8)}
+html[data-style=aero] .ple-cover-hint{background:linear-gradient(transparent,rgb(5 70 120/.65))}
+html[data-style=aero] .ple-item:hover{background:rgb(255 255 255/.5)}
+html[data-style=aero] .ple-item .ic:hover{background:rgb(255 255 255/.7);color:#0a5a96}
+html[data-style=aero] .ple-pick.on{background:rgb(255 255 255/.7);border-color:#27b2ee}
+html[data-style=aero] .ple-pick .ic{color:#0b6aa8}
+#userDlg .hint{margin:0 0 8px}
+.ple .search input{border:0!important;background:none!important;box-shadow:none!important}

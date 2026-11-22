@@ -1,5 +1,6 @@
 import { $, $$ } from './lib/dom.js'
 import { loadPublic } from './library.js'
+import { loadPublicPlaylists } from './playlists.js'
 import { state } from './state.js'
 
 function setView(name) {
@@ -10,6 +11,7 @@ function setView(name) {
   void next.offsetWidth
   next.classList.add('on')
   if (name === 'library' && state.tab === 'library') loadPublic()
+  if (name === 'library' && state.tab === 'plpub') loadPublicPlaylists()
 }
 
 export function setFocus(on = !document.body.classList.contains('focus')) {
