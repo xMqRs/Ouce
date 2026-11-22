@@ -38,6 +38,8 @@ Edite `app/js/config.js` (o modelo está em `app/js/config.example.js`):
 
 > [!IMPORTANT]
 > Rode `supabase/schema.sql` no SQL Editor do seu projeto antes de abrir o site. Sem ele não existem as tabelas, o bucket nem as políticas, e login, histórico, playlists e biblioteca pública não funcionam.
+>
+> Se o seu banco já existe de antes, rode só `supabase/playlists-publicas.sql`: ele cria os perfis (`@username`) e as playlists públicas e pode ser repetido sem problema. Sem ele o app continua funcionando, mas o username e as playlists públicas não.
 
 A chave `anon` é pública por natureza: ela vai para o navegador de qualquer jeito, por isso o `config.js` é versionado e a Vercel consegue publicá-lo. Quem protege os dados são as políticas de RLS do `schema.sql`. Nunca use a chave `service_role` aqui.
 
@@ -91,6 +93,8 @@ Depois de publicar uma mudança de visual e não ver diferença, faça um recarr
 - Editor de corte com forma de onda: mantém ou remove um trecho
 - A cor do site acompanha a capa da música, ou fica na cor que você escolher em hex
 - Histórico, playlists e biblioteca pública com login
+- Username (`@nome`) em cada conta, escolhido no cadastro
+- Playlists públicas: qualquer pessoa pode postar uma playlist na biblioteca, com capa, nome, autor e número de faixas
 - Busca na biblioteca com sugestões enquanto digita (ignora acentos, aceita pequenos erros de digitação, destaca o trecho encontrado) e filtros por Slowed, Speed up, Reverb e Grave
 - Upload por clique ou arrastando arquivos, com capa lida direto do arquivo (MP3 em ID3v2.2, v2.3 e v2.4, FLAC e M4A)
 - Layout para desktop e celular
@@ -122,6 +126,20 @@ Para trocar a foto de fundo do Frutiger Aero, substitua `app/assets/aero/bg.jpg`
 ```
 
 Use só imagens que você pode usar publicamente. Se o `covers.json` não carregar, o app usa uma lista padrão com `ponte-neve.gif`.
+
+## Username
+
+- No cadastro há um campo de username (3 a 20 caracteres: letras minúsculas, números, ponto e underline). Ele aparece como `@nome` nas playlists públicas.
+- Quem já tinha conta e ainda não tem username vê um pop-up ao entrar. Ele não fecha até o username ser definido, pede o nome duas vezes para confirmar e tem só a saída "Sair da conta".
+- Em Configurações dá para trocar o username: 2 trocas a cada 30 dias. O limite é aplicado no banco (`profiles_guard`), e não só no app. A primeira escolha não conta como troca.
+- Os perfis ficam na tabela `profiles` (só `id` e `username`, legíveis por todos; o e-mail nunca é exposto).
+
+## Playlists públicas
+
+- Na Biblioteca há a aba **Playlists públicas**, que qualquer pessoa pode ver, mesmo sem login. Cada cartão mostra a capa, o nome, o `@autor` e quantas faixas tem.
+- O dono da playlist tem, na aba Playlists e na aba pública, os botões de editar e de postar (globo). Em **Editar** abre um pop-up com capa (imagem ou GIF até 4 MB), nome, a lista de faixas (dá para reordenar e tirar), a chave "Postar na biblioteca pública" e uma busca com seleção para adicionar músicas, tanto das suas quanto da biblioteca pública. Nada é gravado até tocar em **Salvar**.
+- Para postar é preciso ter username. As faixas privadas de uma playlist postada são publicadas junto, para que todos consigam ouvir.
+- A capa da playlist, quando não é escolhida, vem da primeira faixa que tiver capa. Na lista a capa aparece estática, mesmo sendo GIF; o GIF anima no pop-up de edição.
 
 ## Modo editor
 
@@ -229,7 +247,7 @@ Ouce/
 │  │  ├─ covers/           capas automáticas (covers.json lista os arquivos)
 │  │  └─ aero/bg.jpg       fundo do tema Frutiger Aero
 │  ├─ css/                 tokens, base, layout, player, focus, library, components,
-│  │                       editor, responsive, glass (tema), aero (tema)
+│  │                       editor, playlists, responsive, glass (tema), aero (tema)
 │  └─ js/
 │     ├─ main.js           ponto de entrada
 │     ├─ config.js         dados do Supabase
@@ -246,7 +264,9 @@ Ouce/
 │     ├─ download.js       exporta a música editada em WAV
 │     ├─ editor.js         editor de corte com forma de onda
 │     ├─ video.js          extrai o áudio de vídeos
-│     ├─ playlists.js      playlists
+│     ├─ playlists.js      playlists, publicação e carregamento das públicas
+│     ├─ plEditor.js       pop-up de edição de playlist
+│     ├─ profile.js        username: pop-up obrigatório, confirmação e limite de trocas
 │     ├─ auth.js           login, cadastro, foto de perfil
 │     ├─ theme.js          temas e cor automática pela capa
 │     ├─ light.js          luz do tema Liquid Glass (mouse ou inclinação)
@@ -263,7 +283,7 @@ Ouce/
 │  ├─ assets/              logo, wordmark, imagem de compartilhamento, ícones
 │  ├─ css/
 │  └─ js/                  demo de áudio, mesa 3D da demo, cena 3D ligada à rolagem e menu mobile
-└─ supabase/schema.sql     tabelas, funções e políticas
+└─ supabase/                schema.sql (banco completo) e playlists-publicas.sql (só o novo, para bancos existentes)
 ```
 
 ## Licença
