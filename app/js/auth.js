@@ -50,6 +50,19 @@ function setAvatar(url) {
   const me = $('#me')
   me.style.backgroundImage = url ? `url("${url}")` : ''
   me.firstElementChild.hidden = !!url
+  $('#accPhotoImg').style.backgroundImage = url ? `url("${url}")` : ''
+  $('#accPhotoImg').classList.toggle('has', !!url)
+}
+
+// números e data de entrada do pop-up da conta
+function fillAccount() {
+  $('#accTracks').textContent = state.rows.length
+  $('#accPubs').textContent = state.rows.filter(r => r.published).length
+  $('#accLists').textContent = state.playlists.length
+  const since = state.user?.created_at ? new Date(state.user.created_at) : null
+  const ok = since && !isNaN(since)
+  $('#accSince').hidden = !ok
+  if (ok) $('#accSince').innerHTML = `<i class="ri-calendar-line"></i>Membro desde ${since.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}`
 }
 
 const avatarKey = uid => `ouce_avatar_${uid}`
@@ -105,8 +118,13 @@ function signedOut() {
 }
 
 export function bindAuth() {
-  $('#me').addEventListener('click', () => (state.user ? $('#accDlg').showModal() : openAuth('login')))
+  $('#me').addEventListener('click', () => {
+    if (!state.user) return openAuth('login')
+    fillAccount()
+    $('#accDlg').showModal()
+  })
   $('#accPhoto').addEventListener('click', () => $('#photo').click())
+  $('#accAvatar').addEventListener('click', () => $('#photo').click())
   $('#accOut').addEventListener('click', async () => { await sb.auth.signOut(); $('#accDlg').close() })
   $('#photo').addEventListener('change', e => { changeAvatar(e.target.files[0]); e.target.value = '' })
   $('#authTabs').addEventListener('click', e => {

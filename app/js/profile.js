@@ -69,6 +69,11 @@ export function syncProfileUI() {
   const name = state.profile?.username
   $('#accUser').textContent = name ? `@${name}` : ''
   $('#accUser').hidden = !name
+  $('#accInitial').textContent = (name || state.user?.email || '?')[0].toUpperCase()
+  const { left: swaps, next: nextSwap } = changeInfo()
+  const stuck = !!name && !swaps
+  $('#accUserBtn').disabled = stuck
+  $('#accUserBtn').title = stuck ? `Disponível de novo em ${fmtDate(nextSwap)}` : ''
   const box = $('#userBox')
   box.hidden = !state.user || !state.profileOk
   if (box.hidden) return
@@ -179,6 +184,7 @@ export function bindProfile() {
   $('#userX').addEventListener('click', () => dlg.close())
   $('#userLogout').addEventListener('click', async () => { locked = false; dlg.close(); await sb.auth.signOut() })
   $('#setUserBtn').addEventListener('click', () => openUsernameDialog({ required: false }))
+  $('#accUserBtn').addEventListener('click', () => { $('#accDlg').close(); openUsernameDialog({ required: false }) })
   // enquanto o username não existe, o pop-up não fecha (nem com Esc nem reabrindo a aba)
   dlg.addEventListener('cancel', e => { if (locked) e.preventDefault() })
   dlg.addEventListener('close', () => { if (locked && state.user && !dlg.open) setTimeout(() => !dlg.open && dlg.showModal(), 0) })

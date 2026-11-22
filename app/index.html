@@ -256,14 +256,26 @@
     </menu>
   </form>
 </dialog>
-<dialog id="accDlg">
-  <h3>Sua conta</h3>
-  <p class="who" id="accMail"></p>
-  <p class="who acc-user" id="accUser" hidden></p>
-  <div class="stack">
+<dialog id="accDlg" class="acc">
+  <button class="round dlg-x acc-x" type="button" data-close aria-label="Fechar"><i class="ri-close-line"></i></button>
+  <div class="acc-hero">
+    <button type="button" class="acc-avatar" id="accAvatar" aria-label="Trocar foto">
+      <span class="acc-photo" id="accPhotoImg"><span id="accInitial">?</span></span>
+      <span class="acc-cam"><i class="ri-camera-line"></i></span>
+    </button>
+    <h3 class="acc-name" id="accUser" hidden></h3>
+    <p class="acc-mail" id="accMail"></p>
+    <p class="acc-since" id="accSince" hidden></p>
+  </div>
+  <div class="acc-stats">
+    <div><b id="accTracks">0</b><span>músicas</span></div>
+    <div><b id="accPubs">0</b><span>públicas</span></div>
+    <div><b id="accLists">0</b><span>playlists</span></div>
+  </div>
+  <div class="acc-actions">
+    <button class="btn flat" id="accUserBtn"><i class="ri-at-line"></i>Trocar username</button>
     <button class="btn flat" id="accPhoto"><i class="ri-image-edit-line"></i>Trocar foto</button>
-    <button class="btn flat" id="accOut"><i class="ri-logout-box-r-line"></i>Sair</button>
-    <button class="btn flat" data-close>Fechar</button>
+    <button class="btn flat out" id="accOut"><i class="ri-logout-box-r-line"></i>Sair da conta</button>
   </div>
 </dialog>
 
