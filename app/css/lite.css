@@ -1,0 +1,36 @@
+/* Modo leve: menos desfoque, menos animação e menos camadas. Liga sozinho em tela pequena,
+   aparelho de toque ou pouca memória (js/perf.js), e dá para forçar em Configurações. */
+
+.lite-row{margin-top:18px}
+
+html.lite .anim .row{animation:none}
+html.lite .view.on{animation-duration:.2s}
+html.lite dialog[open]{animation-duration:.18s}
+html.lite .card,html.lite .sleeve{will-change:auto}
+/* reverb: só uma camada de eco no vinil */
+html.lite .layer.l3,html.lite .layer.l2{display:none}
+
+/* Liquid Glass */
+html.lite[data-style=glass]{--blur:blur(10px)}
+html.lite[data-style=glass] dialog{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+html.lite[data-style=glass] dialog::backdrop{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(3 4 10/.66)}
+html.lite[data-style=glass] .tab.on{-webkit-backdrop-filter:none;backdrop-filter:none}
+html.lite[data-style=glass] .drop{-webkit-backdrop-filter:none;backdrop-filter:none}
+/* O que se mexe dentro de um painel com desfoque obriga a GPU a refazer o desfoque a cada quadro.
+   No cartão do player (vinil girando), no mini player e no aviso, o vidro vira um tom mais fechado, sem blur. */
+html.lite[data-style=glass] .card{outline:0;-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--sheen),rgb(14 16 34/.52)}
+html.lite[data-style=glass] .mini{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(var(--accent-rgb)/.58)}
+html.lite[data-style=glass] .toast{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(10 12 24/.84)}
+
+/* Frutiger Aero */
+html.lite[data-style=aero] body::before{background-image:url(../assets/aero/bg-m.jpg)}
+html.lite[data-style=aero] .rail,
+html.lite[data-style=aero] .fx,
+html.lite[data-style=aero] .editbar,
+html.lite[data-style=aero] .sug,
+html.lite[data-style=aero] .pl-head,
+html.lite[data-style=aero] dialog,
+html.lite[data-style=aero] .drop{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+html.lite[data-style=aero] dialog::backdrop{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(10 70 115/.5)}
+html.lite[data-style=aero] .card{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(180deg,rgb(255 255 255/.74),rgb(255 255 255/.46) 48%,rgb(200 238 255/.5) 49%,rgb(255 255 255/.6))}
+html.lite[data-style=aero] .toast{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(240 250 255/.94)}

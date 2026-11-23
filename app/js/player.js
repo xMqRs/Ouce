@@ -134,7 +134,12 @@ export function setNow(patch, fx) {
 
 export async function play() {
   await resumeAudio()
-  try { await audio.play() } catch {}
+  try {
+    await audio.play()
+  } catch (e) {
+    // celular bloqueia o áudio sem um toque: avisa em vez de ficar mudo sem explicar
+    if (e && e.name === 'NotAllowedError') toast('Toque em tocar para liberar o áudio.')
+  }
   if (!state.counted) {
     state.counted = true
     sb.rpc('bump_stat', { stat: 'plays' }).then(() => {}, () => {})
@@ -241,7 +246,10 @@ export function bindPlayer() {
 
   audio.addEventListener('play', syncPlayState)
   audio.addEventListener('pause', syncPlayState)
-  audio.addEventListener('ended', () => (state.repeat === 2 ? (audio.currentTime = 0, play()) : step(1, true)))
+  audio.addEventListener('ended', () => {
+    if (!state.now.blob) return
+    state.repeat === 2 ? (audio.currentTime = 0, play()) : step(1, true)
+  })
   audio.addEventListener('loadedmetadata', () => { $('#dur').textContent = fmt(audio.duration) })
   audio.addEventListener('timeupdate', () => {
     const d = audio.duration
@@ -264,9 +272,28 @@ export function bindPlayer() {
   })
 
   if ('mediaSession' in navigator) {
-    navigator.mediaSession.setActionHandler('play', play)
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause())
-    navigator.mediaSession.setActionHandler('previoustrack', () => step(-1))
-    navigator.mediaSession.setActionHandler('nexttrack', () => step(1))
+    const ms = navigator.mediaSession
+    const handlers = {
+      play,
+      pause: () => audio.pause(),
+      previoustrack: () => step(-1),
+      nexttrack: () => step(1),
+      seekbackward: e => { audio.currentTime = Math.max(0, audio.currentTime - (e.seekOffset || 10)) },
+      seekforward: e => { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + (e.seekOffset || 10)) },
+      seekto: e => { if (e.seekTime != null) audio.currentTime = e.seekTime }
+    }
+    for (const [action, fn] of Object.entries(handlers)) {
+      try { ms.setActionHandler(action, fn) } catch {}
+    }
+    // a tela de bloqueio mostra o estado e a barra de progresso certos
+    audio.addEventListener('play', () => { ms.playbackState = 'playing' })
+    audio.addEventListener('pause', () => { ms.playbackState = 'paused' })
+    let lastPos = 0
+    audio.addEventListener('timeupdate', () => {
+      const now = Date.now()
+      if (now - lastPos < 1000 || !audio.duration || !isFinite(audio.duration)) return
+      lastPos = now
+      try { ms.setPositionState({ duration: audio.duration, position: Math.min(audio.currentTime, audio.duration), playbackRate: audio.playbackRate || 1 }) } catch {}
+    })
   }
 }

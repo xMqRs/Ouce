@@ -3,6 +3,8 @@ import { bindEditMode } from './editmode.js'
 import { bindPlEditor } from './plEditor.js'
 import { bindProfile } from './profile.js'
 import { initLight } from './light.js'
+import { primeAudio } from './engine.js'
+import { initPerf } from './perf.js'
 import { bindEditor } from './editor.js'
 import { bindEffects, drawChips, syncFxUI } from './effects.js'
 import { $, paint } from './lib/dom.js'
@@ -37,6 +39,8 @@ function start() {
   bindPlEditor()
   bindProfile()
   initLight()
+  initPerf()
+  ;['pointerdown', 'touchend', 'keydown'].forEach(ev => addEventListener(ev, primeAudio, { once: true, capture: true, passive: true }))
   bindPlaylists()
   bindAuth()
   bindSettings()

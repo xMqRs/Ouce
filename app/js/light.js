@@ -1,8 +1,9 @@
 // Luz do tema Liquid Glass: o reflexo e a borda iluminada dos painéis seguem o ponteiro
-// (ou o giro do aparelho no celular). Só trabalha com o tema ativo.
+// no computador. Só trabalha com o tema ativo e fica parada no modo leve.
+import { perf } from './perf.js'
+
 export function initLight() {
   const root = document.documentElement
-  const quiet = matchMedia('(prefers-reduced-motion: reduce)').matches
   let lx = 0.18
   let ly = 0.1
   let shown = ''
@@ -17,17 +18,12 @@ export function initLight() {
     root.style.setProperty('--ly', ly.toFixed(2))
   }
   const push = (x, y) => {
-    if (root.dataset.style !== 'glass') return
-    lx = Math.min(1, Math.max(0, x))
-    ly = Math.min(1, Math.max(0, y))
+    if (root.dataset.style !== 'glass' || perf.lite) return
+    // passos de 0,05: cada mudança repinta os painéis de vidro, então menos mudanças = mais fluidez
+    lx = Math.round(Math.min(1, Math.max(0, x)) * 20) / 20
+    ly = Math.round(Math.min(1, Math.max(0, y)) * 20) / 20
     if (!raf) raf = requestAnimationFrame(paint)
   }
 
   addEventListener('pointermove', e => push(e.clientX / innerWidth, e.clientY / innerHeight), { passive: true })
-  if (!quiet) {
-    addEventListener('deviceorientation', e => {
-      if (e.gamma == null || e.beta == null) return
-      push(0.5 + Math.max(-30, Math.min(30, e.gamma)) / 60, 0.5 + Math.max(-30, Math.min(30, e.beta - 45)) / 60)
-    }, { passive: true })
-  }
 }

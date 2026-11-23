@@ -1,4 +1,5 @@
 import { engine } from './engine.js'
+import { perf } from './perf.js'
 import { $, $$ } from './lib/dom.js'
 import { audio } from './state.js'
 import { theme } from './theme.js'
@@ -15,8 +16,11 @@ let angle = 0
 let bass = 0
 let lastTick = performance.now()
 
+let idleDrawn = false
+
 function sizeBars() {
-  const dpr = devicePixelRatio || 1
+  idleDrawn = false
+  const dpr = Math.min(devicePixelRatio || 1, perf.lite ? 1.25 : 2)
   barsCv.width = barsCv.clientWidth * dpr
   barsCv.height = barsCv.clientHeight * dpr
   bc.setTransform(dpr, 0, 0, dpr, 0, 0)
@@ -66,12 +70,14 @@ function drawBars(now, playing) {
 }
 
 function sway(now) {
-  if (calm) return
+  if (calm || perf.lite) return
   const t = now / 1000
   tilt.style.transform = `translateZ(${(bass * 14).toFixed(1)}px) rotateY(${(-16 + Math.sin(t * 0.7) * 4).toFixed(2)}deg) rotateX(${(3 + Math.sin(t * 0.5) * 1.5).toFixed(2)}deg)`
 }
 
 function frame(now) {
+  // no modo leve a animação roda a ~30 quadros por segundo
+  if (perf.lite && now - lastTick < 32) return requestAnimationFrame(frame)
   const dt = (now - lastTick) / 1000
   lastTick = now
   const playing = !audio.paused
@@ -82,8 +88,10 @@ function frame(now) {
     target = engine.nodes.freq.slice(0, 6).reduce((a, v) => a + v, 0) / 6 / 255
   }
   bass += (target - bass) * 0.15
-  spinners.forEach(el => { el.style.transform = `rotate(${angle}deg)` })
-  drawBars(now, playing)
+  if (playing || !idleDrawn) spinners.forEach(el => { el.style.transform = `rotate(${angle}deg)` })
+  // pausado no modo leve: desenha as barras uma vez e para (sem gastar bateria à toa)
+  if (playing || !perf.lite || !idleDrawn) drawBars(now, playing)
+  idleDrawn = !playing
   sway(now)
   requestAnimationFrame(frame)
 }
@@ -111,6 +119,7 @@ export function startVisuals() {
     pointer.x = e.clientX / innerWidth
     pointer.y = e.clientY / innerHeight
   })
+  document.addEventListener('ouce:perf', sizeBars)
   bindTilt()
   requestAnimationFrame(frame)
 }

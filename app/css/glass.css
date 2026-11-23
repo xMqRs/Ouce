@@ -19,9 +19,7 @@ html[data-style=glass] body::before{content:"";position:fixed;inset:-8%;z-index:
   background:
     radial-gradient(55% 50% at 90% 6%,rgb(var(--accent-hi-rgb)/.62),transparent 68%),
     radial-gradient(65% 65% at 6% 94%,rgb(var(--accent-rgb)/.82),transparent 70%),
-    linear-gradient(165deg,color-mix(in srgb,var(--accent) 34%,#05060c),#05060c 72%);
-  animation:glassDrift 38s ease-in-out infinite alternate}
-@keyframes glassDrift{from{transform:translate3d(-1%,-.6%,0) scale(1)}to{transform:translate3d(1.2%,1%,0) scale(1.05)}}
+    linear-gradient(165deg,color-mix(in srgb,var(--accent) 34%,#05060c),#05060c 72%);}
 
 /* vidro: quase transparente, com um reflexo largo e a borda que pega a luz */
 html[data-style=glass] .rail,
@@ -128,7 +126,6 @@ html[data-style=glass] .foot b{color:#fff}
 html[data-style=glass] .theme-opt{background:rgb(255 255 255/.04);border-color:rgb(255 255 255/.14)}
 html[data-style=glass] .theme-opt.on{border-color:rgb(255 255 255/.6);background:rgb(255 255 255/.09)}
 
-@media(prefers-reduced-motion:reduce){html[data-style=glass] body::before{animation:none}}
 @media(prefers-reduced-transparency:reduce){
   html[data-style=glass] .rail,html[data-style=glass] .card,html[data-style=glass] .fx,html[data-style=glass] .editbar,html[data-style=glass] .sug,html[data-style=glass] dialog,html[data-style=glass] .toast{
     -webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(22 24 44/.94)}
@@ -138,3 +135,9 @@ html[data-style=glass] .theme-opt.on{border-color:rgb(255 255 255/.6);background
 }
 
 html[data-style=glass] .src-tag{background:rgb(255 255 255/.05);border-color:rgb(255 255 255/.16)}
+
+/* Desempenho: o que se mexe dentro de um painel com desfoque (vinil girando no cartão, mini player, aviso)
+   obriga a GPU a refazer o desfoque a cada quadro. Nesses três o vidro fica mais fechado, sem blur. */
+html[data-style=glass] .card{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--sheen),rgb(14 16 34/.6)}
+html[data-style=glass] .mini{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(var(--accent-rgb)/.52)}
+html[data-style=glass] .toast{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(10 12 24/.8)}

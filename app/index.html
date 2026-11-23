@@ -29,9 +29,10 @@
 <link rel="stylesheet" href="css/editor.css">
 <link rel="stylesheet" href="css/playlists.css">
 <link rel="stylesheet" href="css/responsive.css">
-<link rel="stylesheet" href="css/glass.css?v=5">
-<link rel="stylesheet" href="css/aero.css?v=1">
-<script>try{var s=localStorage.getItem("ouce_style");if(s==="glass"||s==="aero")document.documentElement.dataset.style=s}catch(e){}</script>
+<link rel="stylesheet" href="css/glass.css?v=8">
+<link rel="stylesheet" href="css/aero.css?v=3">
+<link rel="stylesheet" href="css/lite.css?v=2">
+<script>try{var l=localStorage.getItem("ouce_lite"),m=matchMedia,n=navigator;if(l==="1"||(l!=="0"&&(m("(pointer: coarse)").matches||m("(max-width: 820px)").matches||(n.deviceMemory&&n.deviceMemory<=4)||(n.hardwareConcurrency&&n.hardwareConcurrency<=4))))document.documentElement.classList.add("lite")}catch(e){}try{var s=localStorage.getItem("ouce_style");if(s==="glass"||s==="aero")document.documentElement.dataset.style=s}catch(e){}</script>
 </head>
 <body data-view="player">
 
@@ -318,6 +319,10 @@
   <div class="stack">
     <button class="btn flat" id="hexReset">Voltar à cor padrão do Ouce</button>
   </div>
+  </div>
+  <div class="switch-row lite-row">
+    <label for="liteSw">Modo leve<small>Menos desfoque e animação, para o celular não travar. Liga sozinho em telas pequenas.</small></label>
+    <input type="checkbox" class="switch" id="liteSw">
   </div>
   <div id="userBox" hidden>
     <h4 class="set-title">Username</h4>
