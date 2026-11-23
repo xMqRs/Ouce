@@ -166,4 +166,4 @@ input[type=range]::-moz-range-thumb{background:#f4f4f6;box-shadow:0 2px 0 #8c8f9
 .num.flip{animation:coin .9s var(--ease)}
 @keyframes coin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
 .js .r3.done{transition:transform .25s ease-out,opacity .4s}
-.demo,.dev{will-change:transform}
+@media(hover:hover) and (pointer:fine){.demo,.dev{will-change:transform}}

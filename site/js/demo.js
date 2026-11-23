@@ -1,5 +1,8 @@
 const NOTES = [220, 261.63, 329.63, 392, 329.63, 261.63, 196, 246.94]
 const STEP = 0.42
+const weak = () => matchMedia('(pointer: coarse)').matches || matchMedia('(max-width: 820px)').matches
+// quanto à frente as notas são agendadas: no celular o navegador atrasa temporizadores e a nota falharia
+const AHEAD = () => (weak() ? 0.9 : 0.4)
 
 function makeImpulse(ctx, secs = 3, decay = 2.6) {
   const len = ctx.sampleRate * secs
@@ -34,7 +37,7 @@ export function initDemo() {
   let lastSpin = 0
 
   function drawBars() {
-    const dpr = devicePixelRatio || 1
+    const dpr = Math.min(devicePixelRatio || 1, weak() ? 1.25 : 2)
     const w = barsCv.clientWidth
     const h = barsCv.clientHeight
     if (barsCv.width !== Math.round(w * dpr)) {
@@ -77,7 +80,8 @@ export function initDemo() {
   }
 
   function build() {
-    ctx = new AudioContext()
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback' } catch {}
+    try { ctx = new AudioContext({ latencyHint: 'playback' }) } catch { ctx = new AudioContext() }
     bus = ctx.createGain()
     dry = ctx.createGain()
     wet = ctx.createGain()
@@ -86,7 +90,7 @@ export function initDemo() {
     analyser.fftSize = 128
     analyser.smoothingTimeConstant = 0.8
     freq = new Uint8Array(analyser.frequencyBinCount)
-    verb.buffer = makeImpulse(ctx)
+    verb.buffer = makeImpulse(ctx, weak() ? 1.6 : 3)
     bus.connect(dry)
     bus.connect(verb)
     verb.connect(wet)
@@ -120,7 +124,7 @@ export function initDemo() {
   }
 
   function schedule() {
-    while (next < ctx.currentTime + 0.3) {
+    while (next < ctx.currentTime + AHEAD()) {
       const r = rate()
       const freq = NOTES[step % NOTES.length] * r
       note(freq, next, (STEP * 1.8) / r, 0.22)

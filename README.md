@@ -106,7 +106,7 @@ Em Configurações, na seção Tema. A escolha fica no `localStorage` (`ouce_sty
 | Tema | Arquivo | Como é |
 |---|---|---|
 | Padrão | `css/tokens.css` e demais | Escuro, com a cor da capa |
-| Liquid Glass | `css/glass.css` | Vidro quase transparente com a cor da capa ao fundo. O reflexo e a borda iluminada dos painéis seguem a luz (`js/light.js`): o mouse no computador, a inclinação do aparelho no celular |
+| Liquid Glass | `css/glass.css` | Vidro quase transparente com a cor da capa ao fundo. O reflexo e a borda iluminada dos painéis seguem a luz do mouse (`js/light.js`); no modo leve (celular) a luz fica parada |
 | Frutiger Aero | `css/aero.css` | Céu e água desfocados ao fundo (`assets/aero/bg.jpg`), vidro com gloss, botões em forma de bolha e ícones no lugar das capas |
 
 No Frutiger Aero a paleta é fixa (azul e verde-água, com um verde de folha no botão de tocar). A cor da capa e a cor personalizada ficam desligadas, e a seção de cor some das configurações. Ao voltar para outro tema, a cor da capa volta.
@@ -114,6 +114,14 @@ No Frutiger Aero a paleta é fixa (azul e verde-água, com um verde de folha no 
 As capas viram ícones de vidro desenhados em SVG (`js/aero-icons.js`). O ícone é fixo para cada música: vem de palavras do título ou do artista (por exemplo, "love" vira coração e "night" vira lua) e, sem nenhuma palavra reconhecida, usa um ícone neutro escolhido pelo nome. As capas reais e os GIFs continuam guardados e voltam ao trocar de tema.
 
 Para trocar a foto de fundo do Frutiger Aero, substitua `app/assets/aero/bg.jpg`. Uma imagem em 1920x1080 e até uns 200 KB é suficiente, porque ela aparece desfocada.
+
+## Desempenho e áudio no celular
+
+- **Modo leve** (`js/perf.js` e `css/lite.css`): liga sozinho em tela pequena, aparelho de toque, pouca memória (4 GB ou menos), poucos núcleos ou economia de dados. Em Configurações há uma chave para ligar ou desligar à mão, e essa escolha vale mais que a automática. Ele diminui o desfoque, tira animações, reduz o vinil a uma camada de eco, limita as barras de fundo a ~30 quadros por segundo e encurta o reverb (1,6 s em vez de 3 s).
+- **Áudio** (`js/engine.js`): o contexto de áudio usa `latencyHint: 'playback'` (buffers maiores, menos estalos), o reverb só entra no grafo quando há reverb (sem ele a convolução não gasta processador), o contexto volta a tocar sozinho depois de uma interrupção do iOS (ligação, tela bloqueada) e `navigator.audioSession` fica em `playback`, para o som não ser calado pela chave de silêncio do iPhone.
+- **Primeiro toque:** celular só deixa o áudio tocar depois de um toque. O Ouce "libera" o áudio no primeiro toque na tela, então a música toca sozinha depois de baixar o arquivo ou ao passar para a próxima. Se o navegador ainda bloquear, aparece um aviso em vez de ficar mudo.
+- **Tela de bloqueio:** play, pausa, anterior, próxima, avançar, voltar e a barra de progresso funcionam pela Media Session.
+- **Temas de vidro:** o fundo do Liquid Glass é parado e o do Frutiger Aero é uma imagem já desfocada (`assets/aero/bg.jpg`, e `bg-m.jpg` menor para o celular). O cartão do player, o mini player e o aviso não usam `backdrop-filter`, porque o vinil girando dentro de um painel com desfoque obriga a GPU a refazer o desfoque a cada quadro.
 
 ## Capas
 
@@ -248,7 +256,7 @@ Ouce/
 │  │  ├─ covers/           capas automáticas (covers.json lista os arquivos)
 │  │  └─ aero/bg.jpg       fundo do tema Frutiger Aero
 │  ├─ css/                 tokens, base, layout, player, focus, library, components,
-│  │                       editor, playlists, responsive, glass (tema), aero (tema)
+│  │                       editor, playlists, responsive, glass (tema), aero (tema), lite (modo leve)
 │  └─ js/
 │     ├─ main.js           ponto de entrada
 │     ├─ config.js         dados do Supabase
@@ -270,7 +278,8 @@ Ouce/
 │     ├─ profile.js        username: pop-up obrigatório, confirmação e limite de trocas
 │     ├─ auth.js           login, cadastro, foto de perfil
 │     ├─ theme.js          temas e cor automática pela capa
-│     ├─ light.js          luz do tema Liquid Glass (mouse ou inclinação)
+│     ├─ light.js          luz do tema Liquid Glass (mouse)
+│     ├─ perf.js           modo leve (automático ou escolhido em Configurações)
 │     ├─ aero-icons.js     ícones de capa do tema Frutiger Aero
 │     ├─ views.js          troca de telas e modo foco
 │     ├─ visuals.js        equalizador de fundo e animações

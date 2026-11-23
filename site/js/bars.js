@@ -14,14 +14,19 @@ function readTint() {
   tint = getComputedStyle(document.documentElement).getPropertyValue('--accent-hi-rgb').trim() || tint
 }
 
+const weak = matchMedia('(pointer: coarse)').matches || matchMedia('(max-width: 820px)').matches
+let lastDraw = 0
+
 function size() {
-  const dpr = devicePixelRatio || 1
+  const dpr = Math.min(devicePixelRatio || 1, weak ? 1.25 : 2)
   canvas.width = canvas.clientWidth * dpr
   canvas.height = canvas.clientHeight * dpr
   g.setTransform(dpr, 0, 0, dpr, 0, 0)
 }
 
 function draw(now) {
+  if (weak && now - lastDraw < 32) return requestAnimationFrame(draw)
+  lastDraw = now
   const w = canvas.clientWidth
   const h = canvas.clientHeight
   const count = Math.min(140, Math.max(24, Math.floor(w / 13)))

@@ -12,6 +12,9 @@ export function initStage() {
   const pose = { ry: -26, rx: 6, slide: 40 }
   let angle = 0
   let last = performance.now()
+  const weak = matchMedia('(pointer: coarse)').matches || matchMedia('(max-width: 900px)').matches
+  let onScreen = true
+  if ('IntersectionObserver' in window) new IntersectionObserver(entries => { onScreen = entries[0].isIntersecting }, { rootMargin: '120px' }).observe(story)
 
   addEventListener('pointermove', e => {
     if (e.pointerType !== 'mouse') return
@@ -37,6 +40,7 @@ export function initStage() {
   }
 
   const frame = now => {
+    if (!onScreen || (weak && now - last < 32)) return requestAnimationFrame(frame)
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     const p = smooth(progress())
