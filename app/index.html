@@ -29,8 +29,8 @@
 <link rel="stylesheet" href="css/editor.css">
 <link rel="stylesheet" href="css/playlists.css">
 <link rel="stylesheet" href="css/responsive.css">
-<link rel="stylesheet" href="css/glass.css?v=8">
-<link rel="stylesheet" href="css/aero.css?v=3">
+<link rel="stylesheet" href="css/glass.css?v=9">
+<link rel="stylesheet" href="css/aero.css?v=4">
 <link rel="stylesheet" href="css/lite.css?v=2">
 <script>try{var l=localStorage.getItem("ouce_lite"),m=matchMedia,n=navigator;if(l==="1"||(l!=="0"&&(m("(pointer: coarse)").matches||m("(max-width: 820px)").matches||(n.deviceMemory&&n.deviceMemory<=4)||(n.hardwareConcurrency&&n.hardwareConcurrency<=4))))document.documentElement.classList.add("lite")}catch(e){}try{var s=localStorage.getItem("ouce_style");if(s==="glass"||s==="aero")document.documentElement.dataset.style=s}catch(e){}</script>
 </head>
@@ -177,15 +177,20 @@
 </dialog>
 
 <dialog id="authDlg">
-  <form id="authForm">
+  <form id="authForm" novalidate>
     <h3>Entrar no Ouce</h3>
     <div class="chips" style="margin-bottom:16px" id="authTabs">
       <button type="button" class="chip on" data-mode="login">Entrar</button>
       <button type="button" class="chip" data-mode="signup">Criar conta</button>
     </div>
-    <label>EMAIL<input name="email" type="email" required autocomplete="email"></label>
-    <label id="authUserBox" hidden>USERNAME<span class="at-input"><b>@</b><input name="username" maxlength="20" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="seunome"></span><small class="hint">3 a 20 caracteres: letras minúsculas, números, ponto e underline. Aparece como autor das suas playlists.</small></label>
-    <label>SENHA<input name="password" type="password" required minlength="6" autocomplete="current-password"></label>
+    <label><span id="authIdLabel">E-MAIL OU USERNAME</span><input name="email" type="text" required autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="voce@email.com ou @username"></label>
+    <label id="authUserBox" hidden>USERNAME<span class="at-input"><b>@</b><input name="username" maxlength="20" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="seunome"></span><small class="hint">3 a 20 caracteres: letras minúsculas, números, ponto e underline. Aparece como autor das suas playlists.</small></label>
+    <label>SENHA<span class="pw"><input name="password" type="password" required autocomplete="current-password"><button type="button" class="pw-eye" data-eye aria-label="Mostrar senha" aria-pressed="false"><i class="ri-eye-line"></i></button></span></label>
+    <label id="authPass2Box" hidden>CONFIRMAR SENHA<span class="pw"><input name="password2" type="password" autocomplete="new-password"><button type="button" class="pw-eye" data-eye aria-label="Mostrar senha" aria-pressed="false"><i class="ri-eye-line"></i></button></span><small class="hint" id="authPwHint">Mínimo de 6 caracteres.</small></label>
+    <div class="captcha" id="authCaptcha">
+      <label class="cap-local" id="capLocal"><input type="checkbox" id="capCheck"><span class="cap-box"><i class="ri-check-line"></i></span><span class="cap-text" id="capText">Não sou um robô</span><span class="cap-brand"><i class="ri-shield-check-line"></i>Ouce</span></label>
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    </div>
     <p class="err" id="authErr"></p>
     <menu>
       <button type="button" class="btn flat" data-close>Fechar</button>

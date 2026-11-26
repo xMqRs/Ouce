@@ -141,3 +141,8 @@ html[data-style=glass] .src-tag{background:rgb(255 255 255/.05);border-color:rgb
 html[data-style=glass] .card{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--sheen),rgb(14 16 34/.6)}
 html[data-style=glass] .mini{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(var(--accent-rgb)/.52)}
 html[data-style=glass] .toast{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgb(10 12 24/.8)}
+
+html[data-style=glass] dialog label.cap-local{background:rgb(255 255 255/.05);border-color:rgb(255 255 255/.18)}
+html[data-style=glass] .cap-box{border-color:rgb(255 255 255/.45)}
+html[data-style=glass] .cap-local.done .cap-box{background:rgb(var(--accent-rgb)/.9);border-color:rgb(255 255 255/.5)}
+html[data-style=glass] .pw-eye:hover{background:rgb(255 255 255/.1)}
