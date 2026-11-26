@@ -55,8 +55,12 @@ const friendly = msg => {
   if (/invalid login credentials|invalid_credentials/i.test(msg)) return 'E-mail, username ou senha incorretos.'
   if (/already registered/i.test(msg)) return 'Esse email já tem cadastro. Faça login.'
   if (/password should be at least/i.test(msg)) return `A senha precisa ter pelo menos ${MIN_PASSWORD} caracteres.`
-  if (msg === '__offline') return 'Sem conexão para entrar agora. Tente de novo.'
-  if (msg === '__nofn') return 'O login por username ainda não está ativado neste site. Entre com o e-mail.'
+  if (/not confirmed/i.test(msg)) return 'Confirme seu e-mail antes de entrar (veja a caixa de entrada).'
+  if (msg === '__unreachable') return 'Não consegui falar com a função login-username. Confira se ela foi publicada no Supabase (Edge Functions) e tente de novo.'
+  if (msg === '__nofn') return 'O login por username ainda não foi ativado: falta publicar a função login-username no Supabase. Por enquanto, entre com o e-mail.'
+  if (msg === '__jwt') return 'O Supabase recusou a chamada da função login-username. Nos detalhes dela, desligue "Verify JWT".'
+  if (msg === '__rate') return 'Muitas tentativas. Espere um pouco e tente de novo.'
+  if (msg === '__server') return 'A função login-username deu erro no servidor. Veja os logs dela no Supabase (Edge Functions, Logs).'
   return msg
 }
 
@@ -70,12 +74,19 @@ async function loginByUsername(username, password) {
       headers: { 'content-type': 'application/json', apikey: config.supabaseAnonKey, authorization: `Bearer ${config.supabaseAnonKey}` },
       body: JSON.stringify({ username, password })
     })
-  } catch {
-    return { error: { message: '__offline' } }
+  } catch (e) {
+    console.warn('[Ouce] login-username: sem resposta', e)
+    return { error: { message: '__unreachable' } }
   }
-  if (res.status === 404) return { error: { message: '__nofn' } }
   const body = await res.json().catch(() => ({}))
-  if (!res.ok || !body.session) return { error: { message: body.error || 'invalid login credentials' } }
+  if (!res.ok || !body.session) {
+    console.warn('[Ouce] login-username:', res.status, body)
+    if (res.status === 404) return { error: { message: '__nofn' } }
+    if (res.status === 401 || res.status === 403) return { error: { message: '__jwt' } }
+    if (res.status === 429) return { error: { message: '__rate' } }
+    if (res.status >= 500) return { error: { message: '__server' } }
+    return { error: { message: body.error || 'invalid login credentials' } }
+  }
   return sb.auth.setSession(body.session)
 }
 

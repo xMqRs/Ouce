@@ -140,7 +140,20 @@ Use só imagens que você pode usar publicamente. Se o `covers.json` não carreg
 
 - **Senha:** no cadastro há o campo de confirmação, e as duas precisam coincidir e ter no mínimo 6 caracteres (o aviso aparece enquanto digita). Cada campo de senha tem um olho (Remix Icon) para mostrar ou esconder o que foi digitado.
 - **Captcha:** a caixinha "Não sou um robô" aparece no login e no cadastro. É a verificação do próprio Ouce (`js/captcha.js`): uma isca escondida, um tempo mínimo com o pop-up aberto e só vale clique de verdade. Barra robôs simples; não é uma proteção forte.
-- **Login só com o username:** o campo de login aceita o e-mail ou o `@username`. O e-mail das pessoas não vai para o navegador, então a busca acontece na Edge Function `supabase/functions/login-username`, que acha o e-mail, faz o login pelo Supabase Auth (o limite de tentativas continua valendo) e devolve só a sessão. Para ativar, publique a função: `supabase functions deploy login-username`. Sem a função, o login por e-mail funciona normal e o app avisa que o login por username ainda não está ativado.
+- **Login só com o username:** o campo de login aceita o e-mail ou o `@username`. O e-mail das pessoas não vai para o navegador, então a busca acontece na Edge Function `supabase/functions/login-username`, que acha o e-mail, faz o login pelo Supabase Auth (o limite de tentativas continua valendo) e devolve só a sessão. Sem a função publicada, o login por e-mail funciona normal e o app avisa que o login por username ainda não foi ativado. Para publicar:
+  1. **Pelo painel:** Edge Functions, Deploy a new function, nome `login-username`, cole o conteúdo de `supabase/functions/login-username/index.ts` e publique. Nos detalhes da função, desligue **Verify JWT**.
+  2. **Pelo terminal:** `supabase functions deploy login-username --no-verify-jwt`.
+  3. Rode também o `supabase/playlists-publicas.sql` (a função lê a tabela `profiles`) e use um username que já esteja salvo na conta.
+- **Se o login por username der erro**, a mensagem diz o motivo (e o console do navegador mostra a resposta da função):
+
+| Mensagem | O que fazer |
+|---|---|
+| "falta publicar a função login-username" | Publicar a função (passos acima) |
+| "O Supabase recusou a chamada" | Desligar **Verify JWT** nos detalhes da função |
+| "A função login-username deu erro no servidor" | Abrir Edge Functions, `login-username`, Logs. Quase sempre é o SQL `playlists-publicas.sql` que ainda não foi rodado |
+| "Não consegui falar com a função" | A função não está publicada com esse nome, ou a conexão caiu |
+| "Confirme seu e-mail antes de entrar" | A conta ainda não confirmou o e-mail |
+| "E-mail, username ou senha incorretos" | Username que não existe (ou conta sem username) ou senha errada |
 - **Limite de tentativas:** o Supabase limita os logins por IP (por padrão 30 a cada 5 minutos). Os logins por username chegam ao Supabase vindos da função, então dividem o mesmo limite; se o site tiver muito movimento, aumente esse limite em Authentication, Rate Limits.
 
 ## Username
