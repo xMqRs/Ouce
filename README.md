@@ -93,7 +93,8 @@ Depois de publicar uma mudança de visual e não ver diferença, faça um recarr
 - Editor de corte com forma de onda: mantém ou remove um trecho
 - A cor do site acompanha a capa da música, ou fica na cor que você escolher em hex
 - Histórico, playlists e biblioteca pública com login
-- Username (`@nome`) em cada conta, escolhido no cadastro
+- Username (`@nome`) em cada conta, escolhido no cadastro; o login aceita e-mail ou username
+- Cadastro com confirmação de senha (mínimo de 6 caracteres), olho para ver a senha e captcha
 - Playlists públicas: qualquer pessoa pode postar uma playlist na biblioteca, com capa, nome, autor e número de faixas
 - Busca na biblioteca com sugestões enquanto digita (ignora acentos, aceita pequenos erros de digitação, destaca o trecho encontrado) e filtros por Slowed, Speed up, Reverb e Grave
 - Upload por clique ou arrastando arquivos, com capa lida direto do arquivo (MP3 em ID3v2.2, v2.3 e v2.4, FLAC e M4A)
@@ -134,6 +135,13 @@ Para trocar a foto de fundo do Frutiger Aero, substitua `app/assets/aero/bg.jpg`
 ```
 
 Use só imagens que você pode usar publicamente. Se o `covers.json` não carregar, o app usa uma lista padrão com `ponte-neve.gif`.
+
+## Cadastro e login
+
+- **Senha:** no cadastro há o campo de confirmação, e as duas precisam coincidir e ter no mínimo 6 caracteres (o aviso aparece enquanto digita). Cada campo de senha tem um olho (Remix Icon) para mostrar ou esconder o que foi digitado.
+- **Captcha:** a caixinha "Não sou um robô" aparece no login e no cadastro. É a verificação do próprio Ouce (`js/captcha.js`): uma isca escondida, um tempo mínimo com o pop-up aberto e só vale clique de verdade. Barra robôs simples; não é uma proteção forte.
+- **Login só com o username:** o campo de login aceita o e-mail ou o `@username`. O e-mail das pessoas não vai para o navegador, então a busca acontece na Edge Function `supabase/functions/login-username`, que acha o e-mail, faz o login pelo Supabase Auth (o limite de tentativas continua valendo) e devolve só a sessão. Para ativar, publique a função: `supabase functions deploy login-username`. Sem a função, o login por e-mail funciona normal e o app avisa que o login por username ainda não está ativado.
+- **Limite de tentativas:** o Supabase limita os logins por IP (por padrão 30 a cada 5 minutos). Os logins por username chegam ao Supabase vindos da função, então dividem o mesmo limite; se o site tiver muito movimento, aumente esse limite em Authentication, Rate Limits.
 
 ## Username
 
@@ -276,7 +284,8 @@ Ouce/
 │     ├─ playlists.js      playlists, publicação e carregamento das públicas
 │     ├─ plEditor.js       pop-up de edição de playlist
 │     ├─ profile.js        username: pop-up obrigatório, confirmação e limite de trocas
-│     ├─ auth.js           login, cadastro, foto de perfil
+│     ├─ auth.js           login, cadastro, olho da senha, foto de perfil
+│     ├─ captcha.js        caixinha "Não sou um robô" do Ouce
 │     ├─ theme.js          temas e cor automática pela capa
 │     ├─ light.js          luz do tema Liquid Glass (mouse)
 │     ├─ perf.js           modo leve (automático ou escolhido em Configurações)
@@ -293,7 +302,8 @@ Ouce/
 │  ├─ assets/              logo, wordmark, imagem de compartilhamento, ícones
 │  ├─ css/
 │  └─ js/                  demo de áudio, mesa 3D da demo, cena 3D ligada à rolagem e menu mobile
-└─ supabase/                schema.sql (banco completo) e playlists-publicas.sql (só o novo, para bancos existentes)
+└─ supabase/                schema.sql (banco completo), playlists-publicas.sql (só o novo, para bancos existentes)
+   └─ functions/login-username/   Edge Function do login só com o username
 ```
 
 ## Licença
